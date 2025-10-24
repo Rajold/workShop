@@ -2,86 +2,102 @@
 // app/views/mechanic/case_view.php
 ?>
 
-<h2>Ficha del vehículo</h2>
+<!-- Cargar Bootstrap desde CDN -->
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
 
-<?php if ($vehicle): ?>
-    <p><strong>Placa:</strong> <?= htmlspecialchars($vehicle['placa'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-    <p><strong>Marca:</strong> <?= htmlspecialchars($vehicle['marca'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-    <p><strong>Modelo:</strong> <?= htmlspecialchars($vehicle['modelo'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-    <p><strong>Color:</strong> <?= htmlspecialchars($vehicle['color'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-    <p><strong>Propietario:</strong> <?= htmlspecialchars($vehicle['propietario'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-<?php else: ?>
-    <p>No hay vehículo seleccionado.</p>
-<?php endif; ?>
+<div class="container mt-4">
+    <h2 class="mb-4">Ficha del vehículo</h2>
 
-<!-- NUEVO BLOQUE: lista de casos del vehículo -->
-<h3>Casos del vehículo</h3>
-<?php if (!empty($cases)): ?>
-    <ul>
-        <?php foreach ($cases as $c): ?>
-            <li>
-                <a href="index.php?controller=mechanic&action=viewCase&veh_id=<?= $vehicle['id'] ?>&case_id=<?= $c['id'] ?>">
-                    Caso #<?= htmlspecialchars($c['id']) ?> – <?= htmlspecialchars($c['causa'] ?? 'Sin causa') ?> 
-                    (<?= htmlspecialchars($c['estado'] ?? 'Desconocido') ?>)
-                </a>
-            </li>
-        <?php endforeach; ?>
-    </ul>
-<?php else: ?>
-    <p>Este vehículo no tiene casos registrados.</p>
-<?php endif; ?>
-<!-- FIN NUEVO BLOQUE -->
-
-<h2>Ficha del caso</h2>
-
-<?php if ($caso): ?>
-    <p><strong>Causa:</strong> <?= htmlspecialchars($caso['causa'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-    <p><strong>Observaciones:</strong> <?= htmlspecialchars($caso['observaciones'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-    <p><strong>Diagnóstico:</strong> <?= htmlspecialchars($caso['diagnostico'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-    <p><strong>Estado:</strong> <?= htmlspecialchars($caso['estado'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-
-    <?php if ($caso['estado'] === 'abierto'): ?>
-        <!-- Sesión de trabajo -->
-        <?php if (empty($activeSession)): ?>
-            <form method="post" action="index.php?controller=mechanic&action=startSession">
-                <input type="hidden" name="case_id" value="<?= $caso['id'] ?>">
-                <button type="submit">Iniciar sesión de trabajo</button>
-            </form>
-        <?php else: ?>
-            <p><strong>Sesión activa</strong></p>
-
-            <!-- Formulario de nuevo avance -->
-            <h3>Agregar avance</h3>
-            <form method="post">
-                <textarea name="nuevo_avance" rows="4" cols="50" placeholder="Describa el avance..."></textarea><br>
-                <button type="submit">Guardar avance</button>
-            </form>
-
-            <form method="post" action="index.php?controller=mechanic&action=endSession">
-                <input type="hidden" name="session_id" value="<?= $activeSession['id'] ?>">
-                <button type="submit">Terminar sesión de trabajo</button>
-            </form>
-        <?php endif; ?>
+    <?php if ($vehicle): ?>
+        <div class="card mb-4">
+            <div class="card-body">
+                <p><strong>Placa:</strong> <?= htmlspecialchars($vehicle['placa'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+                <p><strong>Marca:</strong> <?= htmlspecialchars($vehicle['marca'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+                <p><strong>Modelo:</strong> <?= htmlspecialchars($vehicle['modelo'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+                <p><strong>Color:</strong> <?= htmlspecialchars($vehicle['color'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+                <p><strong>Propietario:</strong> <?= htmlspecialchars($vehicle['propietario'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+            </div>
+        </div>
     <?php else: ?>
-        <p>El caso está cerrado. No se pueden agregar avances.</p>
+        <div class="alert alert-warning">No hay vehículo seleccionado.</div>
     <?php endif; ?>
 
-    <!-- Lista de avances -->
-    <h3>Avances del caso</h3>
-    <?php if (!empty($avances)): ?>
-        <ul>
-            <?php foreach ($avances as $a): ?>
-                <li>
-                    <strong><?= htmlspecialchars($a['mecanico'] ?? 'Desconocido', ENT_QUOTES, 'UTF-8') ?>:</strong>
-                    <?= nl2br(htmlspecialchars($a['descripcion'] ?? '', ENT_QUOTES, 'UTF-8')) ?>
-                    <em>(<?= $a['fecha'] ?>)</em>
+    <h3>Casos del vehículo</h3>
+    <?php if (!empty($cases)): ?>
+        <ul class="list-group mb-4">
+            <?php foreach ($cases as $c): ?>
+                <li class="list-group-item">
+                    <a href="index.php?controller=mechanic&action=viewCase&veh_id=<?= $vehicle['id'] ?>&case_id=<?= $c['id'] ?>" class="text-decoration-none">
+                        Caso #<?= htmlspecialchars($c['id']) ?> – <?= htmlspecialchars($c['causa'] ?? 'Sin causa') ?> 
+                        <span class="badge bg-<?= ($c['estado'] === 'abierto' ? 'success' : 'secondary') ?> float-end"><?= htmlspecialchars($c['estado'] ?? 'Desconocido') ?></span>
+                    </a>
                 </li>
             <?php endforeach; ?>
         </ul>
     <?php else: ?>
-        <p>No hay avances registrados para este caso.</p>
+        <div class="alert alert-info">Este vehículo no tiene casos registrados.</div>
     <?php endif; ?>
 
-<?php else: ?>
-    <p>No hay caso seleccionado.</p>
-<?php endif; ?>
+    <h2 class="mt-4">Ficha del caso</h2>
+
+    <?php if ($caso): ?>
+        <div class="card mb-4">
+            <div class="card-body">
+                <p><strong>Causa:</strong> <?= htmlspecialchars($caso['causa'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+                <p><strong>Observaciones:</strong> <?= htmlspecialchars($caso['observaciones'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+                <p><strong>Diagnóstico:</strong> <?= htmlspecialchars($caso['diagnostico'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+                <p><strong>Estado:</strong> <?= htmlspecialchars($caso['estado'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+            </div>
+        </div>
+
+        <?php if ($caso['estado'] === 'abierto'): ?>
+            <div class="alert alert-info">
+                <?php if (empty($activeSession)): ?>
+                    <form method="post" action="index.php?controller=mechanic&action=startSession" class="mb-3">
+                        <input type="hidden" name="case_id" value="<?= $caso['id'] ?>">
+                        <button type="submit" class="btn btn-primary">Iniciar sesión de trabajo</button>
+                    </form>
+                <?php else: ?>
+                    <p><strong>Sesión activa</strong></p>
+
+                    <h4>Agregar avance</h4>
+                    <form method="post">
+                        <div class="mb-3">
+                            <textarea name="nuevo_avance" rows="4" class="form-control" placeholder="Describa el avance..."></textarea>
+                        </div>
+                        <button type="submit" class="btn btn-success">Guardar avance</button>
+                    </form>
+
+                    <form method="post" action="index.php?controller=mechanic&action=endSession" class="mt-3">
+                        <input type="hidden" name="session_id" value="<?= $activeSession['id'] ?>">
+                        <button type="submit" class="btn btn-danger">Terminar sesión de trabajo</button>
+                    </form>
+                <?php endif; ?>
+            </div>
+        <?php else: ?>
+            <div class="alert alert-secondary">El caso está cerrado. No se pueden agregar avances.</div>
+        <?php endif; ?>
+
+        <h4 class="mt-4">Avances del caso</h4>
+        <?php if (!empty($avances)): ?>
+            <ul class="list-group">
+                <?php foreach ($avances as $a): ?>
+                    <li class="list-group-item">
+                        <strong><?= htmlspecialchars($a['mecanico'] ?? 'Desconocido', ENT_QUOTES, 'UTF-8') ?>:</strong>
+                        <?= nl2br(htmlspecialchars($a['descripcion'] ?? '', ENT_QUOTES, 'UTF-8')) ?>
+                        <br><small class="text-muted"><?= $a['fecha'] ?></small>
+                    </li>
+                <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <div class="alert alert-warning">No hay avances registrados para este caso.</div>
+        <?php endif; ?>
+
+    <?php else: ?>
+        <div class="alert alert-warning">No hay caso seleccionado.</div>
+    <?php endif; ?>
+</div>
+
+<!-- Cargar Bootstrap JS y Popper.js desde CDN -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
