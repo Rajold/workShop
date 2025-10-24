@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS avances (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    caso_id INT NOT NULL,
+    mecanico_id INT NOT NULL,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    comentario TEXT NOT NULL,
+    FOREIGN KEY (caso_id) REFERENCES casos(id) ON DELETE CASCADE,
+    FOREIGN KEY (mecanico_id) REFERENCES usuarios(id) ON DELETE CASCADE
+);
