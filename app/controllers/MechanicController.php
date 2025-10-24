@@ -62,28 +62,44 @@ class MechanicController
         require __DIR__ . '/../views/layouts/footer.php';
     }
 
-    public function saveVehicle()
-    {
-        $this->ensureLogged();
+   public function saveVehicle()
+{
+    $this->ensureLogged();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $data = [
-                'placa'=>trim($_POST['placa']),
-                'marca'=>trim($_POST['marca'] ?? ''),
-                'modelo'=>trim($_POST['modelo'] ?? ''),
-                'color'=>trim($_POST['color'] ?? ''),
-                'propietario'=>trim($_POST['propietario'] ?? ''),
-            ];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        $data = [
+            'placa' => trim($_POST['placa']),
+            'marca' => trim($_POST['marca'] ?? ''),
+            'modelo' => trim($_POST['modelo'] ?? ''),
+            'color' => trim($_POST['color'] ?? ''),
+            'propietario' => trim($_POST['propietario'] ?? '')
+        ];
 
-            $existing = $this->vehicleModel->findByPlate($data['placa']);
-            $id = $existing ? (int)$existing['id'] : $this->vehicleModel->create($data);
+        // Crear o actualizar vehículo
+        $existing = $this->vehicleModel->findByPlate($data['placa']);
+        $veh_id = $existing ? (int)$existing['id'] : $this->vehicleModel->create($data);
 
-            if ($existing) $this->vehicleModel->update($id, $data);
+        if ($existing) {
+            $this->vehicleModel->update($veh_id, $data);
+        }
 
-            header('Location: index.php?controller=mechanic&action=viewCase&veh_id=' . $id);
+        // Nueva: registrar la falla reportada en la tabla "casos"
+        $causa = trim($_POST['causa'] ?? '');
+        if ($causa !== '') {
+            $mec_id = (int)$_SESSION['user_id'];
+            $caso_id = $this->caseModel->openCaseIfNone($veh_id, $mec_id, $causa);
+
+            // Redirigir a la ficha del caso recién creado
+            header("Location: index.php?controller=mechanic&action=viewCase&veh_id={$veh_id}&case_id={$caso_id}");
             exit;
         }
+
+        // Si no hay causa, mostrar la ficha del vehículo
+        header("Location: index.php?controller=mechanic&action=viewCase&veh_id={$veh_id}");
+        exit;
     }
+}
+
 
     public function viewCase()
     {

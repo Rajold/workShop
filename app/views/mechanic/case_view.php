@@ -14,6 +14,24 @@
     <p>No hay vehículo seleccionado.</p>
 <?php endif; ?>
 
+<!-- NUEVO BLOQUE: lista de casos del vehículo -->
+<h3>Casos del vehículo</h3>
+<?php if (!empty($cases)): ?>
+    <ul>
+        <?php foreach ($cases as $c): ?>
+            <li>
+                <a href="index.php?controller=mechanic&action=viewCase&veh_id=<?= $vehicle['id'] ?>&case_id=<?= $c['id'] ?>">
+                    Caso #<?= htmlspecialchars($c['id']) ?> – <?= htmlspecialchars($c['causa'] ?? 'Sin causa') ?> 
+                    (<?= htmlspecialchars($c['estado'] ?? 'Desconocido') ?>)
+                </a>
+            </li>
+        <?php endforeach; ?>
+    </ul>
+<?php else: ?>
+    <p>Este vehículo no tiene casos registrados.</p>
+<?php endif; ?>
+<!-- FIN NUEVO BLOQUE -->
+
 <h2>Ficha del caso</h2>
 
 <?php if ($caso): ?>

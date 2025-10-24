@@ -28,15 +28,16 @@ class WorkSession
     // Finaliza una sesión de trabajo
     public function end(int $sessionId): bool
     {
-        // Obtener la hora de inicio
         $stmt = $this->db->prepare("SELECT fecha_inicio, hora_inicio FROM sesiones_trabajo WHERE id = :id");
         $stmt->execute([':id' => $sessionId]);
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         if (!$row) return false;
 
+        // Calcular duración total en minutos (seguro)
         $inicio = new DateTime($row['fecha_inicio'] . ' ' . $row['hora_inicio']);
         $fin = new DateTime(); // hora actual
-        $duracion = (int)$inicio->diff($fin)->i + ($inicio->diff($fin)->h * 60); // en minutos
+        $duracion = (int) round(($fin->getTimestamp() - $inicio->getTimestamp()) / 60);
+        if ($duracion < 0) $duracion = 0;
 
         $stmt = $this->db->prepare("
             UPDATE sesiones_trabajo

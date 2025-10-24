@@ -11,13 +11,27 @@
 <?php else: ?>
   <div class="alert alert-info">No se encontró. Puedes agregar uno nuevo.</div>
   <form method="post" action="index.php?controller=mechanic&action=saveVehicle" onsubmit="return validateVehicleForm(this)">
-    <div class="mb-2"><input name="placa" placeholder="Placa" class="form-control" required></div>
-    <div class="mb-2"><input name="marca" placeholder="Marca" class="form-control"></div>
-    <div class="mb-2"><input name="modelo" placeholder="Modelo" class="form-control"></div>
-    <div class="mb-2"><input name="color" placeholder="Color" class="form-control"></div>
-    <div class="mb-2"><input name="propietario" placeholder="Propietario" class="form-control"></div>
-    <button class="btn btn-success">Guardar vehículo</button>
-  </form>
+  <div class="mb-2">
+    <input name="placa" placeholder="Placa" class="form-control" required>
+  </div>
+  <div class="mb-2">
+    <input name="marca" placeholder="Marca" class="form-control">
+  </div>
+  <div class="mb-2">
+    <input name="modelo" placeholder="Modelo" class="form-control">
+  </div>
+  <div class="mb-2">
+    <input name="color" placeholder="Color" class="form-control">
+  </div>
+  <div class="mb-2">
+    <input name="propietario" placeholder="Propietario" class="form-control">
+  </div>
+  <div class="mb-2">
+    <textarea name="causa" placeholder="Describa la falla reportada por el propietario" class="form-control" rows="3" required></textarea>
+  </div>
+  <button class="btn btn-success">Guardar vehículo y registrar caso</button>
+</form>
+
 <?php endif; ?>
 
 <?php if (!empty($cases)): ?>
