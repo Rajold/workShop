@@ -1,4 +1,4 @@
-<h2>Resultado de reporte</h2>
+<h2>Resultado del reporte</h2>
 
 <?php if (empty($grouped)): ?>
   <div class="alert alert-info">Sin datos</div>

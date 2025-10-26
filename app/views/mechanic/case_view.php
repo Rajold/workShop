@@ -19,7 +19,7 @@
             </div>
         </div>
     <?php else: ?>
-        <div class="alert alert-warning">No hay vehículo seleccionado.</div>
+        <div class="alert alert-warning">Ningún vehículo seleccionado.</div>
     <?php endif; ?>
 
     <h3>Casos del vehículo</h3>
@@ -35,7 +35,7 @@
             <?php endforeach; ?>
         </ul>
     <?php else: ?>
-        <div class="alert alert-info">Este vehículo no tiene casos registrados.</div>
+        <div class="alert alert-info">El vehículo no tiene casos registrados.</div>
     <?php endif; ?>
 
     <h2 class="mt-4">Ficha del caso</h2>

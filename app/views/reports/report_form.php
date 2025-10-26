@@ -5,8 +5,8 @@
 
   <div class="mb-2">
     <label>Placa (opcional)</label>
-    <input name="placa" class="form-control" placeholder="ABC123">
-    <small class="text-muted">Si no escribes una placa, se mostrarán todos tus casos.</small>
+    <input name="placa" class="form-control" placeholder="Ingrese la Placa">
+    <small class="text-muted">Deje en blanco para mostrar todos los casos.</small>
   </div>
 
   <div class="mb-2">
