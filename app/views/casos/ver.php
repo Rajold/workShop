@@ -5,7 +5,7 @@
         <?php foreach ($avances as $a): ?>
             <li class="list-group-item">
                 <strong><?= htmlspecialchars($a['mecanico']) ?>:</strong>
-                <?= nl2br(htmlspecialchars($a['comentario'])) ?>
+                <?= nl2br(htmlspecialchars($a['descripcion'])) ?>
                 <br><small class="text-muted"><?= htmlspecialchars($a['fecha']) ?></small>
             </li>
         <?php endforeach; ?>
@@ -15,11 +15,11 @@
 <?php endif; ?>
 
 <!-- Formulario para añadir nuevo avance -->
-<form method="POST" action="index.php?controller=case&action=agregarAvance">
+<form method="POST" action="index.php?controller=case&action=add">
     <input type="hidden" name="caso_id" value="<?= htmlspecialchars($caso['id']) ?>">
     <div class="mb-3">
-        <label for="comentario" class="form-label">Nuevo avance:</label>
-        <textarea name="comentario" id="comentario" class="form-control" rows="3" required></textarea>
+        <label for="descripcion" class="form-label">Nuevo avance:</label>
+        <textarea name="descripcion" id="descripcion" class="form-control" rows="3" required></textarea>
     </div>
     <button type="submit" class="btn btn-primary">Agregar avance</button>
 </form>

@@ -2,7 +2,7 @@
 // app/models/Advance.php
 declare(strict_types=1);
 
-class Advance
+class Avance
 {
     private PDO $db;
 

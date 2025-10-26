@@ -50,33 +50,46 @@
             </div>
         </div>
 
-        <?php if ($caso['estado'] === 'abierto'): ?>
-            <div class="alert alert-info">
-                <?php if (empty($activeSession)): ?>
-                    <form method="post" action="index.php?controller=mechanic&action=startSession" class="mb-3">
-                        <input type="hidden" name="case_id" value="<?= $caso['id'] ?>">
-                        <button type="submit" class="btn btn-primary">Iniciar sesión de trabajo</button>
-                    </form>
-                <?php else: ?>
-                    <p><strong>Sesión activa</strong></p>
-
-                    <h4>Agregar avance</h4>
-                    <form method="post">
-                        <div class="mb-3">
-                            <textarea name="nuevo_avance" rows="4" class="form-control" placeholder="Describa el avance..."></textarea>
-                        </div>
-                        <button type="submit" class="btn btn-success">Guardar avance</button>
-                    </form>
-
-                    <form method="post" action="index.php?controller=mechanic&action=endSession" class="mt-3">
-                        <input type="hidden" name="session_id" value="<?= $activeSession['id'] ?>">
-                        <button type="submit" class="btn btn-danger">Terminar sesión de trabajo</button>
-                    </form>
-                <?php endif; ?>
-            </div>
+<?php if ($caso['estado'] === 'abierto'): ?>
+    <div class="alert alert-info">
+        <?php if (empty($activeSession)): ?>
+            <form method="post" action="index.php?controller=mechanic&action=startSession" class="mb-3">
+                <input type="hidden" name="case_id" value="<?= $caso['id'] ?>">
+                <button type="submit" class="btn btn-primary">Iniciar sesión de trabajo</button>
+            </form>
         <?php else: ?>
-            <div class="alert alert-secondary">El caso está cerrado. No se pueden agregar avances.</div>
+            <p><strong>Sesión activa</strong></p>
+
+            <h4>Agregar avance</h4>
+            <form method="post">
+                <div class="mb-3">
+                    <textarea name="nuevo_avance" rows="4" class="form-control" placeholder="Describa el avance..."></textarea>
+                </div>
+                <button type="submit" class="btn btn-success">Guardar avance</button>
+            </form>
+
+            <form method="post" action="index.php?controller=mechanic&action=endSession" class="mt-3">
+                <input type="hidden" name="session_id" value="<?= $activeSession['id'] ?>">
+                <button type="submit" class="btn btn-danger">Terminar sesión de trabajo</button>
+            </form>
         <?php endif; ?>
+    </div>
+
+    <!-- Botón para cerrar caso -->
+    <form method="post" action="index.php?controller=case&action=cerrar" class="mt-3">
+        <input type="hidden" name="caso_id" value="<?= htmlspecialchars($caso['id']) ?>">
+        <button type="submit" class="btn btn-warning w-100">
+            🏁 Cerrar caso
+        </button>
+    </form>
+
+<?php else: ?>
+    <div class="alert alert-secondary">
+        El caso está cerrado. No se pueden agregar avances.
+    </div>
+    <p class="text-success mt-2"><strong>✅ Caso cerrado</strong></p>
+<?php endif; ?>
+
 
         <h4 class="mt-4">Avances del caso</h4>
         <?php if (!empty($avances)): ?>

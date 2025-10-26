@@ -113,7 +113,7 @@ class MechanicController
         $avances = [];
         $activeSession = null;
 
-        $advanceModel = new Advance($this->db);
+        $advanceModel = new Avance($this->db);
 
         if ($veh_id) {
             $vehicle = $this->vehicleModel->findById($veh_id);
