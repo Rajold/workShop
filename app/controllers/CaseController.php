@@ -27,24 +27,28 @@ class CaseController {
 
     // Mostrar detalles del caso y formulario de avances
     public function ver(): void {
-        $this->ensureLogged();
+    $this->ensureLogged();
 
-        if (empty($_GET['id'])) {
-            echo "ID de caso no especificado";
-            return;
-        }
-
-        $id = (int)$_GET['id'];
-        $caso = $this->caseModel->findById($id);
-        $avances = $this->avanceModel->getByCase($id);
-
-        if (!$caso) {
-            echo "Caso no encontrado";
-            return;
-        }
-
-        require __DIR__ . '/../views/casos/ver.php';
+    if (empty($_GET['id'])) {
+        echo "ID de caso no especificado";
+        return;
     }
+
+    $id = (int)$_GET['id'];
+    $caso = $this->caseModel->findById($id);
+    $avances = $this->avanceModel->getByCase($id);
+
+    if (!$caso) {
+        echo "Caso no encontrado";
+        return;
+    }
+
+    // ✅ Obtener el historial de casos del mismo vehículo
+    $historial = $this->caseModel->getHistoryByVehicleId((int)$caso['vehiculo_id']);
+
+    require __DIR__ . '/../views/casos/ver.php';
+}
+
 
     // Guardar nuevo avance
     public function add(): void {
@@ -103,5 +107,34 @@ class CaseController {
     header('Location: index.php?controller=mechanic&action=viewCase&veh_id=' . $vehiculoId);
     exit;
 }
+
+// 🆕 Crear un nuevo caso desde uno cerrado
+public function nuevoDesdeExistente(): void {
+    $this->ensureLogged();
+
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        echo "<div class='alert alert-danger'>Solicitud inválida.</div>";
+        return;
+    }
+
+    $vehiculoId = (int)$_POST['vehiculo_id'];
+    $referenciaAnterior = (int)$_POST['referencia_anterior'];
+    $mecanicoId = (int)$_SESSION['user_id'];
+
+    // Llamar al modelo para crear el nuevo caso
+    $nuevoCasoId = $this->caseModel->crearNuevoDesde($vehiculoId, $referenciaAnterior);
+
+    if ($nuevoCasoId) {
+        // Registrar un avance automático indicando que se creó el nuevo caso
+        $this->avanceModel->add($nuevoCasoId, $mecanicoId, "🆕 Nuevo caso creado a partir del caso #$referenciaAnterior");
+
+        // Redirigir a la vista del nuevo caso
+        header("Location: index.php?controller=mechanic&action=viewCase&veh_id={$vehiculoId}&case_id={$nuevoCasoId}");
+        exit;
+    } else {
+        echo "<div class='alert alert-danger'>Error al crear el nuevo caso.</div>";
+    }
+}
+
 
 }

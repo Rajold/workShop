@@ -57,6 +57,20 @@ class RepairCase
         return $row ?: null;
     }
 
+    public function getHistoryByVehicleId(int $vehiculoId): array {
+    $stmt = $this->pdo->prepare("
+        SELECT c.id, c.estado, c.causa, c.fecha_ingreso, u.nombre AS mecanico_nombre
+        FROM casos c
+        LEFT JOIN usuarios u ON c.mecanico_id = u.id
+        WHERE c.vehiculo_id = :vehiculo_id
+        ORDER BY c.fecha_ingreso DESC
+    ");
+    $stmt->execute(['vehiculo_id' => $vehiculoId]);
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+
+
     public function openCaseIfNone(int $vehiculo_id, int $mecanico_id, string $causa): int
     {
         $stmt = $this->pdo->prepare("
@@ -86,4 +100,23 @@ class RepairCase
         $data['id'] = $id;
         return $stmt->execute($data);
     }
+
+    public function crearNuevoDesde(int $vehiculoId, int $referenciaAnterior): ?int {
+    try {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO casos (vehiculo_id, fecha_ingreso, estado, referencia_anterior)
+            VALUES (:vehiculo_id, NOW(), 'abierto', :referencia_anterior)
+        ");
+        $stmt->execute([
+            ':vehiculo_id' => $vehiculoId,
+            ':referencia_anterior' => $referenciaAnterior
+        ]);
+
+        return (int)$this->pdo->lastInsertId();
+    } catch (PDOException $e) {
+        error_log("Error al crear nuevo caso: " . $e->getMessage());
+        return null;
+    }
+}
+
 }

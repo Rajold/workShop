@@ -74,6 +74,7 @@
             </form>
         <?php endif; ?>
     </div>
+    
 
     <!-- Botón para cerrar caso -->
     <form method="post" action="index.php?controller=case&action=cerrar" class="mt-3">
@@ -83,6 +84,7 @@
         </button>
     </form>
 
+
 <?php else: ?>
     <div class="alert alert-secondary">
         El caso está cerrado. No se pueden agregar avances.
@@ -90,6 +92,15 @@
     <p class="text-success mt-2"><strong>✅ Caso cerrado</strong></p>
 <?php endif; ?>
 
+<?php if ($caso['estado'] === 'cerrado'): ?>
+    <form method="POST" action="index.php?controller=case&action=nuevoDesdeExistente">
+        <input type="hidden" name="vehiculo_id" value="<?= htmlspecialchars($caso['vehiculo_id']) ?>">
+        <input type="hidden" name="referencia_anterior" value="<?= htmlspecialchars($caso['id']) ?>">
+        <button type="submit" class="btn btn-success mt-3">
+            🆕 Nuevo caso
+        </button>
+    </form>
+<?php endif; ?>
 
         <h4 class="mt-4">Avances del caso</h4>
         <?php if (!empty($avances)): ?>
@@ -110,6 +121,7 @@
         <div class="alert alert-warning">No hay caso seleccionado.</div>
     <?php endif; ?>
 </div>
+
 
 <!-- Cargar Bootstrap JS y Popper.js desde CDN -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
