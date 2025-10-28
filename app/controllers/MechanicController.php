@@ -101,51 +101,66 @@ class MechanicController
 }
 
 
-    public function viewCase()
-    {
-        $this->ensureLogged();
+   public function viewCase()
+{
+    $this->ensureLogged();
 
-        $veh_id = (int)($_GET['veh_id'] ?? 0);
-        $case_id = (int)($_GET['case_id'] ?? 0);
-        $vehicle = null;
-        $caso = null;
-        $cases = [];
-        $avances = [];
-        $activeSession = null;
+    $veh_id = (int)($_GET['veh_id'] ?? 0);
+    $case_id = (int)($_GET['case_id'] ?? 0);
+    $vehicle = null;
+    $caso = null;
+    $cases = [];
+    $avances = [];
+    $activeSession = null;
+    $hasOpenCase = false;
 
-        $advanceModel = new Avance($this->db);
+    $advanceModel = new Avance($this->db);
 
-        if ($veh_id) {
-            $vehicle = $this->vehicleModel->findById($veh_id);
-            $cases = $this->caseModel->findByVehicle($veh_id);
+    if ($veh_id) {
+        // 🚗 Obtener datos del vehículo y sus casos
+        $vehicle = $this->vehicleModel->findById($veh_id);
+        $cases = $this->caseModel->findByVehicle($veh_id);
 
-            if ($case_id) {
-                $caso = $this->caseModel->findById($case_id);
-            } else {
-                $caso = $cases[0] ?? null;
-            }
-
-            // Cargar avances
-            if ($caso) {
-                $avances = $advanceModel->getByCase((int)$caso['id']);
-                $activeSession = $this->sessionModel->getActiveByCaseAndMechanic((int)$caso['id'], (int)($_SESSION['user_id'] ?? 0));
+        // 🔍 Verificar si hay un caso abierto
+        foreach ($cases as $c) {
+            if ($c['estado'] === 'abierto') {
+                $hasOpenCase = true;
+                break;
             }
         }
 
-        // Guardar nuevo avance
-        if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['nuevo_avance']) && isset($caso['id'])) {
-            $descripcion = trim($_POST['nuevo_avance']);
-            if ($descripcion !== '' && $activeSession) {
-                $advanceModel->add((int)$caso['id'], (int)$_SESSION['user_id'], $descripcion);
-                header("Location: index.php?controller=mechanic&action=viewCase&case_id={$caso['id']}&veh_id={$veh_id}");
-                exit;
-            }
+        // 📄 Seleccionar el caso activo o el primero disponible
+        if ($case_id) {
+            $caso = $this->caseModel->findById($case_id);
+        } else {
+            $caso = $cases[0] ?? null;
         }
 
-        require __DIR__ . '/../views/layouts/header.php';
-        require __DIR__ . '/../views/mechanic/case_view.php';
-        require __DIR__ . '/../views/layouts/footer.php';
+        // 🧾 Cargar avances y sesión activa
+        if ($caso) {
+            $avances = $advanceModel->getByCase((int)$caso['id']);
+            $activeSession = $this->sessionModel->getActiveByCaseAndMechanic(
+                (int)$caso['id'],
+                (int)($_SESSION['user_id'] ?? 0)
+            );
+        }
     }
+
+    // 📝 Guardar nuevo avance
+    if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['nuevo_avance']) && isset($caso['id'])) {
+        $descripcion = trim($_POST['nuevo_avance']);
+        if ($descripcion !== '' && $activeSession) {
+            $advanceModel->add((int)$caso['id'], (int)$_SESSION['user_id'], $descripcion);
+            header("Location: index.php?controller=mechanic&action=viewCase&case_id={$caso['id']}&veh_id={$veh_id}");
+            exit;
+        }
+    }
+
+    // 🧱 Cargar vistas
+    require __DIR__ . '/../views/layouts/header.php';
+    require __DIR__ . '/../views/mechanic/case_view.php';
+    require __DIR__ . '/../views/layouts/footer.php';
+}
 
     public function openCase()
     {

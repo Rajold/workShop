@@ -28,8 +28,16 @@
 
 <hr class="my-4">
 
+<hr class="my-4">
+
 <h4>Historial del vehículo</h4>
+
 <?php if (!empty($historial)): ?>
+    <?php $totalCasos = count($historial); ?>
+    <p class="text-muted">
+        📋 Este vehículo tiene <strong><?= $totalCasos ?></strong> caso<?= $totalCasos > 1 ? 's' : '' ?> registrado<?= $totalCasos > 1 ? 's' : '' ?>.
+    </p>
+
     <ul class="list-group">
         <?php foreach ($historial as $h): ?>
             <?php
@@ -39,7 +47,8 @@
             ?>
             <li class="list-group-item d-flex justify-content-between align-items-center <?= $itemClass ?>">
                 <div>
-                    <a href="index.php?controller=case&action=ver&id=<?= htmlspecialchars($h['id']) ?>" class="text-decoration-none <?= $isCurrent ? 'fw-bold text-primary' : '' ?>">
+                    <a href="index.php?controller=case&action=ver&id=<?= htmlspecialchars($h['id']) ?>" 
+                       class="text-decoration-none <?= $isCurrent ? 'fw-bold text-primary' : '' ?>">
                         <?php if ($isCurrent): ?>
                             🔹 Caso actual:
                         <?php else: ?>
@@ -62,5 +71,6 @@
 <?php else: ?>
     <p class="text-muted">Este vehículo no tiene historial de casos anteriores.</p>
 <?php endif; ?>
+
 
 

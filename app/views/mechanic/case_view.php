@@ -92,15 +92,29 @@
     <p class="text-success mt-2"><strong>✅ Caso cerrado</strong></p>
 <?php endif; ?>
 
-<?php if ($caso['estado'] === 'cerrado'): ?>
-    <form method="POST" action="index.php?controller=case&action=nuevoDesdeExistente">
-        <input type="hidden" name="vehiculo_id" value="<?= htmlspecialchars($caso['vehiculo_id']) ?>">
-        <input type="hidden" name="referencia_anterior" value="<?= htmlspecialchars($caso['id']) ?>">
-        <button type="submit" class="btn btn-success mt-3">
-            🆕 Nuevo caso
-        </button>
-    </form>
+<?php if (!empty($_SESSION['error_message'])): ?>
+    <div class="alert alert-danger">
+        <?= htmlspecialchars($_SESSION['error_message']) ?>
+    </div>
+    <?php unset($_SESSION['error_message']); ?>
 <?php endif; ?>
+
+<?php if ($caso['estado'] === 'cerrado'): ?>
+    <?php if (!empty($hasOpenCase)): ?>
+        <button class="btn btn-secondary mt-3 w-100" disabled title="Ya existe un caso abierto para este vehículo">
+            🆕 Nuevo caso (no disponible)
+        </button>
+    <?php else: ?>
+        <form method="POST" action="index.php?controller=case&action=nuevoDesdeExistente">
+            <input type="hidden" name="vehiculo_id" value="<?= htmlspecialchars($caso['vehiculo_id']) ?>">
+            <input type="hidden" name="referencia_anterior" value="<?= htmlspecialchars($caso['id']) ?>">
+            <button type="submit" class="btn btn-success mt-3 w-100">
+                🆕 Nuevo caso
+            </button>
+        </form>
+    <?php endif; ?>
+<?php endif; ?>
+
 
         <h4 class="mt-4">Avances del caso</h4>
         <?php if (!empty($avances)): ?>
