@@ -24,16 +24,99 @@ class Avance
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    public function add(int $caseId, int $mecanicoId, string $descripcion): void
-    {
-        $stmt = $this->db->prepare("
-            INSERT INTO avances (caso_id, mecanico_id, descripcion)
-            VALUES (:c, :m, :d)
-        ");
-        $stmt->execute([
-            ':c' => $caseId,
-            ':m' => $mecanicoId,
-            ':d' => htmlspecialchars($descripcion, ENT_QUOTES, 'UTF-8')
-        ]);
-    }
+    public function add(
+    int $caseId,
+    int $mecanicoId,
+    string $descripcion,
+    string $tipo,
+    int $valor
+): void {
+
+    $stmt = $this->db->prepare("
+        INSERT INTO avances
+        (caso_id, mecanico_id, descripcion, tipo, valor)
+        VALUES
+        (:c, :m, :d, :t, :v)
+    ");
+
+    $stmt->execute([
+        ':c' => $caseId,
+        ':m' => $mecanicoId,
+        ':d' => $descripcion,
+        ':t' => $tipo,
+        ':v' => $valor
+    ]);
+}
+
+public function getTotalesPorCaso(int $caseId): array
+{
+    $stmt = $this->db->prepare("
+        SELECT
+            COALESCE(SUM(CASE WHEN tipo = 'Mano de obra' THEN valor ELSE 0 END), 0) AS mano_obra,
+            COALESCE(SUM(CASE WHEN tipo = 'Repuesto' THEN valor ELSE 0 END), 0) AS repuestos,
+            COALESCE(SUM(valor), 0) AS total
+        FROM avances
+        WHERE caso_id = :caso
+    ");
+
+    $stmt->execute([
+        ':caso' => $caseId
+    ]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+public function getById(int $id): ?array
+{
+    $stmt = $this->db->prepare("
+        SELECT *
+        FROM avances
+        WHERE id = :id
+    ");
+
+    $stmt->execute([
+        ':id' => $id
+    ]);
+
+    $avance = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $avance ?: null;
+}
+
+public function update(
+    int $id,
+    string $descripcion,
+    string $tipo,
+    int $valor
+): bool {
+
+    $stmt = $this->db->prepare("
+        UPDATE avances
+        SET
+            descripcion = :descripcion,
+            tipo = :tipo,
+            valor = :valor
+        WHERE id = :id
+    ");
+
+    return $stmt->execute([
+        ':descripcion' => $descripcion,
+        ':tipo' => $tipo,
+        ':valor' => $valor,
+        ':id' => $id
+    ]);
+}
+
+public function delete(int $id): bool
+{
+    $stmt = $this->db->prepare("
+        DELETE FROM avances
+        WHERE id = :id
+    ");
+
+    return $stmt->execute([
+        ':id' => $id
+    ]);
+}
+
 }

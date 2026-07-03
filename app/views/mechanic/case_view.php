@@ -63,8 +63,29 @@
             <h4>Agregar avance</h4>
             <form method="post">
                 <div class="mb-3">
-                    <textarea name="nuevo_avance" rows="4" class="form-control" placeholder="Describa el avance..."></textarea>
+                    <textarea name="nuevo_avance" rows="4" class="form-control" placeholder="Describa el avance..." required></textarea>
                 </div>
+                <div class="mb-3">
+    <label class="form-label">Tipo de avance</label>
+
+    <select name="tipo" class="form-control" required>
+        <option value="">Seleccione...</option>
+        <option value="Repuesto">Repuesto</option>
+        <option value="Mano de obra">Mano de obra</option>
+    </select>
+</div>
+
+<div class="mb-3">
+    <label class="form-label">Valor</label>
+
+    <input
+        type="number"
+        class="form-control"
+        name="valor"
+        min="0"
+        step="0.01"
+        required>
+</div>
                 <button type="submit" class="btn btn-success">Guardar avance</button>
             </form>
 
@@ -115,18 +136,89 @@
     <?php endif; ?>
 <?php endif; ?>
 
+<div class="card border-success mb-4">
+    <div class="card-header bg-success text-white">
+        <strong>💰 Resumen económico del caso</strong>
+    </div>
+
+    <div class="card-body">
+        <div class="row text-center">
+
+            <div class="col-md-4">
+                <h6>🔧 Mano de obra</h6>
+                <h4 class="text-primary">
+                    $<?= number_format((int)$totales['mano_obra'], 0, ',', '.') ?>
+                </h4>
+            </div>
+
+            <div class="col-md-4">
+                <h6>📦 Repuestos</h6>
+                <h4 class="text-warning">
+                    $<?= number_format((int)$totales['repuestos'], 0, ',', '.') ?>
+                </h4>
+            </div>
+
+            <div class="col-md-4">
+                <h6>💰 Total</h6>
+                <h3 class="text-success">
+                    $<?= number_format((int)$totales['total'], 0, ',', '.') ?>
+                </h3>
+            </div>
+
+        </div>
+    </div>
+</div>
 
         <h4 class="mt-4">Avances del caso</h4>
         <?php if (!empty($avances)): ?>
             <ul class="list-group">
                 <?php foreach ($avances as $a): ?>
-                    <li class="list-group-item">
-                        <strong><?= htmlspecialchars($a['mecanico'] ?? 'Desconocido', ENT_QUOTES, 'UTF-8') ?>:</strong>
-                        <?= nl2br(htmlspecialchars($a['descripcion'] ?? '', ENT_QUOTES, 'UTF-8')) ?>
-                        <br><small class="text-muted"><?= $a['fecha'] ?></small>
-                    </li>
-                <?php endforeach; ?>
+
+    <?php
+        $badge = ($a['tipo'] === 'Mano de obra')
+            ? 'primary'
+            : 'warning';
+
+        $icono = ($a['tipo'] === 'Mano de obra')
+            ? '🔧'
+            : '📦';
+    ?>
+
+    <li class="list-group-item">
+
+        <div class="d-flex justify-content-between align-items-center">
+
+            <strong>
+                <?= htmlspecialchars($a['mecanico'] ?? 'Desconocido', ENT_QUOTES, 'UTF-8') ?>
+            </strong>
+
+            <span class="badge bg-<?= $badge ?>">
+                <?= $icono ?> <?= htmlspecialchars($a['tipo']) ?>
+            </span>
+
+        </div>
+
+        <div class="mt-2">
+            <?= nl2br(htmlspecialchars($a['descripcion'], ENT_QUOTES, 'UTF-8')) ?>
+        </div>
+
+        <div class="d-flex justify-content-between mt-3">
+
+            <strong class="text-success">
+                $<?= number_format((int)$a['valor'],0,",",".") ?>
+            </strong>
+
+            <small class="text-muted">
+                <?= htmlspecialchars($a['fecha']) ?>
+            </small>
+
+        </div>
+
+    </li>
+
+<?php endforeach; ?>
             </ul>
+
         <?php else: ?>
             <div class="alert alert-warning">No hay avances registrados para este caso.</div>
         <?php endif; ?>

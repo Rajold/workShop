@@ -140,6 +140,11 @@ class MechanicController
     $avances = [];
     $activeSession = null;
     $hasOpenCase = false;
+    $totales = [
+    'mano_obra' => 0,
+    'repuestos' => 0,
+    'total' => 0
+    ];
 
     $advanceModel = new Avance($this->db);
 
@@ -163,25 +168,41 @@ class MechanicController
             $caso = $cases[0] ?? null;
         }
 
-        // 🧾 Cargar avances y sesión activa
-        if ($caso) {
-            $avances = $advanceModel->getByCase((int)$caso['id']);
-            $activeSession = $this->sessionModel->getActiveByCaseAndMechanic(
-                (int)$caso['id'],
-                (int)($_SESSION['user_id'] ?? 0)
-            );
-        }
+        // 🧾 Cargar avances, totales y sesión activa
+if ($caso) {
+
+    $avances = $advanceModel->getByCase((int)$caso['id']);
+
+    $totales = $advanceModel->getTotalesPorCaso((int)$caso['id']);
+
+    $activeSession = $this->sessionModel->getActiveByCaseAndMechanic(
+        (int)$caso['id'],
+        (int)($_SESSION['user_id'] ?? 0)
+    );
+}
     }
 
     // 📝 Guardar nuevo avance
-    if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['nuevo_avance']) && isset($caso['id'])) {
-        $descripcion = trim($_POST['nuevo_avance']);
-        if ($descripcion !== '' && $activeSession) {
-            $advanceModel->add((int)$caso['id'], (int)$_SESSION['user_id'], $descripcion);
-            header("Location: index.php?controller=mechanic&action=viewCase&case_id={$caso['id']}&veh_id={$veh_id}");
-            exit;
-        }
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['nuevo_avance']) && isset($caso['id'])) {
+
+    $descripcion = trim($_POST['nuevo_avance']);
+    $tipo = trim($_POST['tipo'] ?? '');
+    $valor = (int)($_POST['valor'] ?? 0);
+
+    if ($descripcion !== '' && $tipo !== '' && $activeSession) {
+
+        $advanceModel->add(
+            (int)$caso['id'],
+            (int)$_SESSION['user_id'],
+            $descripcion,
+            $tipo,
+            $valor
+        );
+
+        header("Location: index.php?controller=mechanic&action=viewCase&case_id={$caso['id']}&veh_id={$veh_id}");
+        exit;
     }
+}
 
     // 🧱 Cargar vistas
     require __DIR__ . '/../views/layouts/header.php';

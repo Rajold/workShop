@@ -101,7 +101,13 @@ class CaseController {
     $stmt->execute([':id' => $caseId]);
 
     // 📝 Registrar avance automático
-    $this->avanceModel->add($caseId, $mechanicId, '✅ Caso cerrado por el mecánico.');
+   $this->avanceModel->add(
+    $caseId,
+    $mechanicId,
+    '✅ Caso cerrado por el mecánico.',
+    'Mano de obra',
+    0
+);
 
     // 🔁 Redirigir correctamente
     header('Location: index.php?controller=mechanic&action=viewCase&veh_id=' . $vehiculoId);
@@ -152,7 +158,13 @@ public function nuevoDesdeExistente(): void
         $nuevoCasoId = (int)$this->pdo->lastInsertId();
 
         // 4️⃣ Registrar avance automático
-        $this->avanceModel->add($nuevoCasoId, $mecanico_id, "🆕 Caso creado a partir del caso anterior #{$referencia_anterior}");
+        $this->avanceModel->add(
+    $nuevoCasoId,
+    $mecanico_id,
+    "🆕 Caso creado a partir del caso anterior #{$referencia_anterior}",
+    'Mano de obra',
+    0
+);
 
         // 5️⃣ Redirigir a la nueva vista del caso
         header("Location: index.php?controller=mechanic&action=viewCase&veh_id={$vehiculo_id}&case_id={$nuevoCasoId}");
