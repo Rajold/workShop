@@ -246,6 +246,77 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['nuevo_avance']) && i
         }
     }
 
+public function editAdvance()
+{
+    $this->ensureLogged();
+
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        header('Location: index.php');
+        exit;
+    }
+
+    $advanceModel = new Avance($this->db);
+
+    $id = (int)($_POST['id'] ?? 0);
+
+    $avance = $advanceModel->getById($id);
+
+    if (!$avance) {
+        $_SESSION['error_message'] = "El avance no existe.";
+        header('Location: index.php');
+        exit;
+    }
+
+    $descripcion = trim($_POST['descripcion'] ?? '');
+    $tipo = trim($_POST['tipo'] ?? '');
+    $valor = (int)($_POST['valor'] ?? 0);
+
+    if ($advanceModel->update($id, $descripcion, $tipo, $valor)) {
+        $_SESSION['success_message'] = "Avance actualizado correctamente.";
+    } else {
+        $_SESSION['error_message'] = "No fue posible actualizar el avance.";
+    }
+
+    header(
+        "Location: index.php?controller=mechanic&action=viewCase&veh_id={$avance['vehiculo_id']}&case_id={$avance['caso_id']}"
+    );
+    exit;
+}
+
+public function deleteAdvance()
+{
+    $this->ensureLogged();
+
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        header('Location: index.php');
+        exit;
+    }
+
+    $advanceModel = new Avance($this->db);
+
+    $id = (int)($_POST['id'] ?? 0);
+
+    $avance = $advanceModel->getById($id);
+
+    if (!$avance) {
+        $_SESSION['error_message'] = "El avance no existe.";
+        header('Location: index.php');
+        exit;
+    }
+
+    if ($advanceModel->delete($id)) {
+        $_SESSION['success_message'] = "Avance eliminado.";
+    } else {
+        $_SESSION['error_message'] = "No fue posible eliminar el avance.";
+    }
+
+    header(
+        "Location: index.php?controller=mechanic&action=viewCase&veh_id={$avance['vehiculo_id']}&case_id={$avance['caso_id']}"
+    );
+
+    exit;
+}
+
     public function endSession()
     {
         $this->ensureLogged();

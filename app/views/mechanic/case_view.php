@@ -113,6 +113,14 @@
     <p class="text-success mt-2"><strong>✅ Caso cerrado</strong></p>
 <?php endif; ?>
 
+<?php if (!empty($_SESSION['success_message'])): ?>
+    <div class="alert alert-success alert-dismissible fade show">
+        <?= htmlspecialchars($_SESSION['success_message']) ?>
+        <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+    </div>
+    <?php unset($_SESSION['success_message']); ?>
+<?php endif; ?>
+
 <?php if (!empty($_SESSION['error_message'])): ?>
     <div class="alert alert-danger">
         <?= htmlspecialchars($_SESSION['error_message']) ?>
@@ -136,92 +144,94 @@
     <?php endif; ?>
 <?php endif; ?>
 
-<div class="card border-success mb-4">
-    <div class="card-header bg-success text-white">
-        <strong>💰 Resumen económico del caso</strong>
-    </div>
+<?php require __DIR__ . '/partials/_financial_summary.php'; ?>
 
-    <div class="card-body">
-        <div class="row text-center">
+        <?php require __DIR__ . '/partials/_advance_history.php'; ?>
 
-            <div class="col-md-4">
-                <h6>🔧 Mano de obra</h6>
-                <h4 class="text-primary">
-                    $<?= number_format((int)$totales['mano_obra'], 0, ',', '.') ?>
-                </h4>
-            </div>
+        <div class="modal fade" id="modalEditarAvance" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
 
-            <div class="col-md-4">
-                <h6>📦 Repuestos</h6>
-                <h4 class="text-warning">
-                    $<?= number_format((int)$totales['repuestos'], 0, ',', '.') ?>
-                </h4>
-            </div>
+            <form method="post" action="index.php?controller=mechanic&action=editAdvance">
 
-            <div class="col-md-4">
-                <h6>💰 Total</h6>
-                <h3 class="text-success">
-                    $<?= number_format((int)$totales['total'], 0, ',', '.') ?>
-                </h3>
-            </div>
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar avance</h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+                </div>
+
+                <div class="modal-body">
+
+                    <input type="hidden" id="edit-id" name="id">
+
+                    <div class="mb-3">
+                        <label class="form-label">Descripción</label>
+
+                        <textarea
+                            id="edit-descripcion"
+                            name="descripcion"
+                            class="form-control"
+                            rows="4"
+                            required></textarea>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Tipo</label>
+
+                        <select
+                            id="edit-tipo"
+                            name="tipo"
+                            class="form-control">
+
+                            <option value="Repuesto">Repuesto</option>
+                            <option value="Mano de obra">Mano de obra</option>
+
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label class="form-label">Valor</label>
+
+                        <input
+                            id="edit-valor"
+                            type="number"
+                            name="valor"
+                            class="form-control"
+                            required>
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cancelar
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        Guardar cambios
+
+                    </button>
+
+                </div>
+
+            </form>
 
         </div>
     </div>
 </div>
-
-        <h4 class="mt-4">Avances del caso</h4>
-        <?php if (!empty($avances)): ?>
-            <ul class="list-group">
-                <?php foreach ($avances as $a): ?>
-
-    <?php
-        $badge = ($a['tipo'] === 'Mano de obra')
-            ? 'primary'
-            : 'warning';
-
-        $icono = ($a['tipo'] === 'Mano de obra')
-            ? '🔧'
-            : '📦';
-    ?>
-
-    <li class="list-group-item">
-
-        <div class="d-flex justify-content-between align-items-center">
-
-            <strong>
-                <?= htmlspecialchars($a['mecanico'] ?? 'Desconocido', ENT_QUOTES, 'UTF-8') ?>
-            </strong>
-
-            <span class="badge bg-<?= $badge ?>">
-                <?= $icono ?> <?= htmlspecialchars($a['tipo']) ?>
-            </span>
-
-        </div>
-
-        <div class="mt-2">
-            <?= nl2br(htmlspecialchars($a['descripcion'], ENT_QUOTES, 'UTF-8')) ?>
-        </div>
-
-        <div class="d-flex justify-content-between mt-3">
-
-            <strong class="text-success">
-                $<?= number_format((int)$a['valor'],0,",",".") ?>
-            </strong>
-
-            <small class="text-muted">
-                <?= htmlspecialchars($a['fecha']) ?>
-            </small>
-
-        </div>
-
-    </li>
-
-<?php endforeach; ?>
-            </ul>
-
-        <?php else: ?>
-            <div class="alert alert-warning">No hay avances registrados para este caso.</div>
-        <?php endif; ?>
 
     <?php else: ?>
         <div class="alert alert-warning">No hay caso seleccionado.</div>
@@ -232,3 +242,28 @@
 <!-- Cargar Bootstrap JS y Popper.js desde CDN -->
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    document.querySelectorAll('.editar-avance').forEach(function(btn){
+
+        btn.addEventListener('click', function(){
+
+            document.getElementById('edit-id').value = this.dataset.id;
+
+            document.getElementById('edit-descripcion').value =
+                this.dataset.descripcion;
+
+            document.getElementById('edit-tipo').value =
+                this.dataset.tipo;
+
+            document.getElementById('edit-valor').value =
+                this.dataset.valor;
+
+        });
+
+    });
+
+});
+</script>

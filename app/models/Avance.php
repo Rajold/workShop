@@ -69,9 +69,12 @@ public function getTotalesPorCaso(int $caseId): array
 public function getById(int $id): ?array
 {
     $stmt = $this->db->prepare("
-        SELECT *
-        FROM avances
-        WHERE id = :id
+        SELECT
+            a.*,
+            c.vehiculo_id
+        FROM avances a
+        INNER JOIN casos c ON c.id = a.caso_id
+        WHERE a.id = :id
     ");
 
     $stmt->execute([
