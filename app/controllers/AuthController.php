@@ -46,41 +46,7 @@ class AuthController
                 $error = 'Usuario o contraseña incorrectos';
                 require __DIR__ . '/../views/auth/login.php';
                 return;
-            }public function login()
-    {
-        // Si no hay usuarios, mostrar setup
-        if ($this->userModel->countUsers() === 0) {
-            require __DIR__ . '/../views/auth/setup_admin.php';
-            return;
-        }
-
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $usuario = $_POST['usuario'] ?? '';
-            $password = $_POST['password'] ?? '';
-
-            $user = $this->userModel->findByUsername($usuario);
-            if ($user && password_verify($password, $user['contraseña_hash'])) {
-                // iniciar sesión
-                session_regenerate_id(true);
-                $_SESSION['user_id'] = $user['id'];
-                $_SESSION['user_name'] = $user['nombre'];
-                $_SESSION['user_role'] = $user['rol'];
-
-                if ($user['rol'] === 'admin') {
-                    header('Location: index.php?controller=admin&action=dashboard');
-                    exit;
-                } else {
-                    header('Location: index.php?controller=mechanic&action=dashboard');
-                    exit;
-                }
-            } else {
-                $error = 'Usuario o contraseña incorrectos';
-                require __DIR__ . '/../views/auth/login.php';
-                return;
             }
-        }
-        require __DIR__ . '/../views/auth/login.php';
-    }
         }
         require __DIR__ . '/../views/auth/login.php';
     }

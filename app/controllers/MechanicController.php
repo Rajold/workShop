@@ -304,6 +304,19 @@ public function deleteAdvance()
         exit;
     }
 
+    // 🔒 Validación de permisos
+    if (
+        $avance['mecanico_id'] != $_SESSION['user_id']
+        && $_SESSION['user_role'] !== 'admin'
+    ) {
+        $_SESSION['error_message'] = "No tiene permisos para eliminar este avance.";
+        header(
+            "Location: index.php?controller=mechanic&action=viewCase&veh_id={$avance['vehiculo_id']}&case_id={$avance['caso_id']}"
+        );
+        exit;
+    }
+
+    // 🗑 Eliminar
     if ($advanceModel->delete($id)) {
         $_SESSION['success_message'] = "Avance eliminado.";
     } else {
@@ -313,7 +326,6 @@ public function deleteAdvance()
     header(
         "Location: index.php?controller=mechanic&action=viewCase&veh_id={$avance['vehiculo_id']}&case_id={$avance['caso_id']}"
     );
-
     exit;
 }
 

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 03, 2026 at 09:13 AM
+-- Generation Time: Jul 04, 2026 at 03:59 PM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -185,19 +185,12 @@ INSERT INTO `avances` (`id`, `caso_id`, `mecanico_id`, `descripcion`, `tipo`, `v
 (152, 37, 4, 'Cambio de regulador.\r\nCorrecciones de cableado ahogador automático.\r\nCambio líquido de freno.', 'Repuesto', 0, '2026-06-18 15:24:20'),
 (153, 58, 4, 'Eje de cigüeñal y tuerca embrague dañados.', 'Repuesto', 0, '2026-06-22 16:29:03'),
 (154, 58, 4, 'Tuerca nueva y arandelas de presión.\r\nReflectores laterales.\r\nEspejos.\r\nGasolina.', 'Repuesto', 0, '2026-06-22 21:08:59'),
-(155, 59, 4, 'Cambio de carburador.\r\nBase posapie conductor.\r\nPedal de freno.', 'Repuesto', 0, '2026-06-22 21:11:56'),
-(156, 59, 4, 'Mantenimiento tapa tanque.', 'Repuesto', 0, '2026-06-24 15:14:36'),
-(157, 60, 4, 'Cambio de refrigerante.\r\nCambio tren de arrastre.\r\nAjuste manillar.\r\nAjuste agarraderas pasajero.\r\nCambio de aceite.\r\nCambio empaque tapa rotor.', 'Repuesto', 0, '2026-06-26 14:32:57'),
-(158, 59, 4, 'Cambio pedal cambios.\r\nConexión switch.\r\nConexión corona bobinas.\r\nAjuste válvulas.', 'Repuesto', 0, '2026-06-27 20:04:19'),
-(159, 60, 4, 'Mantenimiento mando izquierdo.', 'Repuesto', 0, '2026-06-28 00:57:39'),
-(160, 60, 4, 'Balanceo rueda trasera.', 'Repuesto', 0, '2026-06-28 00:59:09'),
-(161, 60, 4, 'Tornillería', 'Repuesto', 0, '2026-07-03 04:55:04'),
-(162, 60, 4, 'ffff', 'Repuesto', 0, '2026-07-03 04:57:33'),
-(163, 60, 4, 'más tornillos', 'Repuesto', 12500, '2026-07-03 05:54:58'),
-(164, 60, 4, 'calcas', 'Repuesto', 32000, '2026-07-03 05:56:39'),
-(165, 60, 4, 'cambiar calcas', 'Mano de obra', 80000, '2026-07-03 06:06:02'),
+(162, 60, 4, 'testa\r\nCambio de refrigerante.\r\nCambio tren de arrastre.\r\nAjuste manillar.\r\nMantenimiento mando izquierdo. \r\nAjuste agarraderas pasajero.\r\nCambio de aceite.\r\nCambio filtro aceite.\r\nCambio empaque tapa rotor.\r\nBalanceo rueda trasera.', 'Mano de obra', 120000, '2026-07-03 04:57:33'),
 (166, 33, 4, 'Alinear manubrio', 'Mano de obra', 35000, '2026-07-03 06:48:11'),
-(167, 33, 4, 'tornillería', 'Repuesto', 3200, '2026-07-03 06:48:42');
+(167, 33, 4, 'tornillería', 'Repuesto', 3200, '2026-07-03 06:48:42'),
+(168, 61, 4, 'Instalar posapié derecho.\nInstalar pedal de freno y resorte.\nInstalación carburador nuevo.', 'Mano de obra', 30000, '2026-07-04 00:28:19'),
+(169, 61, 4, 'Tornillo posapié.\r\nResorte pedal freno.', 'Repuesto', 5000, '2026-07-04 00:28:47'),
+(170, 61, 4, 'Reparar cableado corona de bobinas y pulsora. 20\r\nReconexión switch. 5\r\nCambio de bandas. 10\r\nMantenimiento tapa depósito combustible. 10\r\nAjuste de válvulas. 15\r\nInstalación placa. 5\r\nMantenimiento de mandos. 15', 'Mano de obra', 80000, '2026-07-04 00:32:34');
 
 -- --------------------------------------------------------
 
@@ -280,8 +273,8 @@ INSERT INTO `casos` (`id`, `vehiculo_id`, `mecanico_id`, `fecha_ingreso`, `hora_
 (56, 58, 4, '2026-06-07', '11:44:21', 'No enciende en las mañanas.', NULL, NULL, 'abierto', NULL, 0),
 (57, 59, 4, '2026-06-14', '10:47:27', 'Enciende con dols luces rojas destellando rápidamente', NULL, NULL, 'abierto', NULL, 0),
 (58, 60, 4, '2026-06-22', '11:28:23', 'Motor suena mal. \r\nHacer Mantenimiento general.', NULL, NULL, 'abierto', NULL, 0),
-(59, 61, 4, '2026-06-22', '16:11:09', 'Apagada, abandono.', NULL, NULL, 'abierto', NULL, 0),
-(60, 62, 4, '2026-06-22', '16:15:29', 'Vibra cuando rápido.\r\nRueda trasera Pinchada.\r\nCambio tren de arrastre.\r\nAjustar Manillar.\r\nCambiar aceite.\r\nRevisar fuga de aceite.\r\nCambiar refrigerante.', NULL, NULL, 'abierto', NULL, 0);
+(60, 62, 4, '2026-06-22', '16:15:29', 'Vibra cuando rápido.\r\nRueda trasera Pinchada.\r\nCambio tren de arrastre.\r\nAjustar Manillar.\r\nCambiar aceite.\r\nRevisar fuga de aceite.\r\nCambiar refrigerante.', NULL, NULL, 'abierto', NULL, 0),
+(61, 63, 4, '2026-07-03', '19:26:45', 'Avandonada. \r\nRevisar.', NULL, NULL, 'abierto', NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -400,9 +393,8 @@ INSERT INTO `sesiones_trabajo` (`id`, `caso_id`, `mecanico_id`, `fecha_inicio`, 
 (115, 53, 4, '2026-05-25', '14:52:22', '2026-05-25', '14:53:33', 421),
 (116, 55, 4, '2026-06-06', '15:54:38', '2026-06-17', '09:32:27', 15878),
 (117, 58, 4, '2026-06-22', '11:28:29', NULL, NULL, 0),
-(118, 59, 4, '2026-06-22', '16:11:13', '2026-06-22', '16:12:04', 421),
 (119, 60, 4, '2026-06-22', '16:15:32', NULL, NULL, 0),
-(120, 59, 4, '2026-06-24', '10:14:16', NULL, NULL, 0);
+(121, 61, 4, '2026-07-03', '19:26:51', NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -502,8 +494,8 @@ INSERT INTO `vehiculos` (`id`, `placa`, `marca`, `modelo`, `color`, `propietario
 (58, 'FZO38E', 'Honda', 'Cbr250', 'Rojo', 'José Manuel'),
 (59, 'Silla', 'PgDrivers', 'Pg2', 'Negro', 'Hugo Borugo'),
 (60, 'FYF14A', 'Jialing', '70', 'Rojo', 'Luís Oporapa'),
-(61, 'NOPL4C41', 'Akt', 'Cr4180', 'Verde', 'Fernando Motos'),
-(62, 'PWC23E', 'Bajaj', 'Ns200', 'Azul', 'Diego Papelería');
+(62, 'PWC23E', 'Bajaj', 'Ns200', 'Azul', 'Diego Papelería'),
+(63, 'N0PL4C4', 'Akt', 'Cr5', 'Verde', 'FsMotos');
 
 --
 -- Indexes for dumped tables
@@ -555,19 +547,19 @@ ALTER TABLE `vehiculos`
 -- AUTO_INCREMENT for table `avances`
 --
 ALTER TABLE `avances`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=168;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=172;
 
 --
 -- AUTO_INCREMENT for table `casos`
 --
 ALTER TABLE `casos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `sesiones_trabajo`
 --
 ALTER TABLE `sesiones_trabajo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=121;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=122;
 
 --
 -- AUTO_INCREMENT for table `usuarios`
@@ -579,7 +571,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `vehiculos`
 --
 ALTER TABLE `vehiculos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=63;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=64;
 
 --
 -- Constraints for dumped tables
