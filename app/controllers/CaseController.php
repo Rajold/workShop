@@ -79,6 +79,9 @@ class CaseController {
     $caseId = (int)$_POST['caso_id'];
     $mechanicId = (int)$_SESSION['user_id'];
 
+    $precioCobrado = (int)($_POST['precio_cobrado'] ?? 0);
+$descuento = (int)($_POST['descuento'] ?? 0);
+
     // 🔍 Obtener el ID del vehículo asociado al caso
     $stmt = $this->pdo->prepare("SELECT vehiculo_id FROM casos WHERE id = :id LIMIT 1");
     $stmt->execute([':id' => $caseId]);
@@ -96,9 +99,22 @@ class CaseController {
         $workSession->end((int)$active['id']);
     }
 
-    // ✅ Cerrar el caso
-    $stmt = $this->pdo->prepare("UPDATE casos SET estado = 'cerrado' WHERE id = :id");
-    $stmt->execute([':id' => $caseId]);
+    // ✅ Cerrar el caso y guardar información económica
+$stmt = $this->pdo->prepare("
+    UPDATE casos
+    SET
+        estado = 'cerrado',
+        precio_cobrado = :precio,
+        descuento = :descuento,
+        fecha_cierre = NOW()
+    WHERE id = :id
+");
+
+$stmt->execute([
+    ':precio' => $precioCobrado,
+    ':descuento' => $descuento,
+    ':id' => $caseId
+]);
 
     // 📝 Registrar avance automático
    $this->avanceModel->add(
@@ -174,6 +190,34 @@ public function nuevoDesdeExistente(): void
     echo "Solicitud inválida.";
 }
 
+public function imprimir(): void
+{
+    $this->ensureLogged();
 
+    $caseId = (int)($_GET['case_id'] ?? 0);
+
+    if (!$caseId) {
+        die("Caso no válido.");
+    }
+
+    require_once __DIR__ . '/../models/Avance.php';
+    require_once __DIR__ . '/../pdf/CasePdf.php';
+
+    $avanceModel = new Avance($this->pdo);
+
+    $caso = $this->caseModel->findById($caseId);
+    $avances = $avanceModel->getByCase($caseId);
+    $totales = $avanceModel->getTotalesPorCaso($caseId);
+
+    $pdf = new CasePdf();
+
+    $pdf->AliasNbPages();
+
+    $pdf->generate(
+        $caso,
+        $avances,
+        $totales
+    );
+}
 
 }

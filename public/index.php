@@ -3,12 +3,9 @@ declare(strict_types=1);
 
 ini_set('display_errors', 1);
 ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
+error_reporting(E_ALL & ~E_DEPRECATED);
 
 // public/index.php - Punto de entrada
-
-
-
 
 session_start();
 
@@ -48,3 +45,5 @@ if (file_exists($controllerFile)) {
     http_response_code(404);
     echo "Controlador no encontrado";
 }
+
+
