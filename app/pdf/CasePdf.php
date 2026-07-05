@@ -7,16 +7,29 @@ class CasePdf extends FPDF
 
     public function Header()
     {
-        // Logo (lo agregaremos más adelante)
-        // $this->Image(...);
+        // Logo 
+        $this->Image(
+    __DIR__ . '/../../public/assets/img/logo.png',
+    10,
+    8,
+    22
+);
 
         // Nombre del taller
+        
         $this->SetFont('Arial', 'B', 18);
-        $this->Cell(0, 10, utf8_decode('TALLER DONDE LUPE'), 0, 1, 'C');
+        $this->Cell(0, 10, utf8_decode('
+        DONDE LUPE
+        '), 0, 1, 'C');
+
+        $this->SetFont('Arial', 'B', 18);
+        $this->Cell(0, 10, utf8_decode('
+   Sistema de Gestión del Taller
+        '), 0, 1, 'C');
 
         // Eslogan
         $this->SetFont('Arial', '', 10);
-        $this->Cell(0, 6, utf8_decode('Donde todos preguntan... ¿y Lupe?'), 0, 1, 'C');
+        $this->Cell(0, 6, utf8_decode('Taller de motocicletas.'), 0, 1, 'C');
 
         $this->Ln(4);
 

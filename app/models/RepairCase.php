@@ -56,7 +56,7 @@ class RepairCase
         $row = $stmt->fetch(PDO::FETCH_ASSOC);
         return $row ?: null;
     }
-
+//pendiente por eliminar
     public function getHistoryByVehicleId(int $vehiculoId): array {
     $stmt = $this->pdo->prepare("
         SELECT c.id, c.estado, c.causa, c.fecha_ingreso, u.nombre AS mecanico_nombre

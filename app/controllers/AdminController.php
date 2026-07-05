@@ -27,10 +27,61 @@ class AdminController
     {
         $this->ensureAdmin();
         $users = $this->userModel->findAll();
-        require __DIR__ . '/../views/layouts/header.php';
-        require __DIR__ . '/../views/admin/dashboard.php';
-        require __DIR__ . '/../views/layouts/footer.php';
-    }
+
+/*
+|--------------------------------------------------------------------------
+| Estadísticas
+|--------------------------------------------------------------------------
+*/
+
+$totalVehiculos = (int)$this->db
+    ->query("SELECT COUNT(*) FROM vehiculos")
+    ->fetchColumn();
+
+$casosAbiertos = (int)$this->db
+    ->query("SELECT COUNT(*) FROM casos WHERE estado='abierto'")
+    ->fetchColumn();
+
+$casosCerrados = (int)$this->db
+    ->query("SELECT COUNT(*) FROM casos WHERE estado='cerrado'")
+    ->fetchColumn();
+
+$totalMecanicos = (int)$this->db
+    ->query("SELECT COUNT(*) FROM usuarios WHERE rol='mecanico'")
+    ->fetchColumn();
+
+       $totalFacturado = (float)$this->db
+        ->query("
+            SELECT COALESCE(SUM(precio_cobrado - descuento),0)
+            FROM casos
+            WHERE estado='cerrado'
+        ")
+        ->fetchColumn();
+
+    $casosMes = (int)$this->db
+        ->query("
+            SELECT COUNT(*)
+            FROM casos
+            WHERE estado='cerrado'
+            AND YEAR(fecha_ingreso)=YEAR(CURDATE())
+            AND MONTH(fecha_ingreso)=MONTH(CURDATE())
+        ")
+        ->fetchColumn();
+
+    $facturacionMes = (float)$this->db
+        ->query("
+            SELECT COALESCE(SUM(precio_cobrado - descuento),0)
+            FROM casos
+            WHERE estado='cerrado'
+            AND YEAR(fecha_ingreso)=YEAR(CURDATE())
+            AND MONTH(fecha_ingreso)=MONTH(CURDATE())
+        ")
+        ->fetchColumn();
+
+    require __DIR__ . '/../views/layouts/header.php';
+    require __DIR__ . '/../views/admin/dashboard.php';
+    require __DIR__ . '/../views/layouts/footer.php';
+}
 
     public function users()
     {

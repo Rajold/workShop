@@ -17,35 +17,180 @@
 <div class="container mt-4">
     <h2 class="mb-4">Ficha del vehículo</h2>
 
-    <?php if ($vehicle): ?>
-        <div class="card mb-4">
-            <div class="card-body">
-                <p><strong>Placa:</strong> <?= htmlspecialchars($vehicle['placa'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-                <p><strong>Marca:</strong> <?= htmlspecialchars($vehicle['marca'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-                <p><strong>Modelo:</strong> <?= htmlspecialchars($vehicle['modelo'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-                <p><strong>Color:</strong> <?= htmlspecialchars($vehicle['color'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-                <p><strong>Propietario:</strong> <?= htmlspecialchars($vehicle['propietario'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-            </div>
-        </div>
-    <?php else: ?>
-        <div class="alert alert-warning">Ningún vehículo seleccionado.</div>
-    <?php endif; ?>
+<?php if ($vehicle): ?>
+<div class="card shadow-sm mb-4 border-0">
+    <div class="card-body">
 
-    <h3>Casos del vehículo</h3>
-    <?php if (!empty($cases)): ?>
-        <ul class="list-group mb-4">
-            <?php foreach ($cases as $c): ?>
-                <li class="list-group-item">
-                    <a href="index.php?controller=mechanic&action=viewCase&veh_id=<?= $vehicle['id'] ?>&case_id=<?= $c['id'] ?>" class="text-decoration-none">
-                        Caso #<?= htmlspecialchars($c['id']) ?> – <?= htmlspecialchars($c['causa'] ?? 'Sin causa') ?> 
-                        <span class="badge bg-<?= ($c['estado'] === 'abierto' ? 'success' : 'secondary') ?> float-end"><?= htmlspecialchars($c['estado'] ?? 'Desconocido') ?></span>
-                    </a>
-                </li>
-            <?php endforeach; ?>
-        </ul>
+        <div class="d-flex justify-content-between align-items-start">
+
+            <div>
+                <h3 class="mb-1">
+                    🛵 <?= htmlspecialchars($vehicle['marca']) ?>
+                    <?= htmlspecialchars($vehicle['modelo']) ?>
+                </h3>
+
+                <h5 class="text-muted mb-3">
+                    <?= htmlspecialchars($vehicle['placa']) ?>
+                </h5>
+
+                <p class="mb-1">
+                    <strong>Propietario:</strong>
+                    <?= htmlspecialchars($vehicle['propietario']) ?>
+                </p>
+
+                <p class="mb-0">
+                    <strong>Color:</strong>
+                    <?= htmlspecialchars($vehicle['color']) ?>
+                </p>
+            </div>
+
+            <div class="text-end">
+
+                <?php if (!empty($caso)): ?>
+
+                    <?php if ($caso['estado'] === 'abierto'): ?>
+
+                        <span class="badge bg-success fs-6">
+                            🟢 Caso abierto
+                        </span>
+
+                    <?php else: ?>
+
+                        <span class="badge bg-secondary fs-6">
+                            ⚫ Caso cerrado
+                        </span>
+
+<?php if ($caso['estado'] === 'cerrado'): ?>
+    <?php if (!empty($hasOpenCase)): ?>
+        <button class="btn btn-secondary mt-3 w-100" disabled title="Ya existe un caso abierto para este vehículo">
+            🆕 Nuevo caso (no disponible)
+        </button>
     <?php else: ?>
-        <div class="alert alert-info">El vehículo no tiene casos registrados.</div>
+        <form method="POST" action="index.php?controller=case&action=nuevoDesdeExistente">
+            <input type="hidden" name="vehiculo_id" value="<?= htmlspecialchars($caso['vehiculo_id']) ?>">
+            <input type="hidden" name="referencia_anterior" value="<?= htmlspecialchars($caso['id']) ?>">
+            <button type="submit" class="btn btn-success mt-3 w-100">
+                🆕 Iniciar nuevo caso
+            </button>
+        </form>
     <?php endif; ?>
+<?php endif; ?>
+
+
+                    <?php endif; ?>
+
+                    <div class="mt-3">
+
+                        <small class="text-muted">
+
+                            Caso #<?= $caso['id'] ?><br>
+
+                            <?= htmlspecialchars($caso['fecha_ingreso']) ?>
+
+                        </small>
+
+                    </div>
+
+                <?php endif; ?>
+
+            </div>
+
+        </div>
+
+    </div>
+</div>
+<?php else: ?>
+<div class="alert alert-warning">
+    Ningún vehículo seleccionado.
+</div>
+<?php endif; ?>
+
+    <h3 class="mb-3">📚 Historial del vehículo</h3>
+
+<?php if (!empty($cases)): ?>
+
+<div class="row">
+
+<?php foreach ($cases as $c): ?>
+
+<div class="col-md-6 mb-3">
+
+    <div class="card h-100 shadow-sm <?= $c['id'] == $caso['id'] ? 'border-primary' : '' ?>">
+
+        <div class="card-body">
+
+            <h5 class="card-title">
+
+                Caso #<?= $c['id'] ?>
+
+            </h5>
+
+            <p class="mb-1">
+
+                <strong>Fecha:</strong>
+
+                <?= htmlspecialchars($c['fecha_ingreso']) ?>
+
+            </p>
+
+            <p class="mb-2">
+
+                <?= htmlspecialchars($c['causa'] ?: 'Sin descripción') ?>
+
+            </p>
+
+            <span class="badge bg-<?= $c['estado']=='abierto' ? 'success' : 'secondary' ?>">
+
+                <?= ucfirst($c['estado']) ?>
+
+            </span>
+
+        </div>
+
+        <div class="card-footer bg-white">
+
+            <a
+                class="btn btn-sm btn-outline-primary"
+                href="index.php?controller=mechanic&action=viewCase&veh_id=<?= $vehicle['id'] ?>&case_id=<?= $c['id'] ?>">
+
+                👁 Ver
+
+            </a>
+
+            <?php if ($c['estado'] == 'cerrado'): ?>
+
+                <a
+                    class="btn btn-sm btn-outline-danger"
+                    target="_blank"
+                    href="index.php?controller=case&action=imprimir&case_id=<?= $c['id'] ?>">
+
+                    📄 PDF
+
+                </a>
+
+            <?php endif; ?>
+
+        </div>
+
+    </div>
+
+</div>
+
+<?php endforeach; ?>
+
+</div>
+
+<?php else: ?>
+
+<div class="alert alert-info">
+
+    El vehículo no tiene casos registrados.
+
+</div>
+
+<?php endif; ?>
+        <div class="alert alert-info">El vehículo no tiene casssos registrados.</div>
+</php endif; ?>
 
     <h2 class="mt-4">Ficha del caso</h2>
 
@@ -127,70 +272,74 @@
 <div class="card border-success shadow-sm mb-4">
 
     <div class="card-header bg-success text-white">
-        <strong>📊 Resumen del caso</strong>
+        <strong>📊 Resumen del casos</strong>
     </div>
 
     <div class="card-body">
 
-        <table class="table table-sm">
+        <div class="row mb-4">
 
-            <tr>
-                <th>Costo mano de obra</th>
-                <td class="text-end">
+    <div class="col-md-4">
+
+        <div class="card border-primary shadow-sm h-100">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted mb-2">
+                    👨‍🔧 Mano de obra
+                </h6>
+
+                <h2 class="text-primary mb-0">
                     $<?= number_format($totales['mano_obra'],0,',','.') ?>
-                </td>
-            </tr>
+                </h2>
 
-            <tr>
-                <th>Costo repuestos</th>
-                <td class="text-end">
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card border-warning shadow-sm h-100">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted mb-2">
+                    🔩 Repuestos
+                </h6>
+
+                <h2 class="text-warning mb-0">
                     $<?= number_format($totales['repuestos'],0,',','.') ?>
-                </td>
-            </tr>
+                </h2>
 
-            <tr class="table-light">
-                <th>Total registrado</th>
-                <th class="text-end">
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-4">
+
+        <div class="card border-success shadow-sm h-100">
+
+            <div class="card-body text-center">
+
+                <h6 class="text-muted mb-2">
+                    💰 Total
+                </h6>
+
+                <h2 class="text-success mb-0">
                     $<?= number_format($totales['total'],0,',','.') ?>
-                </th>
-            </tr>
+                </h2>
 
-            <tr>
-                <th>Precio cobrado</th>
-                <td class="text-end">
-                    $<?= number_format($caso['precio_cobrado'],0,',','.') ?>
-                </td>
-            </tr>
+            </div>
 
-            <tr>
-                <th>Descuento</th>
-                <td class="text-end">
-                    $<?= number_format($caso['descuento'],0,',','.') ?>
-                </td>
-            </tr>
+        </div>
 
-            <tr class="table-warning">
-                <th>Total facturado</th>
-                <th class="text-end">
-                    $<?= number_format(
-                        $caso['precio_cobrado'] - $caso['descuento'],
-                        0,
-                        ',',
-                        '.'
-                    ) ?>
-                </th>
-            </tr>
+    </div>
 
-            <tr>
-                <th>Fecha cierre</th>
-                <td class="text-end">
-                    <?= !empty($caso['fecha_cierre'])
-                        ? date('d/m/Y H:i', strtotime($caso['fecha_cierre']))
-                        : '--' ?>
-                </td>
-            </tr>
-
-        </table>
+</div>
 
     </div>
 
@@ -213,21 +362,6 @@
     <?php unset($_SESSION['error_message']); ?>
 <?php endif; ?>
 
-<?php if ($caso['estado'] === 'cerrado'): ?>
-    <?php if (!empty($hasOpenCase)): ?>
-        <button class="btn btn-secondary mt-3 w-100" disabled title="Ya existe un caso abierto para este vehículo">
-            🆕 Nuevo caso (no disponible)
-        </button>
-    <?php else: ?>
-        <form method="POST" action="index.php?controller=case&action=nuevoDesdeExistente">
-            <input type="hidden" name="vehiculo_id" value="<?= htmlspecialchars($caso['vehiculo_id']) ?>">
-            <input type="hidden" name="referencia_anterior" value="<?= htmlspecialchars($caso['id']) ?>">
-            <button type="submit" class="btn btn-success mt-3 w-100">
-                🆕 Nuevo caso
-            </button>
-        </form>
-    <?php endif; ?>
-<?php endif; ?>
 
 <?php require __DIR__ . '/partials/_financial_summary.php'; ?>
 
@@ -351,7 +485,7 @@
 
                     <div class="alert alert-info">
 
-                        <strong>📊 Resumen económico</strong>
+                        <strong>📊 Ressumen económico</strong>
 
                         <hr>
 

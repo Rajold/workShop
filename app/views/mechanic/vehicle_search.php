@@ -38,7 +38,8 @@
   <h5 class="mt-3">Casos anteriores</h5>
   <ul>
     <?php foreach ($cases as $c): ?>
-      <li>Fecha: <?=htmlspecialchars($c['fecha_ingreso'])?> - Estado: <?=htmlspecialchars($c['estado'])?> - <a href="index.php?controller=mechanic&action=viewCase&case_id=<?=$c['id']?>&veh_id=<?=$vehicle['id']?>">Abrir</a></li>
+      <li>Fecha: <?=htmlspecialchars($c['fecha_ingreso'])?> - Estado: <?=htmlspecialchars($c['estado'])?> - 
+    </li>
     <?php endforeach; ?>
   </ul>
 <?php endif; ?>
