@@ -46,41 +46,15 @@ class MechanicController
     public function searchVehicle()
 {
     $this->ensureLogged();
-    $vehicle = null;
-    $cases = [];
+
+    $vehicles = [];
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        $criterio = trim($_POST['criterio'] ?? 'placa'); // placa por defecto
+        $criterio = trim($_POST['criterio'] ?? 'placa');
         $valor    = trim($_POST['valor'] ?? '');
 
-        // Buscar según criterio
-        switch ($criterio) {
-            case 'placa':
-                $vehicle = $this->vehicleModel->findByPlate($valor);
-                break;
-
-            case 'propietario':
-                $vehicle = $this->vehicleModel->findByOwner($valor);
-                break;
-
-            case 'marca':
-                $vehicle = $this->vehicleModel->findByBrand($valor);
-                break;
-
-            case 'estado':
-                $vehicle = $this->vehicleModel->findByStatus($valor);
-                break;
-
-            default:
-                $vehicle = null;
-                break;
-        }
-
-        // Si encontró vehículo → cargar casos
-        if ($vehicle) {
-            $cases = $this->caseModel->findByVehicle((int)$vehicle['id']);
-        }
+        $vehicles = $this->vehicleModel->search($criterio, $valor);
     }
 
     require __DIR__ . '/../views/layouts/header.php';

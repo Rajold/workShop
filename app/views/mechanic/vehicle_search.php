@@ -1,45 +1,142 @@
-<h2>Resultado búsqueda</h2>
-<form method="post" action="index.php?controller=mechanic&action=searchVehicle" class="row g-2 mb-3">
-  <div class="col-4"><input name="placa" class="form-control" placeholder="ABC123" required></div>
-  <div class="col-auto"><button class="btn btn-primary">Buscar</button></div>
-</form>
+<h2>Resultado de la búsqueda</h2>
 
-<?php if ($vehicle): ?>
-  <h4>Vehículo: <?=htmlspecialchars($vehicle['placa'])?></h4>
-  <p>Marca: <?=htmlspecialchars($vehicle['marca'])?> | Modelo: <?=htmlspecialchars($vehicle['modelo'])?></p>
-  <a class="btn btn-sm btn-warning" href="index.php?controller=mechanic&action=viewCase&veh_id=<?=$vehicle['id']?>">Ver ficha</a>
+<?php if (!empty($vehicles)): ?>
+
+    <div class="alert alert-success">
+        Se encontraron <strong><?= count($vehicles) ?></strong> vehículo(s).
+    </div>
+
+    <div class="card">
+        <div class="card-body">
+
+            <table class="table table-hover align-middle">
+                <thead>
+<tr>
+    <th>Placa</th>
+    <th>Marca</th>
+    <th>Modelo</th>
+    <th>Propietario</th>
+    <th>Estado</th>
+    <th>Último ingreso</th>
+    <th></th>
+</tr>
+</thead>
+
+                <tbody>
+
+                <?php foreach ($vehicles as $vehicle): ?>
+
+                    <tr>
+
+                        <td>
+                            <strong><?= htmlspecialchars($vehicle['placa']) ?></strong>
+                        </td>
+
+                        <td>
+                            <?= htmlspecialchars($vehicle['marca']) ?>
+                        </td>
+
+                        <td>
+                            <?= htmlspecialchars($vehicle['modelo']) ?>
+                        </td>
+
+                        <td>
+                            <?= htmlspecialchars($vehicle['propietario']) ?>
+                        </td>
+
+                        <td>
+<?php
+if (($vehicle['estado'] ?? '') === 'abierto') {
+    echo '<span class="badge bg-success">🟢 Abierto</span>';
+} elseif (($vehicle['estado'] ?? '') === 'cerrado') {
+    echo '<span class="badge bg-secondary">⚪ Cerrado</span>';
+} else {
+    echo '<span class="badge bg-light text-dark">Sin casos</span>';
+}
+?>
+</td>
+
+<td>
+<?= htmlspecialchars($vehicle['fecha_ingreso'] ?? '-') ?>
+</td>
+
+                        <td class="text-end">
+
+                            <a
+                                class="btn btn-primary btn-sm"
+                                href="index.php?controller=mechanic&action=viewCase&veh_id=<?= $vehicle['id'] ?>">
+                                Ver ficha
+                            </a>
+
+                        </td>
+
+                    </tr>
+
+                <?php endforeach; ?>
+
+                </tbody>
+
+            </table>
+
+        </div>
+    </div>
+
 <?php else: ?>
-  <div class="alert alert-info">No se encontró. Puedes agregar uno nuevo.</div>
-  <form method="post" action="index.php?controller=mechanic&action=saveVehicle" onsubmit="return validateVehicleForm(this)">
-  <div class="mb-2">
-    <input name="placa" placeholder="Placa" class="form-control" required>
-  </div>
-  <div class="mb-2">
-    <input name="marca" placeholder="Marca" class="form-control">
-  </div>
-  <div class="mb-2">
-    <input name="modelo" placeholder="Modelo" class="form-control">
-  </div>
-  <div class="mb-2">
-    <input name="color" placeholder="Color" class="form-control">
-  </div>
-  <div class="mb-2">
-    <input name="propietario" placeholder="Propietario" class="form-control">
-  </div>
-  <div class="mb-2">
-    <textarea name="causa" placeholder="Describa la falla reportada por el propietario" class="form-control" rows="3" required></textarea>
-  </div>
-  <button class="btn btn-success">Guardar vehículo y registrar caso</button>
-</form>
+
+    <div class="alert alert-warning">
+        No se encontraron vehículos.
+    </div>
+
+    <h4>Registrar nuevo vehículo</h4>
+
+    <form method="post"
+          action="index.php?controller=mechanic&action=saveVehicle"
+          onsubmit="return validateVehicleForm(this)">
+
+        <div class="mb-2">
+            <input name="placa" class="form-control" placeholder="Placa" required>
+        </div>
+
+        <div class="mb-2">
+            <input name="marca" class="form-control" placeholder="Marca">
+        </div>
+
+        <div class="mb-2">
+            <input name="modelo" class="form-control" placeholder="Modelo">
+        </div>
+
+        <div class="mb-2">
+            <input name="color" class="form-control" placeholder="Color">
+        </div>
+
+        <div class="mb-2">
+            <input name="propietario" class="form-control" placeholder="Propietario">
+        </div>
+
+        <div class="mb-2">
+            <textarea
+                name="causa"
+                class="form-control"
+                rows="3"
+                placeholder="Describa la falla reportada por el propietario"
+                required></textarea>
+        </div>
+
+        <button class="btn btn-success">
+            Guardar vehículo y registrar caso
+        </button>
+
+    </form>
 
 <?php endif; ?>
 
-<?php if (!empty($cases)): ?>
-  <h5 class="mt-3">Casos anteriores</h5>
-  <ul>
-    <?php foreach ($cases as $c): ?>
-      <li>Fecha: <?=htmlspecialchars($c['fecha_ingreso'])?> - Estado: <?=htmlspecialchars($c['estado'])?> - 
-    </li>
-    <?php endforeach; ?>
-  </ul>
-<?php endif; ?>
+<div class="mt-3">
+
+    <a href="index.php?controller=mechanic&action=dashboard"
+       class="btn btn-secondary">
+
+        ← Nueva búsqueda
+
+    </a>
+
+</div>

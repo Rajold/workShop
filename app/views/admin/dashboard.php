@@ -10,7 +10,7 @@
 
                 <h6>🚗 Vehículos</h6>
 
-                <h2><?= $totalVehiculos ?></h2>
+                <h2><?= $stats['totalVehiculos'] ?></h2>
 
             </div>
 
@@ -26,7 +26,7 @@
 
                 <h6>🟢 Casos abiertos</h6>
 
-                <h2><?= $casosAbiertos ?></h2>
+                <h2><?= $stats['casosAbiertos'] ?></h2>
 
             </div>
 
@@ -42,7 +42,7 @@
 
                 <h6>⚫ Casos cerrados</h6>
 
-                <h2><?= $casosCerrados ?></h2>
+                <h2><?= $stats['casosCerrados'] ?></h2>
 
             </div>
 
@@ -58,7 +58,58 @@
 
                 <h6>👨‍🔧 Mecánicos</h6>
 
-                <h2><?= $totalMecanicos ?></h2>
+                <h2><?= $stats['totalMecanicos'] ?></h2>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm border-warning">
+
+            <div class="card-body text-center">
+
+                <h6>👨‍🔧 Facturado</h6>
+
+                <h2><?= $stats['totalFacturado'] ?></h2>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm border-warning">
+
+            <div class="card-body text-center">
+
+                <h6>👨‍🔧 Facturado este mes</h6>
+
+                <h2><?= $stats['facturacionMes'] ?></h2>
+
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <div class="col-md-3">
+
+        <div class="card shadow-sm border-warning">
+
+            <div class="card-body text-center">
+
+                <h6>👨‍🔧 Casos este mes</h6>
+
+                <h2><?= $stats['casosMes'] ?></h2>
 
 
             </div>
