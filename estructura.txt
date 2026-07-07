@@ -1,0 +1,85 @@
+tree -a -I "node_modules|.git|dist|build" > estructura.txt
+
+
+
+.
+├── app
+│   ├── controllers
+│   │   ├── AdminController.php
+│   │   ├── AuthController.php
+│   │   ├── CaseController.php
+│   │   ├── MechanicController.php
+│   │   └── ReportController.php
+│   ├── models
+│   │   ├── Avance.php
+│   │   ├── BaseModel.php
+│   │   ├── Dashboard.php
+│   │   ├── RepairCase.php
+│   │   ├── User.php
+│   │   ├── Vehicle.php
+│   │   └── WorkSession.php
+│   ├── pdf
+│   │   └── CasePdf.php
+│   └── views
+│       ├── admin
+│       │   ├── dashboard.php
+│       │   ├── user_form.php
+│       │   └── users_list.php
+│       ├── auth
+│       │   ├── login.php
+│       │   └── setup_admin.php
+│       ├── casos
+│       │   └── ver.php
+│       ├── layouts
+│       │   ├── footer.php
+│       │   └── header.php
+│       ├── mechanic
+│       │   ├── case_view.php
+│       │   ├── dashboard.php
+│       │   ├── partials
+│       │   │   ├── _advance_history.php
+│       │   │   └── _financial_summary.php
+│       │   └── vehicle_search.php
+│       └── reports
+│           ├── report_form.php
+│           └── report_result.php
+├── config
+│   └── database.php
+├── docs
+│   └── toolsInventory.ods
+├── estructura.txt
+├── libraries
+│   └── fpdf
+│       ├── font
+│       │   ├── courierbi.json
+│       │   ├── courierb.json
+│       │   ├── courieri.json
+│       │   ├── courier.json
+│       │   ├── helveticabi.json
+│       │   ├── helveticab.json
+│       │   ├── helveticai.json
+│       │   ├── helvetica.json
+│       │   ├── symbol.json
+│       │   ├── timesbi.json
+│       │   ├── timesb.json
+│       │   ├── timesi.json
+│       │   ├── times.json
+│       │   └── zapfdingbats.json
+│       └── fpdf.php
+├── public
+│   ├── assets
+│   │   └── img
+│   │       └── logo.png
+│   ├── css
+│   │   └── style.css
+│   ├── index.php
+│   ├── js
+│   │   └── main.js
+│   └── testpdf.php
+├── README.md
+└── sql
+    ├── schema.sql
+    ├── schema_update.sql
+    └── taller_db.sql
+
+24 directories, 55 files

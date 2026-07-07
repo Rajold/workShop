@@ -62,3 +62,127 @@ CREATE TABLE avances (
     FOREIGN KEY (mecanico_id) REFERENCES usuarios(id) ON DELETE CASCADE
 );
 
+
+-- ==========================================
+-- MÓDULO INVENTARIO
+-- ==========================================
+CREATE TABLE categorias_partes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombre VARCHAR(60) NOT NULL,
+    descripcion VARCHAR(255) DEFAULT NULL,
+    activo TINYINT(1) NOT NULL DEFAULT 1
+);
+
+INSERT INTO categorias_partes (nombre) VALUES
+('Aceites'),
+('Filtros'),
+('Frenos'),
+('Motor'),
+('Suspensión'),
+('Eléctrico'),
+('Consumibles'),
+('Otros');
+
+CREATE TABLE partes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    codigo VARCHAR(30) UNIQUE,
+
+    categoria_id INT,
+
+    nombre VARCHAR(120) NOT NULL,
+
+    marca VARCHAR(60),
+
+    unidad VARCHAR(20) NOT NULL DEFAULT 'UND',
+
+    stock_actual DECIMAL(10,2) NOT NULL DEFAULT 0,
+
+    stock_minimo DECIMAL(10,2) NOT NULL DEFAULT 0,
+
+    costo DECIMAL(12,2) NOT NULL DEFAULT 0,
+
+    precio DECIMAL(12,2) NOT NULL DEFAULT 0,
+
+    ubicacion VARCHAR(60),
+
+    activo TINYINT(1) NOT NULL DEFAULT 1,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TIMESTAMP NULL DEFAULT NULL
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_partes_categoria
+        FOREIGN KEY (categoria_id)
+        REFERENCES categorias_partes(id)
+);
+
+CREATE TABLE movimientos_inventario (
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    parte_id INT NOT NULL,
+
+    tipo ENUM('ENTRADA','SALIDA','AJUSTE') NOT NULL,
+
+    origen ENUM('INVENTARIO','CASO','COMPRA','AJUSTE') NOT NULL,
+
+    cantidad DECIMAL(10,2) NOT NULL,
+
+    stock_anterior DECIMAL(10,2) NOT NULL,
+
+    stock_nuevo DECIMAL(10,2) NOT NULL,
+
+    costo_unitario DECIMAL(12,2) DEFAULT 0,
+
+    caso_id INT DEFAULT NULL,
+
+    usuario_id INT DEFAULT NULL,
+
+    observacion TEXT,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_movimiento_parte
+        FOREIGN KEY (parte_id)
+        REFERENCES partes(id),
+
+    CONSTRAINT fk_movimiento_usuario
+        FOREIGN KEY (usuario_id)
+        REFERENCES usuarios(id),
+
+    CONSTRAINT fk_movimiento_caso
+        FOREIGN KEY (caso_id)
+        REFERENCES casos(id)
+);
+
+CREATE TABLE caso_partes (
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    caso_id INT NOT NULL,
+
+    parte_id INT NOT NULL,
+
+    cantidad DECIMAL(10,2) NOT NULL,
+
+    costo_unitario DECIMAL(12,2) NOT NULL,
+
+    precio_unitario DECIMAL(12,2) NOT NULL,
+
+    subtotal DECIMAL(12,2) NOT NULL,
+
+    observacion TEXT,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_cp_caso
+        FOREIGN KEY (caso_id)
+        REFERENCES casos(id)
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_cp_parte
+        FOREIGN KEY (parte_id)
+        REFERENCES partes(id)
+);
