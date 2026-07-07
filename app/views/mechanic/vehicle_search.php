@@ -94,11 +94,13 @@ if (($vehicle['estado'] ?? '') === 'abierto') {
           onsubmit="return validateVehicleForm(this)">
 
         <div class="mb-2">
-            <input name="placa" class="form-control" placeholder="Placa" required>
+            <input name="placa" class="form-control" placeholder="Placa"
+            value="<?= ($criterio ?? '') === 'placa' ? htmlspecialchars($valor ?? '') : '' ?>" required>
         </div>
 
         <div class="mb-2">
-            <input name="marca" class="form-control" placeholder="Marca">
+            <input name="marca" class="form-control" placeholder="Marca"
+            value="<?= ($criterio ?? '') === 'marca' ? htmlspecialchars($valor ?? '') : '' ?>" required>
         </div>
 
         <div class="mb-2">
@@ -110,15 +112,15 @@ if (($vehicle['estado'] ?? '') === 'abierto') {
         </div>
 
         <div class="mb-2">
-            <input name="propietario" class="form-control" placeholder="Propietario">
+            <input name="propietario" class="form-control" placeholder="Propietario"
+            value="<?= ($criterio ?? '') === 'propietario' ? htmlspecialchars($valor ?? '') : '' ?>" required>
         </div>
 
         <div class="mb-2">
-            <textarea
-                name="causa"
-                class="form-control"
-                rows="3"
-                placeholder="Describa la falla reportada por el propietario"
+            <input name="telefono" class="form-control" placeholder="Teléfono" maxlength="20">
+        </div>
+        <div class="mb-2">
+            <textarea name="causa" class="form-control" rows="3" placeholder="Falla reportada por el propietario"
                 required></textarea>
         </div>
 

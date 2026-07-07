@@ -73,7 +73,8 @@ class MechanicController
             'marca' => trim($_POST['marca'] ?? ''),
             'modelo' => trim($_POST['modelo'] ?? ''),
             'color' => trim($_POST['color'] ?? ''),
-            'propietario' => trim($_POST['propietario'] ?? '')
+            'propietario' => trim($_POST['propietario'] ?? ''),
+            'telefono' => trim($_POST['telefono'] ?? '')
         ];
 
         // Crear o actualizar vehículo

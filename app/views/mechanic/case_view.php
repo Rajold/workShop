@@ -37,6 +37,23 @@
                     <strong>Propietario:</strong>
                     <?= htmlspecialchars($vehicle['propietario']) ?>
                 </p>
+                <p><strong>Teléfono:</strong>
+    <?= htmlspecialchars($vehicle['telefono'] ?? '-') ?>
+</p>
+
+<?php
+$telefono = preg_replace('/\D/', '', $vehicle['telefono']);
+
+$mensaje = urlencode(
+    "Hola {$vehicle['propietario']}, le escribimos desde el taller respecto a su vehículo de placa {$vehicle['placa']}."
+);
+?>
+
+<a class="btn btn-success"
+   target="_blank"
+   href="https://wa.me/57<?= $telefono ?>?text=<?= $mensaje ?>">
+    💬 WhatsApp
+</a>
 
                 <p class="mb-0">
                     <strong>Color:</strong>

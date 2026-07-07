@@ -31,26 +31,28 @@ class Vehicle extends BaseModel
 
     public function create(array $data): int
     {
-        $stmt = $this->db->prepare("INSERT INTO vehiculos (placa, marca, modelo, color, propietario) VALUES (:placa,:marca,:modelo,:color,:propietario)");
+        $stmt = $this->db->prepare("INSERT INTO vehiculos (placa, marca, modelo, color, propietario, telefono) VALUES (:placa,:marca,:modelo,:color,:propietario, :telefono)");
         $stmt->execute([
             ':placa'=>$data['placa'],
             ':marca'=>$data['marca'] ?? null,
             ':modelo'=>$data['modelo'] ?? null,
             ':color'=>$data['color'] ?? null,
             ':propietario'=>$data['propietario'] ?? null,
+            ':telefono'=>$data['telefono'] ?? null,
         ]);
         return (int)$this->db->lastInsertId();
     }
 
     public function update(int $id, array $data)
     {
-        $stmt = $this->db->prepare("UPDATE vehiculos SET placa=:placa, marca=:marca, modelo=:modelo, color=:color, propietario=:propietario WHERE id=:id");
+        $stmt = $this->db->prepare("UPDATE vehiculos SET placa=:placa, marca=:marca, modelo=:modelo, color=:color, propietario=:propietario, telefono=:telefono WHERE id=:id");
         return $stmt->execute([
             ':placa'=>$data['placa'],
             ':marca'=>$data['marca'] ?? null,
             ':modelo'=>$data['modelo'] ?? null,
             ':color'=>$data['color'] ?? null,
             ':propietario'=>$data['propietario'] ?? null,
+            ':telefono'=>$data['telefono'] ?? null,
             ':id'=>$id,
         ]);
     }
