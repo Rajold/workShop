@@ -1,17 +1,14 @@
 <?php
 
-namespace App\Models;
-
-use PDO;
-
 class Part extends BaseModel
 {
+
     protected string $table = 'partes';
 
     public function __construct(PDO $pdo)
-    {
-        parent::__construct($pdo);
-    }
+{
+    parent::__construct($pdo);
+}
 
     /**
      * Obtiene todas las partes activas.
@@ -25,10 +22,11 @@ class Part extends BaseModel
             FROM partes p
             LEFT JOIN categorias_partes c
                 ON c.id = p.categoria_id
-            ORDER BY p.nombre
+            ORDER BY p.activo DESC,
+         p.nombre ASC
         ";
 
-        return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
+        return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -36,7 +34,7 @@ class Part extends BaseModel
      */
     public function findById(int $id): ?array
     {
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->db->prepare("
             SELECT *
             FROM partes
             WHERE id = ?
@@ -53,7 +51,7 @@ class Part extends BaseModel
      */
     public function findByCode(string $codigo): ?array
     {
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->db->prepare("
             SELECT *
             FROM partes
             WHERE codigo = ?
@@ -70,21 +68,28 @@ class Part extends BaseModel
      */
     public function search(string $texto): array
     {
-        $stmt = $this->pdo->prepare("
+        $stmt = $this->db->prepare("
             SELECT
                 p.*,
                 c.nombre AS categoria
             FROM partes p
             LEFT JOIN categorias_partes c
                 ON c.id = p.categoria_id
-            WHERE p.nombre LIKE ?
-               OR p.codigo LIKE ?
-            ORDER BY p.nombre
+            WHERE
+      p.codigo LIKE ?
+   OR p.nombre LIKE ?
+   OR p.marca LIKE ?
+            ORDER BY p.activo DESC,
+         p.nombre ASC
         ");
 
         $like = "%{$texto}%";
 
-        $stmt->execute([$like, $like]);
+        $stmt->execute([
+    $like,
+    $like,
+    $like
+]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -111,7 +116,7 @@ class Part extends BaseModel
             VALUES (?,?,?,?,?,?,?,?,?,?,?)
         ";
 
-        return $this->pdo
+        return $this->db
             ->prepare($sql)
             ->execute([
                 $data['codigo'],
@@ -149,7 +154,7 @@ class Part extends BaseModel
             WHERE id=?
         ";
 
-        return $this->pdo
+        return $this->db
             ->prepare($sql)
             ->execute([
                 $data['codigo'],
@@ -171,7 +176,7 @@ class Part extends BaseModel
      */
     public function deactivate(int $id): bool
     {
-        return $this->pdo
+        return $this->db
             ->prepare("UPDATE partes SET activo=0 WHERE id=?")
             ->execute([$id]);
     }
@@ -181,7 +186,7 @@ class Part extends BaseModel
      */
     public function categories(): array
     {
-        return $this->pdo
+        return $this->db
             ->query("
                 SELECT *
                 FROM categorias_partes

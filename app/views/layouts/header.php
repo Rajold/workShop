@@ -8,6 +8,9 @@
   <link rel="stylesheet" href="/css/style.css">
 </head>
 <body>
+
+
+
 <nav class="navbar navbar-expand-lg navbar-light bg-light">
   <div class="container-fluid">
     <a class="navbar-brand" href="#">Taller</a>
@@ -19,6 +22,7 @@
           <?php endif; ?>
           <li class="nav-item"><a class="nav-link" href="index.php?controller=mechanic&action=dashboard">Panel</a></li>
           <li class="nav-item"><a class="nav-link" href="index.php?controller=report&action=form">Reportes</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.php?controller=inventory&action=index"><i class="bi bi-box-seam"></i> Inventario</a></li>
         <?php endif; ?>
       </ul>
       <ul class="navbar-nav">

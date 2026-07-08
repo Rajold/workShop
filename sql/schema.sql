@@ -1,188 +1,386 @@
--- MySQL schema para la aplicación Taller
+-- phpMyAdmin SQL Dump
+-- version 5.2.1
+-- https://www.phpmyadmin.net/
+--
+-- Host: localhost
+-- Generation Time: Jul 08, 2026 at 03:57 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
-CREATE DATABASE IF NOT EXISTS taller_db CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
-USE taller_db;
-
--- usuarios
-CREATE TABLE IF NOT EXISTS usuarios (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  nombre VARCHAR(150) NOT NULL,
-  usuario VARCHAR(100) NOT NULL UNIQUE,
-  contraseña_hash VARCHAR(255) NOT NULL,
-  rol ENUM('admin','mecanico') NOT NULL DEFAULT 'mecanico',
-  fecha_creacion DATETIME NOT NULL
-) ENGINE=InnoDB;
-
--- vehiculos
-CREATE TABLE IF NOT EXISTS vehiculos (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  placa VARCHAR(30) NOT NULL UNIQUE,
-  marca VARCHAR(100),
-  modelo VARCHAR(100),
-  color VARCHAR(50),
-  propietario VARCHAR(200)
-) ENGINE=InnoDB;
-
--- casos
-CREATE TABLE IF NOT EXISTS casos (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  vehiculo_id INT NOT NULL,
-  mecanico_id INT,
-  fecha_ingreso DATE,
-  hora_ingreso TIME,
-  causa TEXT,
-  observaciones TEXT,
-  diagnostico TEXT,
-  estado ENUM('abierto','cerrado') DEFAULT 'abierto',
-  FOREIGN KEY (vehiculo_id) REFERENCES vehiculos(id) ON DELETE CASCADE,
-  FOREIGN KEY (mecanico_id) REFERENCES usuarios(id) ON DELETE SET NULL
-) ENGINE=InnoDB;
-
--- sesiones_trabajo
-CREATE TABLE IF NOT EXISTS sesiones_trabajo (
-  id INT AUTO_INCREMENT PRIMARY KEY,
-  caso_id INT NOT NULL,
-  mecanico_id INT NOT NULL,
-  fecha_inicio DATE,
-  hora_inicio TIME,
-  fecha_fin DATE,
-  hora_fin TIME,
-  duracion INT DEFAULT 0, -- minutos
-  FOREIGN KEY (caso_id) REFERENCES casos(id) ON DELETE CASCADE,
-  FOREIGN KEY (mecanico_id) REFERENCES usuarios(id) ON DELETE CASCADE
-) ENGINE=InnoDB;
-
-CREATE TABLE avances (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    caso_id INT NOT NULL,
-    mecanico_id INT NOT NULL,
-    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
-    comentario TEXT NOT NULL,
-    FOREIGN KEY (caso_id) REFERENCES casos(id) ON DELETE CASCADE,
-    FOREIGN KEY (mecanico_id) REFERENCES usuarios(id) ON DELETE CASCADE
-);
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+START TRANSACTION;
+SET time_zone = "+00:00";
 
 
--- ==========================================
--- MÓDULO INVENTARIO
--- ==========================================
-CREATE TABLE categorias_partes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(60) NOT NULL,
-    descripcion VARCHAR(255) DEFAULT NULL,
-    activo TINYINT(1) NOT NULL DEFAULT 1
-);
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
 
-INSERT INTO categorias_partes (nombre) VALUES
-('Aceites'),
-('Filtros'),
-('Frenos'),
-('Motor'),
-('Suspensión'),
-('Eléctrico'),
-('Consumibles'),
-('Otros');
+--
+-- Database: `taller_db`
+--
 
-CREATE TABLE partes (
-    id INT AUTO_INCREMENT PRIMARY KEY,
+-- --------------------------------------------------------
 
-    codigo VARCHAR(30) UNIQUE,
+--
+-- Table structure for table `avances`
+--
 
-    categoria_id INT,
+CREATE TABLE `avances` (
+  `id` int(11) NOT NULL,
+  `caso_id` int(11) NOT NULL,
+  `mecanico_id` int(11) NOT NULL,
+  `descripcion` text NOT NULL,
+  `tipo` enum('Repuesto','Mano de obra') NOT NULL,
+  `valor` int(11) NOT NULL,
+  `fecha` timestamp NOT NULL DEFAULT current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-    nombre VARCHAR(120) NOT NULL,
+-- --------------------------------------------------------
 
-    marca VARCHAR(60),
+--
+-- Table structure for table `casos`
+--
 
-    unidad VARCHAR(20) NOT NULL DEFAULT 'UND',
+CREATE TABLE `casos` (
+  `id` int(11) NOT NULL,
+  `vehiculo_id` int(11) NOT NULL,
+  `mecanico_id` int(11) DEFAULT NULL,
+  `fecha_ingreso` date DEFAULT NULL,
+  `hora_ingreso` time DEFAULT NULL,
+  `causa` text DEFAULT NULL,
+  `observaciones` text DEFAULT NULL,
+  `diagnostico` text DEFAULT NULL,
+  `estado` enum('abierto','cerrado') DEFAULT 'abierto',
+  `fecha_cierre` datetime DEFAULT NULL,
+  `cerrado_por` int(11) DEFAULT NULL,
+  `precio_cobrado` DECIMAL(10,2) DEFAULT NULL,
+  `descuento` DECIMAL(10,2) DEFAULT 0,
+  `utilidad` DECIMAL(10,2) DEFAULT 0.00
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-    stock_actual DECIMAL(10,2) NOT NULL DEFAULT 0,
+-- --------------------------------------------------------
 
-    stock_minimo DECIMAL(10,2) NOT NULL DEFAULT 0,
+--
+-- Table structure for table `sesiones_trabajo`
+--
 
-    costo DECIMAL(12,2) NOT NULL DEFAULT 0,
+CREATE TABLE `sesiones_trabajo` (
+  `id` int(11) NOT NULL,
+  `caso_id` int(11) NOT NULL,
+  `mecanico_id` int(11) NOT NULL,
+  `fecha_inicio` date DEFAULT NULL,
+  `hora_inicio` time DEFAULT NULL,
+  `fecha_fin` date DEFAULT NULL,
+  `hora_fin` time DEFAULT NULL,
+  `duracion` int(11) DEFAULT 0
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-    precio DECIMAL(12,2) NOT NULL DEFAULT 0,
+-- --------------------------------------------------------
 
-    ubicacion VARCHAR(60),
+--
+-- Table structure for table `usuarios`
+--
 
-    activo TINYINT(1) NOT NULL DEFAULT 1,
+CREATE TABLE `usuarios` (
+  `id` int(11) NOT NULL,
+  `nombre` varchar(150) NOT NULL,
+  `usuario` varchar(100) NOT NULL,
+  `contrasena_hash` varchar(255) NOT NULL,
+  `rol` enum('admin','mecanico') NOT NULL DEFAULT 'mecanico',
+  `fecha_creacion` datetime NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+-- --------------------------------------------------------
 
-    updated_at TIMESTAMP NULL DEFAULT NULL
+--
+-- Table structure for table `vehiculos`
+--
+
+CREATE TABLE `vehiculos` (
+  `id` int(11) NOT NULL,
+  `placa` varchar(30) NOT NULL,
+  `marca` varchar(100) DEFAULT NULL,
+  `modelo` varchar(100) DEFAULT NULL,
+  `color` varchar(50) DEFAULT NULL,
+  `propietario` varchar(200) DEFAULT NULL,
+  `telefono` varchar(20) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `avances`
+--
+ALTER TABLE `avances`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `caso_id` (`caso_id`),
+  ADD KEY `mecanico_id` (`mecanico_id`);
+
+--
+-- Indexes for table `casos`
+--
+ALTER TABLE `casos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `vehiculo_id` (`vehiculo_id`),
+  ADD KEY `mecanico_id` (`mecanico_id`);
+
+--
+-- Indexes for table `sesiones_trabajo`
+--
+ALTER TABLE `sesiones_trabajo`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `caso_id` (`caso_id`),
+  ADD KEY `mecanico_id` (`mecanico_id`);
+
+--
+-- Indexes for table `usuarios`
+--
+ALTER TABLE `usuarios`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `usuario` (`usuario`);
+
+--
+-- Indexes for table `vehiculos`
+--
+ALTER TABLE `vehiculos`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `placa` (`placa`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `avances`
+--
+ALTER TABLE `avances`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `casos`
+--
+ALTER TABLE `casos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `sesiones_trabajo`
+--
+ALTER TABLE `sesiones_trabajo`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `usuarios`
+--
+ALTER TABLE `usuarios`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- AUTO_INCREMENT for table `vehiculos`
+--
+ALTER TABLE `vehiculos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `avances`
+--
+ALTER TABLE `avances`
+  ADD CONSTRAINT `avances_ibfk_1` FOREIGN KEY (`caso_id`) REFERENCES `casos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `avances_ibfk_2` FOREIGN KEY (`mecanico_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
+
+--
+-- Constraints for table `casos`
+--
+ALTER TABLE `casos`
+  ADD CONSTRAINT `casos_ibfk_1` FOREIGN KEY (`vehiculo_id`) REFERENCES `vehiculos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `casos_ibfk_2` FOREIGN KEY (`mecanico_id`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL;
+
+--
+-- Constraints for table `sesiones_trabajo`
+--
+ALTER TABLE `sesiones_trabajo`
+  ADD CONSTRAINT `sesiones_trabajo_ibfk_1` FOREIGN KEY (`caso_id`) REFERENCES `casos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `sesiones_trabajo_ibfk_2` FOREIGN KEY (`mecanico_id`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
+  --
+-- Tabla: categorias_partes
+--
+
+CREATE TABLE `categorias_partes` (
+    `id` INT NOT NULL AUTO_INCREMENT,
+    `nombre` VARCHAR(100) NOT NULL,
+    `descripcion` TEXT DEFAULT NULL,
+    `activo` TINYINT(1) NOT NULL DEFAULT 1,
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+
+    PRIMARY KEY (`id`),
+    UNIQUE KEY `uk_categoria_nombre` (`nombre`)
+
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Tabla: partes
+--
+CREATE TABLE `partes` (
+
+    `id` INT NOT NULL AUTO_INCREMENT,
+
+    `codigo` VARCHAR(60) NOT NULL,
+
+    `categoria_id` INT DEFAULT NULL,
+
+    `tipo` ENUM(
+        'repuesto',
+        'insumo',
+        'herramienta'
+    ) NOT NULL DEFAULT 'repuesto',
+
+    `nombre` VARCHAR(150) NOT NULL,
+
+    `marca` VARCHAR(100) DEFAULT NULL,
+
+    `created_by` INT DEFAULT NULL,
+
+    `unidad` ENUM(
+        'Unidad',
+        'Juego',
+        'Par',
+        'Litro',
+        'Mililitro',
+        'Kilogramo',
+        'Gramo',
+        'Metro',
+        'Centimetro'
+    ) NOT NULL DEFAULT 'Unidad',
+
+    `stock_actual` DECIMAL(12,2) NOT NULL DEFAULT 0,
+
+    `stock_reservado` DECIMAL(12,2) NOT NULL DEFAULT 0,
+
+    `stock_minimo` DECIMAL(12,2) NOT NULL DEFAULT 0,
+
+    `costo` DECIMAL(10,2) NOT NULL DEFAULT 0,
+
+    `precio_venta` DECIMAL(10,2) NOT NULL DEFAULT 0,
+
+    `ubicacion` VARCHAR(120) DEFAULT NULL,
+
+    `codigo_barras` VARCHAR(100) DEFAULT NULL,
+
+    `imagen` VARCHAR(255) DEFAULT NULL,
+
+    `activo` TINYINT(1) NOT NULL DEFAULT 1,
+
+    `created_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    `updated_at` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
         ON UPDATE CURRENT_TIMESTAMP,
 
-    CONSTRAINT fk_partes_categoria
-        FOREIGN KEY (categoria_id)
-        REFERENCES categorias_partes(id)
-);
+    PRIMARY KEY (`id`),
 
-CREATE TABLE movimientos_inventario (
+    UNIQUE KEY `uk_codigo` (`codigo`),
 
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    KEY `idx_categoria` (`categoria_id`),
 
-    parte_id INT NOT NULL,
+    KEY `idx_nombre` (`nombre`),
 
-    tipo ENUM('ENTRADA','SALIDA','AJUSTE') NOT NULL,
+    KEY `idx_tipo` (`tipo`),
 
-    origen ENUM('INVENTARIO','CASO','COMPRA','AJUSTE') NOT NULL,
+    KEY `idx_codigo_barras` (`codigo_barras`),
 
-    cantidad DECIMAL(10,2) NOT NULL,
+    KEY `idx_created_by` (`created_by`),
 
-    stock_anterior DECIMAL(10,2) NOT NULL,
+    CONSTRAINT `fk_partes_categoria`
+        FOREIGN KEY (`categoria_id`)
+        REFERENCES `categorias_partes` (`id`)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL,
 
-    stock_nuevo DECIMAL(10,2) NOT NULL,
+    CONSTRAINT `fk_partes_created_by`
+        FOREIGN KEY (`created_by`)
+        REFERENCES `usuarios` (`id`)
+        ON UPDATE CASCADE
+        ON DELETE SET NULL
 
-    costo_unitario DECIMAL(12,2) DEFAULT 0,
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_unicode_ci;
 
-    caso_id INT DEFAULT NULL,
+--
+-- Tabla: movimientos_inventario
+--
 
-    usuario_id INT DEFAULT NULL,
+CREATE TABLE `movimientos_inventario` (
 
-    observacion TEXT,
+    `id` INT NOT NULL AUTO_INCREMENT,
 
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    `parte_id` INT NOT NULL,
 
-    CONSTRAINT fk_movimiento_parte
-        FOREIGN KEY (parte_id)
-        REFERENCES partes(id),
+    `usuario_id` INT NOT NULL,
 
-    CONSTRAINT fk_movimiento_usuario
-        FOREIGN KEY (usuario_id)
-        REFERENCES usuarios(id),
+    `caso_id` INT DEFAULT NULL,
 
-    CONSTRAINT fk_movimiento_caso
-        FOREIGN KEY (caso_id)
-        REFERENCES casos(id)
-);
+    `tipo` ENUM(
+        'compra',
+        'consumo',
+        'ajuste_entrada',
+        'ajuste_salida'
+    ) NOT NULL,
+    `motivo` VARCHAR(255) DEFAULT NULL,
 
-CREATE TABLE caso_partes (
+    `cantidad` DECIMAL(12,2) NOT NULL,
+    
+    `stock_resultante` DECIMAL(12,2),
 
-    id INT AUTO_INCREMENT PRIMARY KEY,
+    `costo_unitario` DECIMAL(10,2) DEFAULT NULL,
 
-    caso_id INT NOT NULL,
+    `observacion` TEXT DEFAULT NULL,
 
-    parte_id INT NOT NULL,
+    `fecha` DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    cantidad DECIMAL(10,2) NOT NULL,
+    PRIMARY KEY (`id`),
 
-    costo_unitario DECIMAL(12,2) NOT NULL,
+    KEY `idx_parte` (`parte_id`),
 
-    precio_unitario DECIMAL(12,2) NOT NULL,
+    KEY `idx_usuario` (`usuario_id`),
 
-    subtotal DECIMAL(12,2) NOT NULL,
+    KEY `idx_caso` (`caso_id`),
 
-    observacion TEXT,
+    KEY `idx_fecha` (`fecha`),
 
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT `fk_movimiento_parte`
+    FOREIGN KEY (`parte_id`)
+    REFERENCES `partes` (`id`)
+    ON UPDATE CASCADE
+    ON DELETE CASCADE,
 
-    CONSTRAINT fk_cp_caso
-        FOREIGN KEY (caso_id)
-        REFERENCES casos(id)
-        ON DELETE CASCADE,
+    CONSTRAINT `fk_movimiento_usuario`
+    FOREIGN KEY (`usuario_id`)
+    REFERENCES `usuarios` (`id`)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT,
 
-    CONSTRAINT fk_cp_parte
-        FOREIGN KEY (parte_id)
-        REFERENCES partes(id)
-);
+CONSTRAINT `fk_movimiento_caso`
+    FOREIGN KEY (`caso_id`)
+    REFERENCES `casos` (`id`)
+    ON UPDATE CASCADE
+    ON DELETE SET NULL
+
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_unicode_ci;
+
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

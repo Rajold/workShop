@@ -1,24 +1,20 @@
 <?php
 
-namespace App\Controllers;
-
-use App\Core\Database;
-use PDO;
-
 abstract class BaseController
 {
     protected PDO $pdo;
 
-    public function __construct()
+    public function __construct(PDO $pdo)
     {
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
 
-        $this->ensureLogged();
+        $this->pdo = $pdo;
 
-        $this->pdo = Database::getConnection();
+        $this->ensureLogged();
     }
+
 
     /**
      * Verifica que exista un usuario autenticado.

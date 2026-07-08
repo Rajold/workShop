@@ -1,251 +1,171 @@
-<?php require __DIR__ . '/../layouts/header.php'; ?>
+<div class="container mt-4">
 
-<div class="container py-4">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h2>
+            <i class="bi bi-box-seam"></i>
+            Inventario
+        </h2>
 
-    <div class="card shadow-sm">
+        <a href="index.php?controller=inventory&action=create"
+           class="btn btn-primary">
+            <i class="bi bi-plus-circle"></i>
+            Nuevo artículo
+        </a>
+    </div>
 
-        <div class="card-header d-flex justify-content-between align-items-center">
-            <div>
-                <h3 class="mb-0">
-                    <i class="bi bi-box-seam"></i>
-                    Inventario
-                </h3>
-                <small class="text-muted">
-                    Catálogo de repuestos y consumibles
-                </small>
-            </div>
+    <form method="GET" class="row g-2 mb-4">
 
-            <a href="index.php?controller=inventory&action=create"
-               class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i>
-                Nueva Parte
-            </a>
+        <input type="hidden" name="controller" value="inventory">
+        <input type="hidden" name="action" value="index">
+
+        <div class="col-md-10">
+            <input
+                type="text"
+                class="form-control"
+                name="q"
+                placeholder="Buscar por código, nombre o marca..."
+                value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
         </div>
 
-        <div class="card-body">
+        <div class="col-md-2 d-grid">
+            <button class="btn btn-secondary">
+                Buscar
+            </button>
+        </div>
 
-            <?php if (!empty($_SESSION['success'])): ?>
-                <div class="alert alert-success alert-dismissible fade show">
-                    <?= $_SESSION['success']; ?>
-                    <?php unset($_SESSION['success']); ?>
+    </form>
 
-                    <button class="btn-close"
-                            data-bs-dismiss="alert"></button>
+    <div class="row mb-4">
+
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3><?= count($parts) ?></h3>
+                    <small>Total artículos</small>
                 </div>
-            <?php endif; ?>
+            </div>
+        </div>
 
-            <?php if (!empty($_SESSION['error'])): ?>
-                <div class="alert alert-danger alert-dismissible fade show">
-                    <?= $_SESSION['error']; ?>
-                    <?php unset($_SESSION['error']); ?>
-
-                    <button class="btn-close"
-                            data-bs-dismiss="alert"></button>
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3>0</h3>
+                    <small>Stock bajo</small>
                 </div>
-            <?php endif; ?>
+            </div>
+        </div>
 
-
-            <form method="GET" class="row g-3 mb-4">
-
-                <input type="hidden"
-                       name="controller"
-                       value="inventory">
-
-                <input type="hidden"
-                       name="action"
-                       value="index">
-
-                <div class="col-md-8">
-
-                    <input
-                        type="text"
-                        class="form-control"
-                        name="q"
-                        placeholder="Buscar por código o nombre..."
-                        value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
-
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3>0</h3>
+                    <small>Sin existencias</small>
                 </div>
+            </div>
+        </div>
 
-                <div class="col-md-2">
-
-                    <button class="btn btn-outline-primary w-100">
-
-                        <i class="bi bi-search"></i>
-
-                        Buscar
-
-                    </button>
-
+        <div class="col-md-3">
+            <div class="card text-center">
+                <div class="card-body">
+                    <h3>0</h3>
+                    <small>Herramientas</small>
                 </div>
+            </div>
+        </div>
 
-                <div class="col-md-2">
+    </div>
 
-                    <a href="index.php?controller=inventory&action=index"
-                       class="btn btn-outline-secondary w-100">
+    <div class="card">
 
-                        Limpiar
+        <div class="card-body p-0">
 
-                    </a>
+            <table class="table table-hover mb-0">
 
-                </div>
-
-            </form>
-
-
-            <div class="table-responsive">
-
-                <table class="table table-hover align-middle">
-
-                    <thead class="table-light">
+                <thead class="table-dark">
 
                     <tr>
 
                         <th>Código</th>
-
-                        <th>Parte</th>
-
-                        <th>Categoría</th>
-
+                        <th>Artículo</th>
+                        <th>Tipo</th>
                         <th>Marca</th>
-
-                        <th class="text-center">Stock</th>
-
-                        <th class="text-center">Mínimo</th>
-
-                        <th class="text-center">Estado</th>
-
-                        <th width="140">Acciones</th>
+                        <th>Stock</th>
+                        <th>Estado</th>
+                        <th width="170">Acciones</th>
 
                     </tr>
 
-                    </thead>
+                </thead>
 
-                    <tbody>
+                <tbody>
 
-                    <?php if (empty($parts)): ?>
+                <?php if (empty($parts)): ?>
+
+                    <tr>
+
+                        <td colspan="7" class="text-center p-4 text-muted">
+
+                            No hay artículos registrados.
+
+                        </td>
+
+                    </tr>
+
+                <?php else: ?>
+
+                    <?php foreach ($parts as $part): ?>
 
                         <tr>
 
-                            <td colspan="8" class="text-center text-muted py-5">
+                            <td><?= htmlspecialchars($part['codigo']) ?></td>
 
-                                No existen partes registradas.
+                            <td><?= htmlspecialchars($part['nombre']) ?></td>
+
+                            <td><?= htmlspecialchars($part['tipo']) ?></td>
+
+                            <td><?= htmlspecialchars($part['marca']) ?></td>
+
+                            <td><?= $part['stock_actual'] ?></td>
+
+                            <td>
+
+                                <?php if ($part['activo']): ?>
+
+                                    <span class="badge bg-success">
+                                        Activo
+                                    </span>
+
+                                <?php else: ?>
+
+                                    <span class="badge bg-danger">
+                                        Inactivo
+                                    </span>
+
+                                <?php endif; ?>
+
+                            </td>
+
+                            <td>
+
+                                <a href="#"
+                                   class="btn btn-sm btn-warning">
+                                    Editar
+                                </a>
 
                             </td>
 
                         </tr>
 
-                    <?php else: ?>
+                    <?php endforeach; ?>
 
-                        <?php foreach ($parts as $part): ?>
+                <?php endif; ?>
 
-                            <?php
+                </tbody>
 
-                            $stockClass = 'success';
-
-                            if ($part['stock_actual'] <= 0) {
-                                $stockClass = 'danger';
-                            } elseif ($part['stock_actual'] <= $part['stock_minimo']) {
-                                $stockClass = 'warning';
-                            }
-
-                            ?>
-
-                            <tr>
-
-                                <td>
-
-                                    <strong>
-
-                                        <?= htmlspecialchars($part['codigo']) ?>
-
-                                    </strong>
-
-                                </td>
-
-                                <td>
-
-                                    <?= htmlspecialchars($part['nombre']) ?>
-
-                                </td>
-
-                                <td>
-
-                                    <?= htmlspecialchars($part['categoria']) ?>
-
-                                </td>
-
-                                <td>
-
-                                    <?= htmlspecialchars($part['marca']) ?>
-
-                                </td>
-
-                                <td class="text-center">
-
-                                    <span class="badge bg-<?= $stockClass ?>">
-
-                                        <?= $part['stock_actual'] ?>
-
-                                    </span>
-
-                                </td>
-
-                                <td class="text-center">
-
-                                    <?= $part['stock_minimo'] ?>
-
-                                </td>
-
-                                <td class="text-center">
-
-                                    <?php if ($part['activo']): ?>
-
-                                        <span class="badge bg-success">
-
-                                            Activo
-
-                                        </span>
-
-                                    <?php else: ?>
-
-                                        <span class="badge bg-secondary">
-
-                                            Inactivo
-
-                                        </span>
-
-                                    <?php endif; ?>
-
-                                </td>
-
-                                <td>
-
-                                    <a
-                                        href="index.php?controller=inventory&action=edit&id=<?= $part['id'] ?>"
-                                        class="btn btn-sm btn-outline-primary">
-
-                                        <i class="bi bi-pencil"></i>
-
-                                    </a>
-
-                                </td>
-
-                            </tr>
-
-                        <?php endforeach; ?>
-
-                    <?php endif; ?>
-
-                    </tbody>
-
-                </table>
-
-            </div>
+            </table>
 
         </div>
 
     </div>
 
 </div>
-
-<?php require __DIR__ . '/../layouts/footer.php'; ?>
