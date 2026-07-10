@@ -24,12 +24,12 @@ class CasePdf extends FPDF
 
         $this->SetFont('Arial', 'B', 18);
         $this->Cell(0, 10, utf8_decode('
-   Sistema de Gestión del Taller
+   Taller de motocicletas.
         '), 0, 1, 'C');
 
         // Eslogan
         $this->SetFont('Arial', '', 10);
-        $this->Cell(0, 6, utf8_decode('Taller de motocicletas.'), 0, 1, 'C');
+        $this->Cell(0, 6, utf8_decode('Reporte de procedimientos realizados'), 0, 1, 'C');
 
         $this->Ln(4);
 
