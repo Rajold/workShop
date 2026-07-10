@@ -25,13 +25,23 @@
 
             <div>
                 <h3 class="mb-1">
-                    🛵 <?= htmlspecialchars($vehicle['marca']) ?>
+                    🏍️ <?= htmlspecialchars($vehicle['marca']) ?>
                     <?= htmlspecialchars($vehicle['modelo']) ?>
                 </h3>
 
-              <div class="license-plate mb-3">
-    <?= htmlspecialchars(strtoupper($vehicle['placa'])) ?>
-</div>
+                <?php
+$plate = $vehicle['placa'];
+include __DIR__ . '/../components/license_plate.php';
+?>
+
+    <!-- <div class="license-plate">
+        <div class="plate-number">
+            <?= strtoupper($vehicle['placa']) ?>
+        </div> 
+        <div class="country">
+            COLOMBIA
+        </div>
+    </div> -->
 
                 <p class="mb-1">
                     <strong>Propietario:</strong>
