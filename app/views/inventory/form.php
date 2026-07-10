@@ -1,4 +1,3 @@
-<?php require __DIR__ . '/../layouts/header.php'; ?>
 
 <?php
 $isEdit = !empty($part);
@@ -140,6 +139,20 @@ function field($name, $part, $old)
 
                     </div>
 
+                    <div class="mb-3">
+    <label class="form-label">Tipo</label>
+
+    <select name="tipo" class="form-select">
+
+        <option value="repuesto">Repuesto</option>
+
+        <option value="insumo">Insumo</option>
+
+        <option value="herramienta">Herramienta</option>
+
+    </select>
+</div>
+
                     <div class="col-md-6 mb-3">
 
                         <label class="form-label">
@@ -179,16 +192,15 @@ function field($name, $part, $old)
 
                             ?>
 
-                            <option value="UND" <?= $unidad=='UND'?'selected':'' ?>>Unidad</option>
-
-                            <option value="LTS" <?= $unidad=='LTS'?'selected':'' ?>>Litros</option>
-
-                            <option value="MTS" <?= $unidad=='MTS'?'selected':'' ?>>Metros</option>
-
-                            <option value="KG" <?= $unidad=='KG'?'selected':'' ?>>Kilogramos</option>
-
-                            <option value="JGO" <?= $unidad=='JGO'?'selected':'' ?>>Juego</option>
-
+                            <option value="Unidad">Unidad</option>
+<option value="Juego">Juego</option>
+<option value="Par">Par</option>
+<option value="Litro">Litro</option>
+<option value="Mililitro">Mililitro</option>
+<option value="Kilogramo">Kilogramo</option>
+<option value="Gramo">Gramo</option>
+<option value="Metro">Metro</option>
+<option value="Centimetro">Centimetro</option>
                         </select>
 
                     </div>
@@ -207,6 +219,16 @@ function field($name, $part, $old)
                             value="<?= field('ubicacion',$part,$old) ?>">
 
                     </div>
+
+                    <div class="mb-3">
+    <label class="form-label">Código de barras</label>
+
+    <input
+        type="text"
+        class="form-control"
+        name="codigo_barras"
+        value="<?= htmlspecialchars($part['codigo_barras'] ?? '') ?>">
+</div>
 
                 </div>
 
@@ -244,7 +266,7 @@ function field($name, $part, $old)
                             step="0.01"
                             min="0"
                             class="form-control"
-                            name="precio"
+                            name="precio_venta"
                             value="<?= field('precio',$part,$old) ?>">
 
                     </div>
@@ -324,5 +346,3 @@ function field($name, $part, $old)
     </div>
 
 </div>
-
-<?php require __DIR__ . '/../layouts/footer.php'; ?>

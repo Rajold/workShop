@@ -29,9 +29,9 @@
                     <?= htmlspecialchars($vehicle['modelo']) ?>
                 </h3>
 
-                <h5 class="text-muted mb-3">
-                    <?= htmlspecialchars($vehicle['placa']) ?>
-                </h5>
+              <div class="license-plate mb-3">
+    <?= htmlspecialchars(strtoupper($vehicle['placa'])) ?>
+</div>
 
                 <p class="mb-1">
                     <strong>Propietario:</strong>

@@ -98,40 +98,60 @@ class Part extends BaseModel
      * Crear parte.
      */
     public function create(array $data): bool
-    {
-        $sql = "
-            INSERT INTO partes (
-                codigo,
-                categoria_id,
-                nombre,
-                marca,
-                unidad,
-                stock_actual,
-                stock_minimo,
-                costo,
-                precio,
-                ubicacion,
-                activo
-            )
-            VALUES (?,?,?,?,?,?,?,?,?,?,?)
-        ";
+{
+    $sql = "
+        INSERT INTO partes (
+            codigo,
+            categoria_id,
+            tipo,
+            nombre,
+            marca,
+            created_by,
+            unidad,
+            stock_actual,
+            stock_minimo,
+            costo,
+            precio_venta,
+            ubicacion,
+            codigo_barras,
+            activo
+        )
+        VALUES (
+            :codigo,
+            :categoria_id,
+            :tipo,
+            :nombre,
+            :marca,
+            :created_by,
+            :unidad,
+            0,
+            :stock_minimo,
+            :costo,
+            :precio_venta,
+            :ubicacion,
+            :codigo_barras,
+            :activo
+        )
+    ";
 
-        return $this->db
-            ->prepare($sql)
-            ->execute([
-                $data['codigo'],
-                $data['categoria_id'],
-                $data['nombre'],
-                $data['marca'],
-                $data['unidad'],
-                0,
-                $data['stock_minimo'],
-                $data['costo'],
-                $data['precio'],
-                $data['ubicacion'],
-                $data['activo']
-            ]);
-    }
+    $stmt = $this->db->prepare($sql);
+
+    return $stmt->execute([
+        ':codigo'         => $data['codigo'],
+        ':categoria_id'   => !empty($data['categoria_id']) ? $data['categoria_id'] : null,
+        ':tipo'           => $data['tipo'],
+        ':nombre'         => $data['nombre'],
+        ':marca'          => $data['marca'] ?? null,
+        ':created_by'     => $data['created_by'] ?? null,
+        ':unidad'         => $data['unidad'],
+        ':stock_minimo'   => $data['stock_minimo'] ?: 0,
+        ':costo'          => $data['costo'] ?: 0,
+        ':precio_venta'   => $data['precio_venta'] ?: 0,
+        ':ubicacion'      => $data['ubicacion'] ?? null,
+        ':codigo_barras'  => $data['codigo_barras'] ?? null,
+        ':activo'         => isset($data['activo']) ? 1 : 0,
+    ]);
+}
 
     /**
      * Actualizar parte.
@@ -148,7 +168,7 @@ class Part extends BaseModel
                 unidad=?,
                 stock_minimo=?,
                 costo=?,
-                precio=?,
+                precio_venta=?,
                 ubicacion=?,
                 activo=?
             WHERE id=?
@@ -164,7 +184,7 @@ class Part extends BaseModel
                 $data['unidad'],
                 $data['stock_minimo'],
                 $data['costo'],
-                $data['precio'],
+                $data['precio_venta'],
                 $data['ubicacion'],
                 $data['activo'],
                 $id

@@ -1,49 +1,92 @@
 <?php
 
-class InventoryController
+declare(strict_types=1);
+
+class InventoryController extends BaseController
 {
-    protected PDO $db;
-    protected Part $partModel;
+    private Part $partModel;
 
     public function __construct(PDO $pdo)
-{
-    $this->db = $pdo;
+    {
+        parent::__construct($pdo);
 
-    require_once __DIR__ . '/../models/BaseModel.php';
-    require_once __DIR__ . '/../models/Part.php';
-
-    $this->partModel = new Part($pdo);
-}
-
-    protected function ensureLogged()
-{
-    if (session_status() === PHP_SESSION_NONE) {
-        session_start();
+        $this->partModel = new Part($pdo);
     }
 
-    if (empty($_SESSION['user_id'])) {
+    /**
+     * Listado del inventario.
+     */
+    public function index(): void
+    {
+        $search = trim($_GET['q'] ?? '');
 
-        header('Location: index.php?controller=auth&action=login');
-        exit;
+        if ($search !== '') {
+            $parts = $this->partModel->search($search);
+        } else {
+            $parts = $this->partModel->all();
+        }
+
+        $this->render('inventory/index', [
+            'parts'  => $parts,
+            'search' => $search
+        ]);
     }
-}
 
-  public function index()
+    /**
+     * Formulario de nuevo artículo.
+     */
+    public function create(): void
+    {
+        $this->render('inventory/form', [
+            'part' => null,
+            'categories' => $this->partModel->categories(),
+            'title' => 'Nuevo artículo'
+        ]);
+    }
+
+    public function store(): void
 {
     $this->ensureLogged();
 
-    $search = trim($_GET['q'] ?? '');
+    $data = $_POST;
 
-    if ($search !== '') {
-        $parts = $this->partModel->search($search);
-    } else {
-        $parts = $this->partModel->all();
+    // Normalizar valores numéricos
+    $data['stock_minimo'] = $data['stock_minimo'] !== ''
+        ? (float)$data['stock_minimo']
+        : 0;
+
+    $data['costo'] = $data['costo'] !== ''
+        ? (float)$data['costo']
+        : 0;
+
+    $data['precio_venta'] = $data['precio_venta'] !== ''
+        ? (float)$data['precio_venta']
+        : 0;
+
+    // Usuario que crea el registro
+    $data['created_by'] = $_SESSION['user_id'];
+
+    // Validación básica
+    if (empty($data['codigo']) || empty($data['nombre'])) {
+
+        $this->error('El código y el nombre son obligatorios.');
+
+        $this->redirect('index.php?controller=inventory&action=create');
+
+        return;
     }
 
-    require __DIR__ . '/../views/layouts/header.php';
-    require __DIR__ . '/../views/inventory/index.php';
-    require __DIR__ . '/../views/layouts/footer.php';
+    if ($this->partModel->create($data)) {
+
+        $this->success('Artículo creado correctamente.');
+
+        $this->redirect('index.php?controller=inventory&action=index');
+
+        return;
+    }
+
+    $this->error('No fue posible guardar el artículo.');
+
+    $this->redirect('index.php?controller=inventory&action=create');
 }
-
-
 }
