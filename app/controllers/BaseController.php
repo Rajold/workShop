@@ -28,16 +28,17 @@ abstract class BaseController
 
 /**
  * Renderiza una vista.
- *
- * @param string $view Ruta relativa dentro de app/views
- *                     Ej: inventory/index
- * @param array $data Variables disponibles en la vista
  */
+
 protected function render(string $view, array $data = []): void
 {
     extract($data);
 
+    require __DIR__ . '/../views/layouts/header.php';
+
     require __DIR__ . '/../views/' . $view . '.php';
+
+    require __DIR__ . '/../views/layouts/footer.php';
 }
 
     /**
