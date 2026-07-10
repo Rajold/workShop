@@ -44,6 +44,102 @@ class InventoryController extends BaseController
         ]);
     }
 
+    /**
+ * Mostrar formulario de edición.
+ */
+public function edit(): void
+{
+    $this->ensureLogged();
+
+    $id = (int) ($_GET['id'] ?? 0);
+
+    if ($id <= 0) {
+
+        $this->error('Artículo no válido.');
+
+        $this->redirect('index.php?controller=inventory&action=index');
+
+        return;
+    }
+
+    $part = $this->partModel->findById($id);
+
+    if (!$part) {
+
+        $this->error('El artículo no existe.');
+
+        $this->redirect('index.php?controller=inventory&action=index');
+
+        return;
+    }
+
+    $this->render('inventory/form', [
+        'part' => $part,
+        'categories' => $this->partModel->categories(),
+        'title' => 'Editar artículo'
+    ]);
+}
+
+public function update(): void
+{
+    $this->ensureLogged();
+
+    $data = $_POST;
+
+    $id = (int)($data['id'] ?? 0);
+
+    if ($id <= 0) {
+
+        $this->error('Artículo no válido.');
+
+        $this->redirect('index.php?controller=inventory&action=index');
+
+        return;
+    }
+
+    // Normalizar valores numéricos
+    $data['stock_minimo'] = $data['stock_minimo'] !== ''
+        ? (float)$data['stock_minimo']
+        : 0;
+
+    $data['costo'] = $data['costo'] !== ''
+        ? (float)$data['costo']
+        : 0;
+
+    $data['precio_venta'] = $data['precio_venta'] !== ''
+        ? (float)$data['precio_venta']
+        : 0;
+
+    $data['id'] = $id;
+
+    // Validación básica
+    if (empty($data['codigo']) || empty($data['nombre'])) {
+
+        $this->error('El código y el nombre son obligatorios.');
+
+        $this->redirect(
+            'index.php?controller=inventory&action=edit&id=' . $id
+        );
+
+        return;
+    }
+
+    if ($this->partModel->update($data)) {
+
+        $this->success('Artículo actualizado correctamente.');
+
+        $this->redirect('index.php?controller=inventory&action=index');
+
+        return;
+    }
+
+    $this->error('No fue posible actualizar el artículo.');
+
+    $this->redirect(
+        'index.php?controller=inventory&action=edit&id=' . $id
+    );
+}
+
     public function store(): void
 {
     $this->ensureLogged();

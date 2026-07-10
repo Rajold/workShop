@@ -153,43 +153,49 @@ class Part extends BaseModel
     ]);
 }
 
+
+
     /**
      * Actualizar parte.
      */
-    public function update(int $id, array $data): bool
-    {
-        $sql = "
-            UPDATE partes
-            SET
-                codigo=?,
-                categoria_id=?,
-                nombre=?,
-                marca=?,
-                unidad=?,
-                stock_minimo=?,
-                costo=?,
-                precio_venta=?,
-                ubicacion=?,
-                activo=?
-            WHERE id=?
-        ";
+   public function update(array $data): bool
+{
+    $sql = "
+        UPDATE partes
+        SET
+            codigo = :codigo,
+            categoria_id = :categoria_id,
+            tipo = :tipo,
+            nombre = :nombre,
+            marca = :marca,
+            unidad = :unidad,
+            stock_minimo = :stock_minimo,
+            costo = :costo,
+            precio_venta = :precio_venta,
+            ubicacion = :ubicacion,
+            codigo_barras = :codigo_barras,
+            activo = :activo
+        WHERE id = :id
+    ";
 
-        return $this->db
-            ->prepare($sql)
-            ->execute([
-                $data['codigo'],
-                $data['categoria_id'],
-                $data['nombre'],
-                $data['marca'],
-                $data['unidad'],
-                $data['stock_minimo'],
-                $data['costo'],
-                $data['precio_venta'],
-                $data['ubicacion'],
-                $data['activo'],
-                $id
-            ]);
-    }
+    $stmt = $this->db->prepare($sql);
+
+    return $stmt->execute([
+        ':id'             => $data['id'],
+        ':codigo'         => $data['codigo'],
+        ':categoria_id'   => !empty($data['categoria_id']) ? $data['categoria_id'] : null,
+        ':tipo'           => $data['tipo'],
+        ':nombre'         => $data['nombre'],
+        ':marca'          => $data['marca'] ?? null,
+        ':unidad'         => $data['unidad'],
+        ':stock_minimo'   => $data['stock_minimo'] ?: 0,
+        ':costo'          => $data['costo'] ?: 0,
+        ':precio_venta'   => $data['precio_venta'] ?: 0,
+        ':ubicacion'      => $data['ubicacion'] ?? null,
+        ':codigo_barras'  => $data['codigo_barras'] ?? null,
+        ':activo'         => isset($data['activo']) ? 1 : 0,
+    ]);
+}
 
     /**
      * Desactivar una parte.

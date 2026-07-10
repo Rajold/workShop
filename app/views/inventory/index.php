@@ -1,3 +1,5 @@
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+
 <div class="container mt-4">
 
     <div class="d-flex justify-content-between align-items-center mb-4">
@@ -147,12 +149,17 @@
 
                             <td>
 
-                                <a href="#"
-                                   class="btn btn-sm btn-warning">
-                                    Editar
-                                </a>
+    <a href="index.php?controller=inventory&action=edit&id=<?= $part['id'] ?>"
+       class="btn btn-sm btn-warning">
+        Editar
+    </a>
 
-                            </td>
+    <a href="index.php?controller=inventory&action=edit&id=<?= $part['id'] ?>"
+       class="btn btn-sm btn-warning">
+        Eliminar
+    </a>
+
+</td>
 
                         </tr>
 
