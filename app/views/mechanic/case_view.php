@@ -242,6 +242,15 @@ $mensaje = urlencode(
             <p><strong>Sesión activa</strong></p>
 
             <h4>Agregar avance</h4>
+            <a
+    href="index.php?controller=inventory&action=selectForCase&case_id=<?= $caso['id'] ?>&veh_id=<?= $veh_id ?>"
+    class="btn btn-primary">
+
+    <i class="bi bi-box-seam"></i>
+
+    Agregar repuesto
+
+</a>
             <form method="post">
                 <div class="mb-3">
                     <textarea name="nuevo_avance" rows="4" class="form-control" placeholder="Describa el avance..." required></textarea>
@@ -276,7 +285,6 @@ $mensaje = urlencode(
             </form>
         <?php endif; ?>
     </div>
-    
 
     <!-- Botón para cerrar caso -->
     <button

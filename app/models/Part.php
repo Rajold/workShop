@@ -221,4 +221,74 @@ class Part extends BaseModel
             ")
             ->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    /**
+ * Actualiza el stock de una parte.
+ */
+public function updateStock(int $partId, float $newStock): bool
+{
+    $stmt = $this->db->prepare("
+        UPDATE partes
+        SET stock_actual = ?
+        WHERE id = ?
+    ");
+
+    return $stmt->execute([
+        $newStock,
+        $partId
+    ]);
+}
+
+/**
+ * Registrar movimiento de inventario.
+ */
+public function registerMovement(array $data): bool
+{
+    $sql = "
+        INSERT INTO movimientos_inventario
+        (
+            parte_id,
+            usuario_id,
+            caso_id,
+            tipo,
+            motivo,
+            cantidad,
+            stock_resultante,
+            costo_unitario,
+            observacion
+        )
+        VALUES
+        (
+            :parte_id,
+            :usuario_id,
+            :caso_id,
+            :tipo,
+            :motivo,
+            :cantidad,
+            :stock_resultante,
+            :costo_unitario,
+            :observacion
+        )
+    ";
+
+    return $this->db->prepare($sql)->execute([
+
+        ':parte_id' => $data['parte_id'],
+        ':usuario_id' => $data['usuario_id'],
+        ':caso_id' => $data['caso_id'],
+
+        ':tipo' => $data['tipo'],
+
+        ':motivo' => $data['motivo'],
+
+        ':cantidad' => $data['cantidad'],
+
+        ':stock_resultante' => $data['stock_resultante'],
+
+        ':costo_unitario' => $data['costo_unitario'],
+
+        ':observacion' => $data['observacion']
+
+    ]);
+}
 }

@@ -185,4 +185,23 @@ public function update(): void
 
     $this->redirect('index.php?controller=inventory&action=create');
 }
+
+public function selectForCase(): void
+{
+    $this->ensureLogged();
+
+    $caseId = (int)($_GET['case_id'] ?? 0);
+    $vehId  = (int)($_GET['veh_id'] ?? 0);
+
+    $search = trim($_GET['q'] ?? '');
+
+    $parts = $this->partModel->all($search);
+
+    $this->render('inventory/select_for_case', [
+        'caseId' => $caseId,
+        'vehId'  => $vehId,
+        'parts'  => $parts,
+        'search' => $search
+    ]);
+}
 }

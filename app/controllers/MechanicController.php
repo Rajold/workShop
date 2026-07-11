@@ -3,17 +3,16 @@
 
 declare(strict_types=1);
 
-class MechanicController
+class MechanicController extends BaseController
 {
-    protected PDO $db;
     protected Vehicle $vehicleModel;
     protected RepairCase $caseModel;
     protected WorkSession $sessionModel;
     protected User $userModel;
 
-    public function __construct(PDO $pdo)
-    {
-        $this->db = $pdo;
+   public function __construct(PDO $pdo)
+{
+    parent::__construct($pdo);
 
         require_once __DIR__ . '/../models/Vehicle.php';
         require_once __DIR__ . '/../models/RepairCase.php';
@@ -27,26 +26,13 @@ class MechanicController
         $this->userModel = new User($pdo);
     }
 
-    protected function ensureLogged()
-    {
-        if (empty($_SESSION['user_id'])) {
-            header('Location: index.php?controller=auth&action=login');
-            exit;
-        }
-    }
-
-    public function dashboard()
-    {
-        $this->ensureLogged();
-        require __DIR__ . '/../views/layouts/header.php';
-        require __DIR__ . '/../views/mechanic/dashboard.php';
-        require __DIR__ . '/../views/layouts/footer.php';
-    }
-
-    public function searchVehicle()
+   public function dashboard(): void
 {
-    $this->ensureLogged();
+    $this->render('mechanic/dashboard');
+}
 
+  public function searchVehicle(): void
+{
     $vehicles = [];
 
     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -57,9 +43,9 @@ class MechanicController
         $vehicles = $this->vehicleModel->search($criterio, $valor);
     }
 
-    require __DIR__ . '/../views/layouts/header.php';
-    require __DIR__ . '/../views/mechanic/vehicle_search.php';
-    require __DIR__ . '/../views/layouts/footer.php';
+    $this->render('mechanic/vehicle_search', [
+        'vehicles' => $vehicles
+    ]);
 }
 
 
@@ -121,7 +107,7 @@ class MechanicController
     'total' => 0
     ];
 
-    $advanceModel = new Avance($this->db);
+    $advanceModel = new Avance($this->pdo);
 
     if ($veh_id) {
         // 🚗 Obtener datos del vehículo y sus casos
@@ -180,9 +166,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['nuevo_avance']) && i
 }
 
     // 🧱 Cargar vistas
-    require __DIR__ . '/../views/layouts/header.php';
-    require __DIR__ . '/../views/mechanic/case_view.php';
-    require __DIR__ . '/../views/layouts/footer.php';
+    $this->render('mechanic/case_view', [
+    'veh_id'         => $veh_id,
+    'vehicle'        => $vehicle,
+    'caso'           => $caso,
+    'cases'          => $cases,
+    'avances'        => $avances,
+    'activeSession'  => $activeSession,
+    'hasOpenCase'    => $hasOpenCase,
+    'totales'        => $totales
+]);
 }
 
     public function openCase()
@@ -209,7 +202,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST' && !empty($_POST['nuevo_avance']) && i
             $case_id = (int)$_POST['case_id'];
 
             // obtener vehiculo
-            $stmt = $this->db->prepare("SELECT vehiculo_id FROM casos WHERE id = :id");
+            $stmt = $this->pdo->prepare("SELECT vehiculo_id FROM casos WHERE id = :id");
             $stmt->execute([':id' => $case_id]);
             $veh = $stmt->fetch(PDO::FETCH_ASSOC);
             $veh_id = $veh['vehiculo_id'] ?? 0;
@@ -230,7 +223,7 @@ public function editAdvance()
         exit;
     }
 
-    $advanceModel = new Avance($this->db);
+    $advanceModel = new Avance($this->pdo);
 
     $id = (int)($_POST['id'] ?? 0);
 
@@ -267,7 +260,7 @@ public function deleteAdvance()
         exit;
     }
 
-    $advanceModel = new Avance($this->db);
+    $advanceModel = new Avance($this->pdo);
 
     $id = (int)($_POST['id'] ?? 0);
 

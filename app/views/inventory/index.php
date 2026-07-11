@@ -155,7 +155,7 @@
     </a>
 
     <a href="index.php?controller=inventory&action=edit&id=<?= $part['id'] ?>"
-       class="btn btn-sm btn-warning">
+       class="btn btn-sm btn-danger">
         Eliminar
     </a>
 
