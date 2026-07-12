@@ -18,14 +18,14 @@ class User extends BaseModel
     {
         $hash = password_hash($password, PASSWORD_DEFAULT);
         $stmt = $this->db->prepare("INSERT INTO usuarios (nombre, usuario, contraseña_hash, rol, fecha_creacion) VALUES (:nombre, :usuario, :hash, :rol, NOW())");
-        $stmt->execute([':nombre'=>$nombre, ':usuario'=>$usuario, ':hash'=>$hash, ':rol'=>$rol]);
+        $stmt->execute([':nombre' => $nombre, ':usuario' => $usuario, ':hash' => $hash, ':rol' => $rol]);
         return (int)$this->db->lastInsertId();
     }
 
     public function findByUsername(string $usuario)
     {
         $stmt = $this->db->prepare("SELECT * FROM usuarios WHERE usuario = :u LIMIT 1");
-        $stmt->execute([':u'=>$usuario]);
+        $stmt->execute([':u' => $usuario]);
         return $stmt->fetch() ?: null;
     }
 
@@ -38,7 +38,7 @@ class User extends BaseModel
     public function findById(int $id)
     {
         $stmt = $this->db->prepare("SELECT * FROM usuarios WHERE id = :id LIMIT 1");
-        $stmt->execute([':id'=>$id]);
+        $stmt->execute([':id' => $id]);
         return $stmt->fetch() ?: null;
     }
 
@@ -46,12 +46,12 @@ class User extends BaseModel
     {
         $hash = password_hash($newPassword, PASSWORD_DEFAULT);
         $stmt = $this->db->prepare("UPDATE usuarios SET contraseña_hash = :h WHERE id = :id");
-        return $stmt->execute([':h'=>$hash, ':id'=>$id]);
+        return $stmt->execute([':h' => $hash, ':id' => $id]);
     }
 
     public function delete(int $id)
     {
         $stmt = $this->db->prepare("DELETE FROM usuarios WHERE id = :id");
-        return $stmt->execute([':id'=>$id]);
+        return $stmt->execute([':id' => $id]);
     }
 }

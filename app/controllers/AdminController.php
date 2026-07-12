@@ -8,16 +8,16 @@ class AdminController
     private PDO $db;
     private User $userModel;
     private Dashboard $dashboardModel;
-    
+
 
     public function __construct(PDO $pdo)
-{
-    $this->db = $pdo;
+    {
+        $this->db = $pdo;
 
-    $this->userModel = new User($pdo);
+        $this->userModel = new User($pdo);
 
-    $this->dashboardModel = new Dashboard($pdo);
-}
+        $this->dashboardModel = new Dashboard($pdo);
+    }
 
     protected function ensureAdmin()
     {
@@ -32,20 +32,20 @@ class AdminController
         $this->ensureAdmin();
         $users = $this->userModel->findAll();
 
-/*
+        /*
 |--------------------------------------------------------------------------
 | Estadísticas
 |--------------------------------------------------------------------------
 */
 
-$users = $this->userModel->findAll();
+        $users = $this->userModel->findAll();
 
-$stats = $this->dashboardModel->getStats();
+        $stats = $this->dashboardModel->getStats();
 
-    require __DIR__ . '/../views/layouts/header.php';
-    require __DIR__ . '/../views/admin/dashboard.php';
-    require __DIR__ . '/../views/layouts/footer.php';
-}
+        require __DIR__ . '/../views/layouts/header.php';
+        require __DIR__ . '/../views/admin/dashboard.php';
+        require __DIR__ . '/../views/layouts/footer.php';
+    }
 
     public function users()
     {

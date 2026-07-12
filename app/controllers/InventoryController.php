@@ -45,163 +45,435 @@ class InventoryController extends BaseController
     }
 
     /**
- * Mostrar formulario de edición.
- */
-public function edit(): void
-{
-    $this->ensureLogged();
+     * Mostrar formulario de edición.
+     */
+    public function edit(): void
+    {
+        $this->ensureLogged();
 
-    $id = (int) ($_GET['id'] ?? 0);
+        $id = (int) ($_GET['id'] ?? 0);
 
-    if ($id <= 0) {
+        if ($id <= 0) {
 
-        $this->error('Artículo no válido.');
+            $this->error('Artículo no válido.');
 
-        $this->redirect('index.php?controller=inventory&action=index');
+            $this->redirect('index.php?controller=inventory&action=index');
 
-        return;
+            return;
+        }
+
+        $part = $this->partModel->findById($id);
+
+        if (!$part) {
+
+            $this->error('El artículo no existe.');
+
+            $this->redirect('index.php?controller=inventory&action=index');
+
+            return;
+        }
+
+        $this->render('inventory/form', [
+            'part' => $part,
+            'categories' => $this->partModel->categories(),
+            'title' => 'Editar artículo'
+        ]);
     }
 
-    $part = $this->partModel->findById($id);
+    public function update(): void
+    {
+        $this->ensureLogged();
 
-    if (!$part) {
+        $data = $_POST;
 
-        $this->error('El artículo no existe.');
+        $id = (int)($data['id'] ?? 0);
 
-        $this->redirect('index.php?controller=inventory&action=index');
+        if ($id <= 0) {
 
-        return;
-    }
+            $this->error('Artículo no válido.');
 
-    $this->render('inventory/form', [
-        'part' => $part,
-        'categories' => $this->partModel->categories(),
-        'title' => 'Editar artículo'
-    ]);
-}
+            $this->redirect('index.php?controller=inventory&action=index');
 
-public function update(): void
-{
-    $this->ensureLogged();
+            return;
+        }
 
-    $data = $_POST;
+        // Normalizar valores numéricos
+        $data['stock_minimo'] = $data['stock_minimo'] !== ''
+            ? (float)$data['stock_minimo']
+            : 0;
 
-    $id = (int)($data['id'] ?? 0);
+        $data['costo'] = $data['costo'] !== ''
+            ? (float)$data['costo']
+            : 0;
 
-    if ($id <= 0) {
+        $data['precio_venta'] = $data['precio_venta'] !== ''
+            ? (float)$data['precio_venta']
+            : 0;
 
-        $this->error('Artículo no válido.');
+        $data['id'] = $id;
 
-        $this->redirect('index.php?controller=inventory&action=index');
+        // Validación básica
+        if (empty($data['codigo']) || empty($data['nombre'])) {
 
-        return;
-    }
+            $this->error('El código y el nombre son obligatorios.');
 
-    // Normalizar valores numéricos
-    $data['stock_minimo'] = $data['stock_minimo'] !== ''
-        ? (float)$data['stock_minimo']
-        : 0;
+            $this->redirect(
+                'index.php?controller=inventory&action=edit&id=' . $id
+            );
 
-    $data['costo'] = $data['costo'] !== ''
-        ? (float)$data['costo']
-        : 0;
+            return;
+        }
 
-    $data['precio_venta'] = $data['precio_venta'] !== ''
-        ? (float)$data['precio_venta']
-        : 0;
+        if ($this->partModel->update($data)) {
 
-    $data['id'] = $id;
+            $this->success('Artículo actualizado correctamente.');
 
-    // Validación básica
-    if (empty($data['codigo']) || empty($data['nombre'])) {
+            $this->redirect('index.php?controller=inventory&action=index');
 
-        $this->error('El código y el nombre son obligatorios.');
+            return;
+        }
+
+        $this->error('No fue posible actualizar el artículo.');
 
         $this->redirect(
             'index.php?controller=inventory&action=edit&id=' . $id
         );
-
-        return;
     }
 
-    if ($this->partModel->update($data)) {
+    public function store(): void
+    {
+        $this->ensureLogged();
 
-        $this->success('Artículo actualizado correctamente.');
+        $data = $_POST;
 
-        $this->redirect('index.php?controller=inventory&action=index');
+        // Normalizar valores numéricos
+        $data['stock_minimo'] = $data['stock_minimo'] !== ''
+            ? (float)$data['stock_minimo']
+            : 0;
 
-        return;
+        $data['costo'] = $data['costo'] !== ''
+            ? (float)$data['costo']
+            : 0;
+
+        $data['precio_venta'] = $data['precio_venta'] !== ''
+            ? (float)$data['precio_venta']
+            : 0;
+
+        // Usuario que crea el registro
+        $data['created_by'] = $_SESSION['user_id'];
+
+        // Validación básica
+        if (empty($data['codigo']) || empty($data['nombre'])) {
+
+            $this->error('El código y el nombre son obligatorios.');
+
+            $this->redirect('index.php?controller=inventory&action=create');
+
+            return;
+        }
+
+        // echo '<pre>';
+        // var_dump($data['tipo']);
+        // exit;
+
+        if ($this->partModel->create($data)) {
+
+            $this->success('Artículo creado correctamente.');
+
+            $this->redirect('index.php?controller=inventory&action=index');
+
+            return;
+        }
+
+        $this->error('No fue posible guardar el artículo.');
+
+        $this->redirect('index.php?controller=inventory&action=create');
     }
 
-    $this->error('No fue posible actualizar el artículo.');
+    public function selectForCase(): void
+    {
+        $this->ensureLogged();
 
-    $this->redirect(
-        'index.php?controller=inventory&action=edit&id=' . $id
+        $caseId = (int)($_GET['case_id'] ?? 0);
+        $vehId  = (int)($_GET['veh_id'] ?? 0);
+
+        $search = trim($_GET['q'] ?? '');
+
+        $parts = $this->partModel->all($search);
+
+        $this->render('inventory/select_for_case', [
+            'caseId' => $caseId,
+            'vehId'  => $vehId,
+            'parts'  => $parts,
+            'search' => $search
+        ]);
+    }
+
+    public function addToCart(): void
+    {
+        $this->ensureLogged();
+
+        $caseId = (int)($_POST['case_id'] ?? 0);
+        $vehId  = (int)($_POST['veh_id'] ?? 0);
+        $partId = (int)($_POST['parte_id'] ?? 0);
+        $cantidad = (float)($_POST['cantidad'] ?? 1);
+
+        if (!isset($_SESSION['case_cart'])) {
+
+            $_SESSION['case_cart'] = [];
+        }
+
+        if (!isset($_SESSION['case_cart'][$caseId])) {
+
+            $_SESSION['case_cart'][$caseId] = [];
+        }
+
+        $part = $this->partModel->findById($partId);
+
+        if (!$part) {
+
+            $this->error('Artículo no encontrado.');
+
+            $this->redirect(
+                "index.php?controller=inventory&action=selectForCase&case_id={$caseId}&veh_id={$vehId}"
+            );
+
+            return;
+        }
+
+        if (!isset($_SESSION['case_cart'])) {
+
+            $_SESSION['case_cart'] = [];
+        }
+
+        if (isset($_SESSION['case_cart'][$caseId][$partId])) {
+
+            $_SESSION['case_cart'][$caseId][$partId]['cantidad'] += $cantidad;
+        } else {
+
+            $_SESSION['case_cart'][$caseId][$partId] = [
+
+                'part_id'        => $partId,
+
+                'codigo'         => $part['codigo'],
+
+                'nombre'         => $part['nombre'],
+
+                'marca'          => $part['marca'],
+
+                'unidad'         => $part['unidad'],
+
+                'cantidad'       => $cantidad,
+
+                'costo'          => (float)$part['costo'],
+
+                'precio_venta'   => (float)$part['precio_venta']
+
+            ];
+        }
+
+        $this->success('Artículo agregado al carrito.');
+
+        $this->redirect(
+            "index.php?controller=inventory&action=selectForCase&case_id={$caseId}&veh_id={$vehId}"
+        );
+    }
+
+    public function removeFromCart(): void
+    {
+        $this->ensureLogged();
+
+        $caseId = (int)($_POST['case_id'] ?? 0);
+        $vehId  = (int)($_POST['veh_id'] ?? 0);
+        $partId = (int)($_POST['part_id'] ?? 0);
+
+        if (isset($_SESSION['case_cart'][$caseId][$partId])) {
+
+            unset($_SESSION['case_cart'][$caseId][$partId]);
+
+            if (empty($_SESSION['case_cart'][$caseId])) {
+
+                unset($_SESSION['case_cart'][$caseId]);
+            }
+
+            $this->success('Artículo eliminado del carrito.');
+        } else {
+
+            $this->error('El artículo no estaba en el carrito.');
+        }
+
+        $this->redirect(
+            "index.php?controller=inventory&action=selectForCase&case_id={$caseId}&veh_id={$vehId}"
+        );
+    }
+
+    public function confirmCart(): void
+    {
+        $this->ensureLogged();
+
+        $caseId = (int)($_POST['case_id'] ?? 0);
+        $vehId  = (int)($_POST['veh_id'] ?? 0);
+
+        $cart = $_SESSION['case_cart'][$caseId] ?? [];
+
+        if (empty($cart)) {
+
+            $this->error('No hay artículos en el carrito.');
+
+            $this->redirect(
+                "index.php?controller=inventory&action=selectForCase&case_id={$caseId}&veh_id={$vehId}"
+            );
+
+            return;
+        }
+
+        $avanceModel = new Avance($this->pdo);
+
+        try {
+
+            $this->pdo->beginTransaction();
+
+            foreach ($cart as $item) {
+
+                $part = $this->partModel->findById($item['part_id']);
+
+                if (!$part) {
+
+                    throw new Exception(
+                        "No existe el artículo {$item['nombre']}."
+                    );
+                }
+
+                if ($part['stock_actual'] < $item['cantidad']) {
+
+                    throw new Exception(
+                        "Stock insuficiente para {$item['nombre']}."
+                    );
+                }
+
+                $nuevoStock = $part['stock_actual'] - $item['cantidad'];
+
+                if (!$this->partModel->updateStock($part['id'], $nuevoStock)) {
+
+                    throw new Exception(
+                        "No fue posible actualizar el stock de {$item['nombre']}."
+                    );
+                }
+
+                if (!$this->partModel->registerMovement([
+
+                    'parte_id'         => $part['id'],
+                    'usuario_id'       => $_SESSION['user_id'],
+                    'caso_id'          => $caseId,
+
+                    'tipo'             => 'consumo',
+
+                    'motivo'           => 'Consumo durante reparación',
+
+                    'cantidad'         => $item['cantidad'],
+
+                    'stock_resultante' => $nuevoStock,
+
+                    'costo_unitario'   => $part['costo'],
+
+                    'observacion'      => 'Aplicado desde WorkShop'
+
+                ])) {
+
+                    throw new Exception(
+                        "No fue posible registrar el movimiento de inventario."
+                    );
+                }
+
+                $avanceModel->add(
+
+                    $caseId,
+
+                    $_SESSION['user_id'],
+
+                    sprintf(
+                        'Repuesto: %s x %s',
+                        $item['nombre'],
+                        $item['cantidad']
+                    ),
+
+                    'Repuesto',
+
+                    (int)($item['precio_venta'] * $item['cantidad'])
+
+                );
+            }
+
+            $this->pdo->commit();
+
+            $this->clearCaseCart($caseId);
+
+            $this->success('Los repuestos fueron aplicados correctamente.');
+        } catch (Throwable $e) {
+
+    if ($this->pdo->inTransaction()) {
+        $this->pdo->rollBack();
+    }
+
+    die(
+        '<pre>'.
+        $e->getMessage().
+        "\n\n".
+        $e->getTraceAsString().
+        '</pre>'
     );
 }
 
-    public function store(): void
-{
-    $this->ensureLogged();
-
-    $data = $_POST;
-
-    // Normalizar valores numéricos
-    $data['stock_minimo'] = $data['stock_minimo'] !== ''
-        ? (float)$data['stock_minimo']
-        : 0;
-
-    $data['costo'] = $data['costo'] !== ''
-        ? (float)$data['costo']
-        : 0;
-
-    $data['precio_venta'] = $data['precio_venta'] !== ''
-        ? (float)$data['precio_venta']
-        : 0;
-
-    // Usuario que crea el registro
-    $data['created_by'] = $_SESSION['user_id'];
-
-    // Validación básica
-    if (empty($data['codigo']) || empty($data['nombre'])) {
-
-        $this->error('El código y el nombre son obligatorios.');
-
-        $this->redirect('index.php?controller=inventory&action=create');
-
-        return;
+        $this->redirect(
+            "index.php?controller=mechanic&action=viewCase&veh_id={$vehId}"
+        );
     }
 
-    if ($this->partModel->create($data)) {
+    private function clearCaseCart(int $caseId): void
+    {
+        unset($_SESSION['case_cart'][$caseId]);
 
-        $this->success('Artículo creado correctamente.');
-
-        $this->redirect('index.php?controller=inventory&action=index');
-
-        return;
+        if (empty($_SESSION['case_cart'])) {
+            unset($_SESSION['case_cart']);
+        }
     }
 
-    $this->error('No fue posible guardar el artículo.');
+    private function createAdvance(
+        Avance $avanceModel,
+        int $caseId,
+        array $item
+    ): void {
 
-    $this->redirect('index.php?controller=inventory&action=create');
-}
+        $descripcion = sprintf(
+            'Repuesto: %s x %s',
+            $item['nombre'],
+            $item['cantidad']
+        );
 
-public function selectForCase(): void
-{
-    $this->ensureLogged();
+        $avanceModel->add(
+            $caseId,
+            $_SESSION['user_id'],
+            $descripcion,
+            'Repuesto',
+            (int)($item['precio_venta'] * $item['cantidad'])
+        );
+    }
 
-    $caseId = (int)($_GET['case_id'] ?? 0);
-    $vehId  = (int)($_GET['veh_id'] ?? 0);
+    private function validateCartStock(array $cart): bool
+    {
+        foreach ($cart as $item) {
 
-    $search = trim($_GET['q'] ?? '');
+            $part = $this->partModel->findById($item['part_id']);
 
-    $parts = $this->partModel->all($search);
+            if (!$part) {
+                return false;
+            }
 
-    $this->render('inventory/select_for_case', [
-        'caseId' => $caseId,
-        'vehId'  => $vehId,
-        'parts'  => $parts,
-        'search' => $search
-    ]);
-}
+            if ($part['stock_actual'] < $item['cantidad']) {
+                return false;
+            }
+        }
+
+        return true;
+    }
 }

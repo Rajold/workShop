@@ -25,32 +25,32 @@ class Avance
     }
 
     public function add(
-    int $caseId,
-    int $mecanicoId,
-    string $descripcion,
-    string $tipo,
-    int $valor
-): void {
+        int $caseId,
+        int $mecanicoId,
+        string $descripcion,
+        string $tipo,
+        int $valor
+    ): void {
 
-    $stmt = $this->db->prepare("
+        $stmt = $this->db->prepare("
         INSERT INTO avances
         (caso_id, mecanico_id, descripcion, tipo, valor)
         VALUES
         (:c, :m, :d, :t, :v)
     ");
 
-    $stmt->execute([
-        ':c' => $caseId,
-        ':m' => $mecanicoId,
-        ':d' => $descripcion,
-        ':t' => $tipo,
-        ':v' => $valor
-    ]);
-}
+        $stmt->execute([
+            ':c' => $caseId,
+            ':m' => $mecanicoId,
+            ':d' => $descripcion,
+            ':t' => $tipo,
+            ':v' => $valor
+        ]);
+    }
 
-public function getTotalesPorCaso(int $caseId): array
-{
-    $stmt = $this->db->prepare("
+    public function getTotalesPorCaso(int $caseId): array
+    {
+        $stmt = $this->db->prepare("
         SELECT
             COALESCE(SUM(CASE WHEN tipo = 'Mano de obra' THEN valor ELSE 0 END), 0) AS mano_obra,
             COALESCE(SUM(CASE WHEN tipo = 'Repuesto' THEN valor ELSE 0 END), 0) AS repuestos,
@@ -59,16 +59,16 @@ public function getTotalesPorCaso(int $caseId): array
         WHERE caso_id = :caso
     ");
 
-    $stmt->execute([
-        ':caso' => $caseId
-    ]);
+        $stmt->execute([
+            ':caso' => $caseId
+        ]);
 
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
-public function getById(int $id): ?array
-{
-    $stmt = $this->db->prepare("
+    public function getById(int $id): ?array
+    {
+        $stmt = $this->db->prepare("
         SELECT
             a.*,
             c.vehiculo_id
@@ -77,23 +77,23 @@ public function getById(int $id): ?array
         WHERE a.id = :id
     ");
 
-    $stmt->execute([
-        ':id' => $id
-    ]);
+        $stmt->execute([
+            ':id' => $id
+        ]);
 
-    $avance = $stmt->fetch(PDO::FETCH_ASSOC);
+        $avance = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    return $avance ?: null;
-}
+        return $avance ?: null;
+    }
 
-public function update(
-    int $id,
-    string $descripcion,
-    string $tipo,
-    int $valor
-): bool {
+    public function update(
+        int $id,
+        string $descripcion,
+        string $tipo,
+        int $valor
+    ): bool {
 
-    $stmt = $this->db->prepare("
+        $stmt = $this->db->prepare("
         UPDATE avances
         SET
             descripcion = :descripcion,
@@ -102,24 +102,23 @@ public function update(
         WHERE id = :id
     ");
 
-    return $stmt->execute([
-        ':descripcion' => $descripcion,
-        ':tipo' => $tipo,
-        ':valor' => $valor,
-        ':id' => $id
-    ]);
-}
+        return $stmt->execute([
+            ':descripcion' => $descripcion,
+            ':tipo' => $tipo,
+            ':valor' => $valor,
+            ':id' => $id
+        ]);
+    }
 
-public function delete(int $id): bool
-{
-    $stmt = $this->db->prepare("
+    public function delete(int $id): bool
+    {
+        $stmt = $this->db->prepare("
         DELETE FROM avances
         WHERE id = :id
     ");
 
-    return $stmt->execute([
-        ':id' => $id
-    ]);
-}
-
+        return $stmt->execute([
+            ':id' => $id
+        ]);
+    }
 }

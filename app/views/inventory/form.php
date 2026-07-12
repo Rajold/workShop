@@ -1,4 +1,3 @@
-
 <?php
 $isEdit = !empty($part);
 
@@ -71,7 +70,7 @@ function field($name, $part, $old)
                             class="form-control"
                             maxlength="30"
                             required
-                            value="<?= field('codigo',$part,$old) ?>">
+                            value="<?= field('codigo', $part, $old) ?>">
 
                     </div>
 
@@ -88,7 +87,7 @@ function field($name, $part, $old)
                             name="nombre"
                             class="form-control"
                             required
-                            value="<?= field('nombre',$part,$old) ?>">
+                            value="<?= field('nombre', $part, $old) ?>">
 
                     </div>
 
@@ -116,7 +115,7 @@ function field($name, $part, $old)
 
                             </option>
 
-                            <?php foreach($categories as $cat): ?>
+                            <?php foreach ($categories as $cat): ?>
 
                                 <?php
 
@@ -140,18 +139,18 @@ function field($name, $part, $old)
                     </div>
 
                     <div class="mb-3">
-    <label class="form-label">Tipo</label>
+                        <label class="form-label">Tipo</label>
 
-    <select name="tipo" class="form-select">
+                        <select name="tipo" class="form-select">
 
-        <option value="repuesto">Repuesto</option>
+                            <option value="repuesto">Repuesto</option>
 
-        <option value="insumo">Insumo</option>
+                            <option value="insumo">Insumo</option>
 
-        <option value="herramienta">Herramienta</option>
+                            <option value="herramienta">Herramienta</option>
 
-    </select>
-</div>
+                        </select>
+                    </div>
 
                     <div class="col-md-6 mb-3">
 
@@ -165,7 +164,7 @@ function field($name, $part, $old)
                             type="text"
                             class="form-control"
                             name="marca"
-                            value="<?= field('marca',$part,$old) ?>">
+                            value="<?= field('marca', $part, $old) ?>">
 
                     </div>
 
@@ -193,14 +192,14 @@ function field($name, $part, $old)
                             ?>
 
                             <option value="Unidad">Unidad</option>
-<option value="Juego">Juego</option>
-<option value="Par">Par</option>
-<option value="Litro">Litro</option>
-<option value="Mililitro">Mililitro</option>
-<option value="Kilogramo">Kilogramo</option>
-<option value="Gramo">Gramo</option>
-<option value="Metro">Metro</option>
-<option value="Centimetro">Centimetro</option>
+                            <option value="Juego">Juego</option>
+                            <option value="Par">Par</option>
+                            <option value="Litro">Litro</option>
+                            <option value="Mililitro">Mililitro</option>
+                            <option value="Kilogramo">Kilogramo</option>
+                            <option value="Gramo">Gramo</option>
+                            <option value="Metro">Metro</option>
+                            <option value="Centimetro">Centimetro</option>
                         </select>
 
                     </div>
@@ -216,19 +215,19 @@ function field($name, $part, $old)
                         <input
                             class="form-control"
                             name="ubicacion"
-                            value="<?= field('ubicacion',$part,$old) ?>">
+                            value="<?= field('ubicacion', $part, $old) ?>">
 
                     </div>
 
                     <div class="mb-3">
-    <label class="form-label">Código de barras</label>
+                        <label class="form-label">Código de barras</label>
 
-    <input
-        type="text"
-        class="form-control"
-        name="codigo_barras"
-        value="<?= htmlspecialchars($part['codigo_barras'] ?? '') ?>">
-</div>
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="codigo_barras"
+                            value="<?= htmlspecialchars($part['codigo_barras'] ?? '') ?>">
+                    </div>
 
                 </div>
 
@@ -249,7 +248,7 @@ function field($name, $part, $old)
                             min="0"
                             class="form-control"
                             name="costo"
-                            value="<?= field('costo',$part,$old) ?>">
+                            value="<?= field('costo', $part, $old) ?>">
 
                     </div>
 
@@ -267,7 +266,7 @@ function field($name, $part, $old)
                             min="0"
                             class="form-control"
                             name="precio_venta"
-                            value="<?= field('precio',$part,$old) ?>">
+                            value="<?= field('precio', $part, $old) ?>">
 
                     </div>
 
@@ -285,7 +284,7 @@ function field($name, $part, $old)
                             min="0"
                             class="form-control"
                             name="stock_minimo"
-                            value="<?= field('stock_minimo',$part,$old) ?>">
+                            value="<?= field('stock_minimo', $part, $old) ?>">
 
                     </div>
 

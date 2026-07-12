@@ -82,22 +82,22 @@ class Dashboard
             ->fetchColumn();
     }
 
-public function getStats(): array
-{
-    return [
-        'totalVehiculos' => $this->getTotalVehiculos(),
-        'casosAbiertos' => $this->getCasosAbiertos(),
-        'casosCerrados' => $this->getCasosCerrados(),
-        'totalMecanicos' => $this->getTotalMecanicos(),
-        'totalFacturado' => $this->getFacturacionTotal(),
-        'facturacionMes' => $this->getFacturacionMes(),
-        'casosMes' => $this->getCasosMes(),
-    ];
-}
+    public function getStats(): array
+    {
+        return [
+            'totalVehiculos' => $this->getTotalVehiculos(),
+            'casosAbiertos' => $this->getCasosAbiertos(),
+            'casosCerrados' => $this->getCasosCerrados(),
+            'totalMecanicos' => $this->getTotalMecanicos(),
+            'totalFacturado' => $this->getFacturacionTotal(),
+            'facturacionMes' => $this->getFacturacionMes(),
+            'casosMes' => $this->getCasosMes(),
+        ];
+    }
 
-public function getRevenueStats(): array
-{
-    $stmt = $this->db->query("
+    public function getRevenueStats(): array
+    {
+        $stmt = $this->db->query("
         SELECT
             COUNT(*) AS casos,
             COALESCE(SUM(precio_cobrado - descuento),0) AS total,
@@ -107,12 +107,12 @@ public function getRevenueStats(): array
         WHERE estado='cerrado'
     ");
 
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
-public function getMechanicStats(): array
-{
-    $stmt = $this->db->query("
+    public function getMechanicStats(): array
+    {
+        $stmt = $this->db->query("
         SELECT
             u.nombre,
             COUNT(c.id) AS casos
@@ -125,37 +125,37 @@ public function getMechanicStats(): array
         ORDER BY casos DESC
     ");
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-public function getVehicleStats(): array
-{
-    // Total de vehículos registrados
-    $total = (int)$this->db
-        ->query("SELECT COUNT(*) FROM vehiculos")
-        ->fetchColumn();
+    public function getVehicleStats(): array
+    {
+        // Total de vehículos registrados
+        $total = (int)$this->db
+            ->query("SELECT COUNT(*) FROM vehiculos")
+            ->fetchColumn();
 
-    // Vehículos que actualmente tienen un caso abierto
-    $conCasosAbiertos = (int)$this->db
-        ->query("
+        // Vehículos que actualmente tienen un caso abierto
+        $conCasosAbiertos = (int)$this->db
+            ->query("
             SELECT COUNT(DISTINCT vehiculo_id)
             FROM casos
             WHERE estado = 'abierto'
         ")
-        ->fetchColumn();
+            ->fetchColumn();
 
-    // Vehículos atendidos este mes
-    $atendidosMes = (int)$this->db
-        ->query("
+        // Vehículos atendidos este mes
+        $atendidosMes = (int)$this->db
+            ->query("
             SELECT COUNT(DISTINCT vehiculo_id)
             FROM casos
             WHERE YEAR(fecha_ingreso) = YEAR(CURDATE())
               AND MONTH(fecha_ingreso) = MONTH(CURDATE())
         ")
-        ->fetchColumn();
+            ->fetchColumn();
 
-    // Vehículo con más ingresos al taller
-    $stmt = $this->db->query("
+        // Vehículo con más ingresos al taller
+        $stmt = $this->db->query("
         SELECT
             v.id,
             v.placa,
@@ -170,14 +170,13 @@ public function getVehicleStats(): array
         LIMIT 1
     ");
 
-    $vehiculoFrecuente = $stmt->fetch(PDO::FETCH_ASSOC);
+        $vehiculoFrecuente = $stmt->fetch(PDO::FETCH_ASSOC);
 
-    return [
-        'total' => $total,
-        'conCasosAbiertos' => $conCasosAbiertos,
-        'atendidosMes' => $atendidosMes,
-        'vehiculoFrecuente' => $vehiculoFrecuente
-    ];
-}
-
+        return [
+            'total' => $total,
+            'conCasosAbiertos' => $conCasosAbiertos,
+            'atendidosMes' => $atendidosMes,
+            'vehiculoFrecuente' => $vehiculoFrecuente
+        ];
+    }
 }

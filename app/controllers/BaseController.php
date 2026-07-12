@@ -20,26 +20,26 @@ abstract class BaseController
      * Verifica que exista un usuario autenticado.
      */
     protected function ensureLogged(): void
-{
-    if (empty($_SESSION['user_id'])) {
-        $this->redirect('index.php?controller=auth&action=login');
+    {
+        if (empty($_SESSION['user_id'])) {
+            $this->redirect('index.php?controller=auth&action=login');
+        }
     }
-}
 
-/**
- * Renderiza una vista.
- */
+    /**
+     * Renderiza una vista.
+     */
 
-protected function render(string $view, array $data = []): void
-{
-    extract($data);
+    protected function render(string $view, array $data = []): void
+    {
+        extract($data);
 
-    require __DIR__ . '/../views/layouts/header.php';
+        require __DIR__ . '/../views/layouts/header.php';
 
-    require __DIR__ . '/../views/' . $view . '.php';
+        require __DIR__ . '/../views/' . $view . '.php';
 
-    require __DIR__ . '/../views/layouts/footer.php';
-}
+        require __DIR__ . '/../views/layouts/footer.php';
+    }
 
     /**
      * Redirecciona y finaliza la ejecución.

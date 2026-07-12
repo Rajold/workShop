@@ -216,7 +216,7 @@ $mensaje = urlencode(
 </div>
 
 <?php endif; ?>
-        <div class="alert alert-info">El vehículo no tiene casssos registrados.</div>
+        <div class="alert alert-info">El vehículo no tiene más casos registrados.</div>
 </php endif; ?>
 
     <h2 class="mt-4">Ficha del caso</h2>

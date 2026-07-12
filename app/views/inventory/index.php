@@ -9,7 +9,7 @@
         </h2>
 
         <a href="index.php?controller=inventory&action=create"
-           class="btn btn-primary">
+            class="btn btn-primary">
             <i class="bi bi-plus-circle"></i>
             Nuevo artículo
         </a>
@@ -101,71 +101,71 @@
 
                 <tbody>
 
-                <?php if (empty($parts)): ?>
-
-                    <tr>
-
-                        <td colspan="7" class="text-center p-4 text-muted">
-
-                            No hay artículos registrados.
-
-                        </td>
-
-                    </tr>
-
-                <?php else: ?>
-
-                    <?php foreach ($parts as $part): ?>
+                    <?php if (empty($parts)): ?>
 
                         <tr>
 
-                            <td><?= htmlspecialchars($part['codigo']) ?></td>
+                            <td colspan="7" class="text-center p-4 text-muted">
 
-                            <td><?= htmlspecialchars($part['nombre']) ?></td>
-
-                            <td><?= htmlspecialchars($part['tipo']) ?></td>
-
-                            <td><?= htmlspecialchars($part['marca']) ?></td>
-
-                            <td><?= $part['stock_actual'] ?></td>
-
-                            <td>
-
-                                <?php if ($part['activo']): ?>
-
-                                    <span class="badge bg-success">
-                                        Activo
-                                    </span>
-
-                                <?php else: ?>
-
-                                    <span class="badge bg-danger">
-                                        Inactivo
-                                    </span>
-
-                                <?php endif; ?>
+                                No hay artículos registrados.
 
                             </td>
 
-                            <td>
-
-    <a href="index.php?controller=inventory&action=edit&id=<?= $part['id'] ?>"
-       class="btn btn-sm btn-warning">
-        Editar
-    </a>
-
-    <a href="index.php?controller=inventory&action=edit&id=<?= $part['id'] ?>"
-       class="btn btn-sm btn-danger">
-        Eliminar
-    </a>
-
-</td>
-
                         </tr>
 
-                    <?php endforeach; ?>
+                    <?php else: ?>
 
-                <?php endif; ?>
+                        <?php foreach ($parts as $part): ?>
+
+                            <tr>
+
+                                <td><?= htmlspecialchars($part['codigo']) ?></td>
+
+                                <td><?= htmlspecialchars($part['nombre']) ?></td>
+
+                                <td><?= htmlspecialchars($part['tipo']) ?></td>
+
+                                <td><?= htmlspecialchars($part['marca']) ?></td>
+
+                                <td><?= $part['stock_actual'] ?></td>
+
+                                <td>
+
+                                    <?php if ($part['activo']): ?>
+
+                                        <span class="badge bg-success">
+                                            Activo
+                                        </span>
+
+                                    <?php else: ?>
+
+                                        <span class="badge bg-danger">
+                                            Inactivo
+                                        </span>
+
+                                    <?php endif; ?>
+
+                                </td>
+
+                                <td>
+
+                                    <a href="index.php?controller=inventory&action=edit&id=<?= $part['id'] ?>"
+                                        class="btn btn-sm btn-warning">
+                                        Editar
+                                    </a>
+
+                                    <a href="index.php?controller=inventory&action=edit&id=<?= $part['id'] ?>"
+                                        class="btn btn-sm btn-danger">
+                                        Eliminar
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                        <?php endforeach; ?>
+
+                    <?php endif; ?>
 
                 </tbody>
 

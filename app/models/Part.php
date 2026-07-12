@@ -6,9 +6,9 @@ class Part extends BaseModel
     protected string $table = 'partes';
 
     public function __construct(PDO $pdo)
-{
-    parent::__construct($pdo);
-}
+    {
+        parent::__construct($pdo);
+    }
 
     /**
      * Obtiene todas las partes activas.
@@ -86,10 +86,10 @@ class Part extends BaseModel
         $like = "%{$texto}%";
 
         $stmt->execute([
-    $like,
-    $like,
-    $like
-]);
+            $like,
+            $like,
+            $like
+        ]);
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
@@ -98,8 +98,8 @@ class Part extends BaseModel
      * Crear parte.
      */
     public function create(array $data): bool
-{
-    $sql = "
+    {
+        $sql = "
         INSERT INTO partes (
             codigo,
             categoria_id,
@@ -134,33 +134,33 @@ class Part extends BaseModel
         )
     ";
 
-    $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->prepare($sql);
 
-    return $stmt->execute([
-        ':codigo'         => $data['codigo'],
-        ':categoria_id'   => !empty($data['categoria_id']) ? $data['categoria_id'] : null,
-        ':tipo'           => $data['tipo'],
-        ':nombre'         => $data['nombre'],
-        ':marca'          => $data['marca'] ?? null,
-        ':created_by'     => $data['created_by'] ?? null,
-        ':unidad'         => $data['unidad'],
-        ':stock_minimo'   => $data['stock_minimo'] ?: 0,
-        ':costo'          => $data['costo'] ?: 0,
-        ':precio_venta'   => $data['precio_venta'] ?: 0,
-        ':ubicacion'      => $data['ubicacion'] ?? null,
-        ':codigo_barras'  => $data['codigo_barras'] ?? null,
-        ':activo'         => isset($data['activo']) ? 1 : 0,
-    ]);
-}
+        return $stmt->execute([
+            ':codigo'         => $data['codigo'],
+            ':categoria_id'   => !empty($data['categoria_id']) ? $data['categoria_id'] : null,
+            ':tipo'           => $data['tipo'],
+            ':nombre'         => $data['nombre'],
+            ':marca'          => $data['marca'] ?? null,
+            ':created_by'     => $data['created_by'] ?? null,
+            ':unidad'         => $data['unidad'],
+            ':stock_minimo'   => $data['stock_minimo'] ?: 0,
+            ':costo'          => $data['costo'] ?: 0,
+            ':precio_venta'   => $data['precio_venta'] ?: 0,
+            ':ubicacion'      => $data['ubicacion'] ?? null,
+            ':codigo_barras'  => $data['codigo_barras'] ?? null,
+            ':activo'         => isset($data['activo']) ? 1 : 0,
+        ]);
+    }
 
 
 
     /**
      * Actualizar parte.
      */
-   public function update(array $data): bool
-{
-    $sql = "
+    public function update(array $data): bool
+    {
+        $sql = "
         UPDATE partes
         SET
             codigo = :codigo,
@@ -178,24 +178,24 @@ class Part extends BaseModel
         WHERE id = :id
     ";
 
-    $stmt = $this->db->prepare($sql);
+        $stmt = $this->db->prepare($sql);
 
-    return $stmt->execute([
-        ':id'             => $data['id'],
-        ':codigo'         => $data['codigo'],
-        ':categoria_id'   => !empty($data['categoria_id']) ? $data['categoria_id'] : null,
-        ':tipo'           => $data['tipo'],
-        ':nombre'         => $data['nombre'],
-        ':marca'          => $data['marca'] ?? null,
-        ':unidad'         => $data['unidad'],
-        ':stock_minimo'   => $data['stock_minimo'] ?: 0,
-        ':costo'          => $data['costo'] ?: 0,
-        ':precio_venta'   => $data['precio_venta'] ?: 0,
-        ':ubicacion'      => $data['ubicacion'] ?? null,
-        ':codigo_barras'  => $data['codigo_barras'] ?? null,
-        ':activo'         => isset($data['activo']) ? 1 : 0,
-    ]);
-}
+        return $stmt->execute([
+            ':id'             => $data['id'],
+            ':codigo'         => $data['codigo'],
+            ':categoria_id'   => !empty($data['categoria_id']) ? $data['categoria_id'] : null,
+            ':tipo'           => $data['tipo'],
+            ':nombre'         => $data['nombre'],
+            ':marca'          => $data['marca'] ?? null,
+            ':unidad'         => $data['unidad'],
+            ':stock_minimo'   => $data['stock_minimo'] ?: 0,
+            ':costo'          => $data['costo'] ?: 0,
+            ':precio_venta'   => $data['precio_venta'] ?: 0,
+            ':ubicacion'      => $data['ubicacion'] ?? null,
+            ':codigo_barras'  => $data['codigo_barras'] ?? null,
+            ':activo'         => isset($data['activo']) ? 1 : 0,
+        ]);
+    }
 
     /**
      * Desactivar una parte.
@@ -223,28 +223,28 @@ class Part extends BaseModel
     }
 
     /**
- * Actualiza el stock de una parte.
- */
-public function updateStock(int $partId, float $newStock): bool
-{
-    $stmt = $this->db->prepare("
+     * Actualiza el stock de una parte.
+     */
+    public function updateStock(int $partId, float $newStock): bool
+    {
+        $stmt = $this->db->prepare("
         UPDATE partes
         SET stock_actual = ?
         WHERE id = ?
     ");
 
-    return $stmt->execute([
-        $newStock,
-        $partId
-    ]);
-}
+        return $stmt->execute([
+            $newStock,
+            $partId
+        ]);
+    }
 
-/**
- * Registrar movimiento de inventario.
- */
-public function registerMovement(array $data): bool
-{
-    $sql = "
+    /**
+     * Registrar movimiento de inventario.
+     */
+    public function registerMovement(array $data): bool
+    {
+        $sql = "
         INSERT INTO movimientos_inventario
         (
             parte_id,
@@ -271,24 +271,24 @@ public function registerMovement(array $data): bool
         )
     ";
 
-    return $this->db->prepare($sql)->execute([
+        return $this->db->prepare($sql)->execute([
 
-        ':parte_id' => $data['parte_id'],
-        ':usuario_id' => $data['usuario_id'],
-        ':caso_id' => $data['caso_id'],
+            ':parte_id' => $data['parte_id'],
+            ':usuario_id' => $data['usuario_id'],
+            ':caso_id' => $data['caso_id'],
 
-        ':tipo' => $data['tipo'],
+            ':tipo' => $data['tipo'],
 
-        ':motivo' => $data['motivo'],
+            ':motivo' => $data['motivo'],
 
-        ':cantidad' => $data['cantidad'],
+            ':cantidad' => $data['cantidad'],
 
-        ':stock_resultante' => $data['stock_resultante'],
+            ':stock_resultante' => $data['stock_resultante'],
 
-        ':costo_unitario' => $data['costo_unitario'],
+            ':costo_unitario' => $data['costo_unitario'],
 
-        ':observacion' => $data['observacion']
+            ':observacion' => $data['observacion']
 
-    ]);
-}
+        ]);
+    }
 }
