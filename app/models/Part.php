@@ -291,4 +291,114 @@ class Part extends BaseModel
 
         ]);
     }
+
+    /**
+ * Historial de movimientos de un artículo.
+ */
+public function getMovements(int $partId): array
+{
+    $stmt = $this->db->prepare("
+        SELECT
+            m.*,
+            u.nombre AS usuario
+        FROM movimientos_inventario m
+        INNER JOIN usuarios u
+            ON u.id = m.usuario_id
+        WHERE m.parte_id = :parte
+        ORDER BY m.fecha DESC
+    ");
+
+    $stmt->execute([
+        ':parte' => $partId
+    ]);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
+
+/**
+ * Obtiene estadísticas generales del inventario.
+ */
+public function getStatistics(): array
+{
+    $stmt = $this->db->query("
+        SELECT
+
+            COUNT(*) AS total,
+
+            SUM(
+                CASE
+                    WHEN stock_actual <= stock_minimo
+                    AND stock_actual > 0
+                    THEN 1
+                    ELSE 0
+                END
+            ) AS stock_bajo,
+
+            SUM(
+                CASE
+                    WHEN stock_actual <= 0
+                    THEN 1
+                    ELSE 0
+                END
+            ) AS agotados,
+
+            SUM(
+                CASE
+                    WHEN tipo = 'herramienta'
+                    THEN 1
+                    ELSE 0
+                END
+            ) AS herramientas
+
+        FROM partes
+
+        WHERE activo = 1
+    ");
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
+
+/**
+ * Actualiza el costo de un artículo.
+ */
+public function updateCost(
+    int $id,
+    float $cost
+): bool
+{
+    $stmt = $this->db->prepare("
+        UPDATE partes
+        SET costo = :costo
+        WHERE id = :id
+    ");
+
+    return $stmt->execute([
+        ':costo' => $cost,
+        ':id'    => $id
+    ]);
+}
+
+/**
+ * Actualiza simultáneamente el stock y el costo del artículo.
+ */
+public function updateInventory(
+    int $id,
+    float $stock,
+    float $cost
+): bool
+{
+    $stmt = $this->db->prepare("
+        UPDATE partes
+        SET
+            stock_actual = :stock,
+            costo = :costo
+        WHERE id = :id
+    ");
+
+    return $stmt->execute([
+        ':stock' => $stock,
+        ':costo' => $cost,
+        ':id'    => $id
+    ]);
+}
 }

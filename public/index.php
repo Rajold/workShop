@@ -25,6 +25,7 @@ require_once __DIR__ . '/../config/database.php'; // crea $pdo
 // Ruteo básico por GET params
 $controller = $_GET['controller'] ?? 'auth';
 $action = $_GET['action'] ?? 'login';
+$action = $_GET['action'] ?? ($controller === 'auth' ? 'login' : 'index');
 
 $controller = preg_replace('/[^a-z0-9_]/i','', $controller);
 $action = preg_replace('/[^a-z0-9_]/i','', $action);
@@ -32,18 +33,23 @@ $action = preg_replace('/[^a-z0-9_]/i','', $action);
 $controllerClass = ucfirst($controller) . 'Controller';
 $controllerFile = __DIR__ . '/../app/controllers/' . $controllerClass . '.php';
 
+
 if (file_exists($controllerFile)) {
+
     require_once $controllerFile;
+
     $ctrl = new $controllerClass($pdo);
+
     if (method_exists($ctrl, $action)) {
         $ctrl->{$action}();
     } else {
         http_response_code(404);
         echo "Accion no encontrada";
     }
+
 } else {
+
     http_response_code(404);
     echo "Controlador no encontrado";
 }
-
 

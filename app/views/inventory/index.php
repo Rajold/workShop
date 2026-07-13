@@ -42,7 +42,8 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h3><?= count($parts) ?></h3>
+                    <h3><?= $stats['total'] ?></h3>
+
                     <small>Total artículos</small>
                 </div>
             </div>
@@ -51,7 +52,12 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h3>0</h3>
+                    <h3 class="text-warning">
+
+                        <?= $stats['stock_bajo'] ?>
+
+                    </h3>
+
                     <small>Stock bajo</small>
                 </div>
             </div>
@@ -60,7 +66,12 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h3>0</h3>
+                    <h3 class="text-danger">
+
+                        <?= $stats['agotados'] ?>
+
+                    </h3>
+
                     <small>Sin existencias</small>
                 </div>
             </div>
@@ -69,7 +80,12 @@
         <div class="col-md-3">
             <div class="card text-center">
                 <div class="card-body">
-                    <h3>0</h3>
+                    <h3 class="text-primary">
+
+                        <?= $stats['herramientas'] ?>
+
+                    </h3>
+
                     <small>Herramientas</small>
                 </div>
             </div>
@@ -117,7 +133,21 @@
 
                         <?php foreach ($parts as $part): ?>
 
-                            <tr>
+                            <?php
+
+                            $rowClass = '';
+
+                            if ($part['stock_actual'] <= 0) {
+
+                                $rowClass = 'table-danger';
+                            } elseif ($part['stock_actual'] <= $part['stock_minimo']) {
+
+                                $rowClass = 'table-warning';
+                            }
+
+                            ?>
+
+                            <tr class="<?= $rowClass ?>">
 
                                 <td><?= htmlspecialchars($part['codigo']) ?></td>
 
@@ -127,7 +157,56 @@
 
                                 <td><?= htmlspecialchars($part['marca']) ?></td>
 
-                                <td><?= $part['stock_actual'] ?></td>
+                                <td>
+
+                                    <?php
+
+                                    $stock = (float)$part['stock_actual'];
+                                    $minimo = max(1, (float)$part['stock_minimo']);
+
+                                    if ($stock <= 0) {
+
+                                        $color = 'danger';
+                                        $texto = 'Agotado';
+                                        $porcentaje = 0;
+                                    } elseif ($stock <= $part['stock_minimo']) {
+
+                                        $color = 'warning';
+                                        $texto = 'Bajo';
+                                        $porcentaje = min(100, ($stock / $minimo) * 100);
+                                    } else {
+
+                                        $color = 'success';
+                                        $texto = 'Disponible';
+                                        $porcentaje = 100;
+                                    }
+
+                                    ?>
+
+                                    <strong>
+
+                                        <?= $stock ?>
+
+                                    </strong>
+
+                                    <span class="badge bg-<?= $color ?> ms-2">
+
+                                        <?= $texto ?>
+
+                                    </span>
+
+                                    <div class="progress mt-2" style="height:8px;">
+
+                                        <div
+                                            class="progress-bar bg-<?= $color ?>"
+                                            role="progressbar"
+                                            style="width: <?= $porcentaje ?>%">
+
+                                        </div>
+
+                                    </div>
+
+                                </td>
 
                                 <td>
 
@@ -149,15 +228,32 @@
 
                                 <td>
 
-                                    <a href="index.php?controller=inventory&action=edit&id=<?= $part['id'] ?>"
-                                        class="btn btn-sm btn-warning">
-                                        Editar
-                                    </a>
+                                    <a
+                                        href="index.php?controller=inventory&action=movements&id=<?= $part['id'] ?>"
+                                        class="btn btn-sm btn-info">
 
-                                    <a href="index.php?controller=inventory&action=edit&id=<?= $part['id'] ?>"
-                                        class="btn btn-sm btn-danger">
-                                        Eliminar
+                                        <i class="bi bi-clock-history"></i>
+                                        Movimientos
+
                                     </a>
+                                    <a
+                                        href="index.php?controller=inventory&action=addStock&id=<?= $part['id'] ?>"
+                                        class="btn btn-success btn-sm">
+
+                                        <i class="bi bi-box-arrow-in-down"></i>
+
+                                        Stock
+
+                                    </a>
+                                    <a
+                                        href="index.php?controller=inventory&action=edit&id=<?= $part['id'] ?>"
+                                        class="btn btn-sm btn-warning">
+
+                                        <i class="bi bi-pencil"></i>
+                                        Editar
+
+                                    </a>
+                                    
 
                                 </td>
 

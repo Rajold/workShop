@@ -11,8 +11,6 @@ abstract class BaseController
         }
 
         $this->pdo = $pdo;
-
-        $this->ensureLogged();
     }
 
 
@@ -80,5 +78,15 @@ abstract class BaseController
     protected function info(string $message): void
     {
         $_SESSION['info'] = $message;
+    }
+
+    protected function isPost(): bool
+    {
+        return $_SERVER['REQUEST_METHOD'] === 'POST';
+    }
+
+    protected function isGet(): bool
+    {
+        return $_SERVER['REQUEST_METHOD'] === 'GET';
     }
 }

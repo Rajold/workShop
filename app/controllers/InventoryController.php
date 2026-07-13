@@ -1,16 +1,20 @@
 <?php
 
 declare(strict_types=1);
+require_once __DIR__ . '/../services/InventoryService.php';
 
 class InventoryController extends BaseController
 {
     private Part $partModel;
+    private InventoryService $inventoryService;
+
 
     public function __construct(PDO $pdo)
     {
         parent::__construct($pdo);
 
         $this->partModel = new Part($pdo);
+        $this->inventoryService = new InventoryService($pdo);
     }
 
     /**
@@ -19,17 +23,22 @@ class InventoryController extends BaseController
     public function index(): void
     {
         $search = trim($_GET['q'] ?? '');
-
+        $stats = $this->partModel->getStatistics();
         if ($search !== '') {
             $parts = $this->partModel->search($search);
         } else {
             $parts = $this->partModel->all();
         }
 
-        $this->render('inventory/index', [
-            'parts'  => $parts,
-            'search' => $search
-        ]);
+        $this->render(
+            'inventory/index',
+            [
+                'parts'  => $parts,
+                'search' => $search,
+                'stats'  => $stats,
+                'title'  => 'Inventario'
+            ]
+        );
     }
 
     /**
@@ -314,115 +323,21 @@ class InventoryController extends BaseController
         $caseId = (int)($_POST['case_id'] ?? 0);
         $vehId  = (int)($_POST['veh_id'] ?? 0);
 
-        $cart = $_SESSION['case_cart'][$caseId] ?? [];
-
-        if (empty($cart)) {
-
-            $this->error('No hay artículos en el carrito.');
-
-            $this->redirect(
-                "index.php?controller=inventory&action=selectForCase&case_id={$caseId}&veh_id={$vehId}"
-            );
-
-            return;
-        }
-
-        $avanceModel = new Avance($this->pdo);
-
         try {
 
-            $this->pdo->beginTransaction();
+            $this->inventoryService->confirmCart(
+                $caseId,
+                $vehId,
+                (int)$_SESSION['user_id']
+            );
 
-            foreach ($cart as $item) {
-
-                $part = $this->partModel->findById($item['part_id']);
-
-                if (!$part) {
-
-                    throw new Exception(
-                        "No existe el artículo {$item['nombre']}."
-                    );
-                }
-
-                if ($part['stock_actual'] < $item['cantidad']) {
-
-                    throw new Exception(
-                        "Stock insuficiente para {$item['nombre']}."
-                    );
-                }
-
-                $nuevoStock = $part['stock_actual'] - $item['cantidad'];
-
-                if (!$this->partModel->updateStock($part['id'], $nuevoStock)) {
-
-                    throw new Exception(
-                        "No fue posible actualizar el stock de {$item['nombre']}."
-                    );
-                }
-
-                if (!$this->partModel->registerMovement([
-
-                    'parte_id'         => $part['id'],
-                    'usuario_id'       => $_SESSION['user_id'],
-                    'caso_id'          => $caseId,
-
-                    'tipo'             => 'consumo',
-
-                    'motivo'           => 'Consumo durante reparación',
-
-                    'cantidad'         => $item['cantidad'],
-
-                    'stock_resultante' => $nuevoStock,
-
-                    'costo_unitario'   => $part['costo'],
-
-                    'observacion'      => 'Aplicado desde WorkShop'
-
-                ])) {
-
-                    throw new Exception(
-                        "No fue posible registrar el movimiento de inventario."
-                    );
-                }
-
-                $avanceModel->add(
-
-                    $caseId,
-
-                    $_SESSION['user_id'],
-
-                    sprintf(
-                        'Repuesto: %s x %s',
-                        $item['nombre'],
-                        $item['cantidad']
-                    ),
-
-                    'Repuesto',
-
-                    (int)($item['precio_venta'] * $item['cantidad'])
-
-                );
-            }
-
-            $this->pdo->commit();
-
-            $this->clearCaseCart($caseId);
-
-            $this->success('Los repuestos fueron aplicados correctamente.');
+            $this->success(
+                'Los repuestos fueron aplicados correctamente.'
+            );
         } catch (Throwable $e) {
 
-    if ($this->pdo->inTransaction()) {
-        $this->pdo->rollBack();
-    }
-
-    die(
-        '<pre>'.
-        $e->getMessage().
-        "\n\n".
-        $e->getTraceAsString().
-        '</pre>'
-    );
-}
+            $this->error($e->getMessage());
+        }
 
         $this->redirect(
             "index.php?controller=mechanic&action=viewCase&veh_id={$vehId}"
@@ -475,5 +390,157 @@ class InventoryController extends BaseController
         }
 
         return true;
+    }
+
+    public function movements(): void
+    {
+        $this->ensureLogged();
+
+        $id = (int)($_GET['id'] ?? 0);
+
+        $part = $this->partModel->findById($id);
+
+        if (!$part) {
+
+            $this->error('Artículo no encontrado.');
+
+            $this->redirect(
+                'index.php?controller=inventory&action=index'
+            );
+
+            return;
+        }
+
+        $movements = $this->partModel->getMovements($id);
+
+        $this->render(
+            'inventory/movements',
+            [
+                'part' => $part,
+                'movements' => $movements,
+                'title' => 'Movimientos de inventario'
+            ]
+        );
+    }
+
+    public function addStock(): void
+    {
+        $this->ensureLogged();
+
+        $id = (int)($_GET['id'] ?? 0);
+
+        $part = $this->partModel->findById($id);
+
+        if (!$part) {
+
+            $this->error('Artículo no encontrado.');
+
+            $this->redirect(
+                'index.php?controller=inventory'
+            );
+        }
+
+        $this->render(
+            'inventory/add_stock',
+            [
+                'title' => 'Agregar stock',
+                'part'  => $part
+            ]
+        );
+    }
+
+    public function saveStock(): void
+    {
+        $this->ensureLogged();
+
+        if (!$this->isPost()) {
+
+            $this->redirect(
+                'index.php?controller=inventory&action=index'
+            );
+        }
+
+        $id = (int)$_POST['id'];
+
+        $cantidad = (float)$_POST['cantidad'];
+
+        $costo = (float)$_POST['costo'];
+
+        $motivo = trim($_POST['motivo']);
+
+        $observacion = trim($_POST['observacion']);
+
+        $part = $this->partModel->findById($id);
+
+        if (!$part) {
+
+            $this->error('Artículo no encontrado.');
+
+            $this->redirect(
+                'index.php?controller=inventory'
+            );
+        }
+
+        $nuevoStock = $part['stock_actual'] + $cantidad;
+
+        try {
+
+            $this->pdo->beginTransaction();
+
+            if (!$this->partModel->updateInventory(
+                $id,
+                $nuevoStock,
+                $costo
+            )) {
+
+                throw new Exception(
+                    'No fue posible actualizar el inventario.'
+                );
+            }
+
+            if (!$this->partModel->registerMovement([
+
+                'parte_id'         => $id,
+                'usuario_id'       => $_SESSION['user_id'],
+                'caso_id'          => null,
+
+                'tipo'             => 'compra',
+
+                'motivo'           => $motivo,
+
+                'cantidad'         => $cantidad,
+
+                'stock_resultante' => $nuevoStock,
+
+                'costo_unitario'   => $costo,
+
+                'observacion'      => $observacion
+
+            ])) {
+
+                throw new Exception(
+                    'No fue posible registrar el movimiento.'
+                );
+            }
+
+            $this->pdo->commit();
+
+            $this->success(
+                'Stock actualizado correctamente.'
+            );
+        } catch (Throwable $e) {
+
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            $this->error(
+                $e->getMessage()
+            );
+        }
+
+        $this->redirect(
+            'index.php?controller=inventory'
+        );
     }
 }
