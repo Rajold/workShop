@@ -151,6 +151,7 @@
                         <th>Usuario</th>
 
                         <th>Motivo</th>
+                        <th>Observación</th>
 
                     </tr>
 
@@ -158,112 +159,136 @@
 
                 <tbody>
 
-                <?php if(empty($movements)): ?>
+<?php if (empty($movements)): ?>
 
-                    <tr>
+    <tr>
 
-                        <td colspan="7"
-                            class="text-center text-muted p-4">
+        <td colspan="8" class="text-center text-muted p-4">
 
-                            No existen movimientos para este artículo.
+            No existen movimientos para este artículo.
 
-                        </td>
+        </td>
 
-                    </tr>
-
-                <?php else: ?>
-
-                    <?php foreach($movements as $m): ?>
-
-                    <tr>
-
-                        <td>
-
-                            <?= date('d/m/Y H:i',strtotime($m['fecha'])) ?>
-
-                        </td>
-
-                        <td>
-
-<?php
-
-switch($m['tipo']){
-
-case 'compra':
-
-    echo '<span class="badge bg-success">Compra</span>';
-
-break;
-
-case 'consumo':
-
-    echo '<span class="badge bg-danger">Consumo</span>';
-
-break;
-
-case 'ajuste_entrada':
-
-    echo '<span class="badge bg-primary">Ajuste +</span>';
-
-break;
-
-case 'ajuste_salida':
-
-    echo '<span class="badge bg-warning text-dark">Ajuste -</span>';
-
-break;
-
-}
-
-?>
-
-                        </td>
-
-                        <td>
-
-                            <?= $m['cantidad'] ?>
-
-                        </td>
-
-                        <td>
-
-                            <?= $m['stock_resultante'] ?>
-
-                        </td>
-
-                        <td>
-
-<?php if($m['caso_id']): ?>
-
-Caso #<?= $m['caso_id'] ?>
+    </tr>
 
 <?php else: ?>
 
-—
+    <?php foreach ($movements as $m): ?>
 
-<?php endif; ?>
+        <tr>
 
-                        </td>
+            <td>
 
-                        <td>
+                <?= date('d/m/Y H:i', strtotime($m['fecha'])) ?>
 
-                            <?= htmlspecialchars($m['usuario']) ?>
+            </td>
 
-                        </td>
+            <td>
 
-                        <td>
+                <?php
 
-                            <?= htmlspecialchars($m['motivo']) ?>
+                switch ($m['tipo']) {
 
-                        </td>
+                    case 'compra':
+                        echo '<span class="badge bg-success">Compra</span>';
+                        break;
 
-                    </tr>
+                    case 'consumo':
+                        echo '<span class="badge bg-danger">Consumo</span>';
+                        break;
 
-                    <?php endforeach; ?>
+                    case 'ajuste_entrada':
+                        echo '<span class="badge bg-primary">Ajuste +</span>';
+                        break;
+
+                    case 'ajuste_salida':
+                        echo '<span class="badge bg-warning text-dark">Ajuste -</span>';
+                        break;
+                }
+
+                ?>
+
+            </td>
+
+            <td>
+
+                <?= $m['cantidad'] ?>
+
+            </td>
+
+            <td>
+
+                <?php if ($m['stock_resultante'] <= 0): ?>
+
+                    <span class="badge bg-danger">
+
+                        <?= $m['stock_resultante'] ?>
+
+                    </span>
+
+                <?php elseif ($m['stock_resultante'] <= $part['stock_minimo']): ?>
+
+                    <span class="badge bg-warning text-dark">
+
+                        <?= $m['stock_resultante'] ?>
+
+                    </span>
+
+                <?php else: ?>
+
+                    <span class="badge bg-success">
+
+                        <?= $m['stock_resultante'] ?>
+
+                    </span>
 
                 <?php endif; ?>
 
-                </tbody>
+            </td>
+
+            <td>
+
+                <?php if ($m['caso']): ?>
+
+                    <a href="index.php?controller=mechanic&action=viewCase&case_id=<?= $m['caso'] ?>">
+
+                        Caso #<?= $m['caso'] ?>
+
+                    </a>
+
+                <?php else: ?>
+
+                    —
+
+                <?php endif; ?>
+
+            </td>
+
+            <td>
+
+                <?= htmlspecialchars($m['usuario']) ?>
+
+            </td>
+
+            <td>
+
+                <?= htmlspecialchars($m['motivo']) ?>
+
+            </td>
+
+            <td>
+
+                <?= htmlspecialchars($m['observacion'] ?: '—') ?>
+
+            </td>
+
+        </tr>
+
+    <?php endforeach; ?>
+
+<?php endif; ?>
+
+</tbody>
 
             </table>
 

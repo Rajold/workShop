@@ -293,34 +293,52 @@ class Part extends BaseModel
     }
 
     /**
- * Historial de movimientos de un artículo.
- */
-public function getMovements(int $partId): array
-{
-    $stmt = $this->db->prepare("
+     * Historial de movimientos de un artículo.
+     */
+    public function getMovements(int $partId): array
+    {
+        $stmt = $this->db->prepare("
         SELECT
+
             m.*,
-            u.nombre AS usuario
+
+            u.nombre AS usuario,
+
+            p.nombre AS articulo,
+
+            c.id AS caso
+
         FROM movimientos_inventario m
+
         INNER JOIN usuarios u
             ON u.id = m.usuario_id
+
+        INNER JOIN partes p
+            ON p.id = m.parte_id
+
+        LEFT JOIN casos c
+            ON c.id = m.caso_id
+
         WHERE m.parte_id = :parte
-        ORDER BY m.fecha DESC
+
+        ORDER BY
+            m.fecha DESC,
+            m.id DESC
     ");
 
-    $stmt->execute([
-        ':parte' => $partId
-    ]);
+        $stmt->execute([
+            ':parte' => $partId
+        ]);
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
-/**
- * Obtiene estadísticas generales del inventario.
- */
-public function getStatistics(): array
-{
-    $stmt = $this->db->query("
+    /**
+     * Obtiene estadísticas generales del inventario.
+     */
+    public function getStatistics(): array
+    {
+        $stmt = $this->db->query("
         SELECT
 
             COUNT(*) AS total,
@@ -348,46 +366,50 @@ public function getStatistics(): array
                     THEN 1
                     ELSE 0
                 END
-            ) AS herramientas
+            ) AS herramientas,
+
+            COALESCE(SUM(stock_actual * costo),0) AS valor_compra,
+
+            COALESCE(SUM(stock_actual * precio_venta),0) AS valor_venta,
+
+            COALESCE(SUM(stock_actual),0) AS unidades
 
         FROM partes
 
         WHERE activo = 1
     ");
 
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
-/**
- * Actualiza el costo de un artículo.
- */
-public function updateCost(
-    int $id,
-    float $cost
-): bool
-{
-    $stmt = $this->db->prepare("
+    /**
+     * Actualiza el costo de un artículo.
+     */
+    public function updateCost(
+        int $id,
+        float $cost
+    ): bool {
+        $stmt = $this->db->prepare("
         UPDATE partes
         SET costo = :costo
         WHERE id = :id
     ");
 
-    return $stmt->execute([
-        ':costo' => $cost,
-        ':id'    => $id
-    ]);
-}
+        return $stmt->execute([
+            ':costo' => $cost,
+            ':id'    => $id
+        ]);
+    }
 
-/**
- * Actualiza simultáneamente el stock y el costo del artículo.
- */
-public function updateInventory(
-    int $id,
-    float $stock,
-    float $cost
-): bool
-{
-    $stmt = $this->db->prepare("
+    /**
+     * Actualiza simultáneamente el stock y el costo del artículo.
+     */
+    public function updateInventory(
+        int $id,
+        float $stock,
+        float $cost
+    ): bool {
+        $stmt = $this->db->prepare("
         UPDATE partes
         SET
             stock_actual = :stock,
@@ -395,10 +417,77 @@ public function updateInventory(
         WHERE id = :id
     ");
 
-    return $stmt->execute([
-        ':stock' => $stock,
-        ':costo' => $cost,
-        ':id'    => $id
-    ]);
-}
+        return $stmt->execute([
+            ':stock' => $stock,
+            ':costo' => $cost,
+            ':id'    => $id
+        ]);
+    }
+
+    public function getAllMovements(array $filters = []): array
+    {
+        $sql = "
+        SELECT
+
+            m.*,
+
+            p.codigo,
+
+            p.nombre AS articulo,
+
+            u.nombre AS usuario,
+
+            c.id AS caso
+
+        FROM movimientos_inventario m
+
+        INNER JOIN partes p
+            ON p.id = m.parte_id
+
+        INNER JOIN usuarios u
+            ON u.id = m.usuario_id
+
+        LEFT JOIN casos c
+            ON c.id = m.caso_id
+    ";
+
+        $where = [];
+
+        $params = [];
+
+        if (!empty($filters['buscar'])) {
+
+            $where[] = "(
+            p.codigo LIKE :buscar
+            OR
+            p.nombre LIKE :buscar
+        )";
+
+            $params[':buscar'] = '%' . $filters['buscar'] . '%';
+        }
+
+        if (!empty($filters['tipo'])) {
+
+            $where[] = "m.tipo = :tipo";
+
+            $params[':tipo'] = $filters['tipo'];
+        }
+
+        if (!empty($where)) {
+
+            $sql .= " WHERE " . implode(" AND ", $where);
+        }
+
+        $sql .= "
+        ORDER BY
+            m.fecha DESC,
+            m.id DESC
+    ";
+
+        $stmt = $this->db->prepare($sql);
+
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }

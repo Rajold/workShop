@@ -7,12 +7,23 @@
             <i class="bi bi-box-seam"></i>
             Inventario
         </h2>
+<div class="btn-group">
 
-        <a href="index.php?controller=inventory&action=create"
-            class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i>
-            Nuevo artículo
-        </a>
+    <a href="index.php?controller=inventory&action=create"
+    class="btn btn-primary">
+    <i class="bi bi-plus-circle"></i>
+    Nuevo artículo
+</a>
+<a
+    href="index.php?controller=inventory&action=kardex"
+    class="btn btn-dark">
+
+    <i class="bi bi-clock-history"></i>
+    
+    Kardex General
+    
+</a>
+</div>
     </div>
 
     <form method="GET" class="row g-2 mb-4">
@@ -237,6 +248,15 @@
 
                                     </a>
                                     <a
+                                        href="index.php?controller=inventory&action=adjustStock&id=<?= $part['id'] ?>"
+                                        class="btn btn-warning btn-sm">
+
+                                        <i class="bi bi-sliders"></i>
+
+                                        Ajuste
+
+                                    </a>
+                                    <a
                                         href="index.php?controller=inventory&action=addStock&id=<?= $part['id'] ?>"
                                         class="btn btn-success btn-sm">
 
@@ -253,7 +273,7 @@
                                         Editar
 
                                     </a>
-                                    
+
 
                                 </td>
 

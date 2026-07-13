@@ -543,4 +543,171 @@ class InventoryController extends BaseController
             'index.php?controller=inventory'
         );
     }
+
+    public function adjustStock(): void
+{
+    $this->ensureLogged();
+
+    $id = (int)($_GET['id'] ?? 0);
+
+    $part = $this->partModel->findById($id);
+
+    if (!$part) {
+
+        $this->error('Artículo no encontrado.');
+
+        $this->redirect(
+            'index.php?controller=inventory&action=index'
+        );
+    }
+
+    $this->render(
+        'inventory/adjust_stock',
+        [
+            'title' => 'Ajuste de inventario',
+            'part'  => $part
+        ]
+    );
+}
+
+public function saveAdjustment(): void
+{
+    $this->ensureLogged();
+
+    if (!$this->isPost()) {
+
+        $this->redirect(
+            'index.php?controller=inventory&action=index'
+        );
+    }
+
+    $id = (int)$_POST['id'];
+
+    $tipo = $_POST['tipo'];
+
+    $cantidad = (float)$_POST['cantidad'];
+
+    $motivo = trim($_POST['motivo']);
+
+    $observacion = trim($_POST['observacion']);
+
+    $part = $this->partModel->findById($id);
+
+    if (!$part) {
+
+        $this->error('Artículo no encontrado.');
+
+        $this->redirect(
+            'index.php?controller=inventory&action=index'
+        );
+    }
+
+    if ($tipo === 'entrada') {
+
+        $nuevoStock = $part['stock_actual'] + $cantidad;
+
+        $tipoMovimiento = 'ajuste_entrada';
+
+    } else {
+
+        if ($cantidad > $part['stock_actual']) {
+
+            $this->error(
+                'No es posible dejar el stock negativo.'
+            );
+
+            $this->redirect(
+                'index.php?controller=inventory&action=adjustStock&id=' . $id
+            );
+        }
+
+        $nuevoStock = $part['stock_actual'] - $cantidad;
+
+        $tipoMovimiento = 'ajuste_salida';
+    }
+
+    try {
+
+        $this->pdo->beginTransaction();
+
+        if (!$this->partModel->updateStock(
+            $id,
+            $nuevoStock
+        )) {
+
+            throw new Exception(
+                'No fue posible actualizar el stock.'
+            );
+        }
+
+        if (!$this->partModel->registerMovement([
+
+            'parte_id'         => $id,
+            'usuario_id'       => $_SESSION['user_id'],
+            'caso_id'          => null,
+
+            'tipo'             => $tipoMovimiento,
+
+            'motivo'           => $motivo,
+
+            'cantidad'         => $cantidad,
+
+            'stock_resultante' => $nuevoStock,
+
+            'costo_unitario'   => $part['costo'],
+
+            'observacion'      => $observacion
+
+        ])) {
+
+            throw new Exception(
+                'No fue posible registrar el movimiento.'
+            );
+        }
+
+        $this->pdo->commit();
+
+        $this->success(
+            'Ajuste realizado correctamente.'
+        );
+
+    } catch (Throwable $e) {
+
+        if ($this->pdo->inTransaction()) {
+            $this->pdo->rollBack();
+        }
+
+        $this->error(
+            $e->getMessage()
+        );
+    }
+
+    $this->redirect(
+        'index.php?controller=inventory&action=index'
+    );
+}
+
+public function kardex(): void
+{
+    $this->ensureLogged();
+
+    $filters = [
+
+        'buscar' => trim($_GET['buscar'] ?? ''),
+
+        'tipo' => trim($_GET['tipo'] ?? '')
+
+    ];
+
+    $movements = $this->partModel->getAllMovements($filters);
+
+    $this->render(
+        'inventory/kardex',
+        [
+            'title'     => 'Kardex General',
+            'movements' => $movements,
+            'filters'   => $filters
+        ]
+    );
+}
 }
