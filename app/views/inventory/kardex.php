@@ -25,102 +25,179 @@
         <div class="card-body p-0">
             <form class="row g-2 mb-3" method="GET">
 
-    <input
-        type="hidden"
-        name="controller"
-        value="inventory">
+                <input
+                    type="hidden"
+                    name="controller"
+                    value="inventory">
 
-    <input
-        type="hidden"
-        name="action"
-        value="kardex">
+                <input
+                    type="hidden"
+                    name="action"
+                    value="kardex">
 
-    <div class="col-md-4">
+                <div class="col-md-4">
 
-        <input
-            type="text"
-            class="form-control"
-            name="buscar"
-            placeholder="Buscar artículo..."
-            value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>">
+                    <input
+                        type="text"
+                        class="form-control"
+                        name="buscar"
+                        placeholder="Buscar artículo..."
+                        value="<?= htmlspecialchars($_GET['buscar'] ?? '') ?>">
 
-    </div>
+                </div>
 
-    <div class="col-md-3">
+                <div class="col-md-3">
 
-        <select
-    name="tipo"
-    class="form-select">
+                    <select
+                        name="tipo"
+                        class="form-select">
 
-    <option
-        value=""
-        <?= empty($filters['tipo']) ? 'selected' : '' ?>>
+                        <option
+                            value=""
+                            <?= empty($filters['tipo']) ? 'selected' : '' ?>>
 
-        Todos los movimientos
+                            Todos los movimientos
 
-    </option>
+                        </option>
 
-    <option
-        value="compra"
-        <?= ($filters['tipo'] ?? '') === 'compra' ? 'selected' : '' ?>>
+                        <option
+                            value="compra"
+                            <?= ($filters['tipo'] ?? '') === 'compra' ? 'selected' : '' ?>>
 
-        Compra
+                            Compra
 
-    </option>
+                        </option>
 
-    <option
-        value="consumo"
-        <?= ($filters['tipo'] ?? '') === 'consumo' ? 'selected' : '' ?>>
+                        <option
+                            value="consumo"
+                            <?= ($filters['tipo'] ?? '') === 'consumo' ? 'selected' : '' ?>>
 
-        Consumo
+                            Consumo
 
-    </option>
+                        </option>
 
-    <option
-        value="ajuste_entrada"
-        <?= ($filters['tipo'] ?? '') === 'ajuste_entrada' ? 'selected' : '' ?>>
+                        <option
+                            value="ajuste_entrada"
+                            <?= ($filters['tipo'] ?? '') === 'ajuste_entrada' ? 'selected' : '' ?>>
 
-        Ajuste entrada
+                            Ajuste entrada
 
-    </option>
+                        </option>
 
-    <option
-        value="ajuste_salida"
-        <?= ($filters['tipo'] ?? '') === 'ajuste_salida' ? 'selected' : '' ?>>
+                        <option
+                            value="ajuste_salida"
+                            <?= ($filters['tipo'] ?? '') === 'ajuste_salida' ? 'selected' : '' ?>>
 
-        Ajuste salida
+                            Ajuste salida
 
-    </option>
+                        </option>
 
-</select>
+                    </select>
 
-    </div>
+                </div>
 
-    <div class="col-md-2">
+                <div class="col-md-2">
 
-        <button class="btn btn-primary w-100">
+                    <button class="btn btn-primary w-100">
 
-            <i class="bi bi-search"></i>
+                        <i class="bi bi-search"></i>
 
-            Buscar
+                        Buscar
 
-        </button>
+                    </button>
 
-    </div>
+                </div>
 
-    <div class="col-md-2">
+                <div class="col-md-2">
 
-        <a
-            href="index.php?controller=inventory&action=kardex"
-            class="btn btn-secondary w-100">
+                    <a
+                        href="index.php?controller=inventory&action=kardex"
+                        class="btn btn-secondary w-100">
 
-            Limpiar
+                        Limpiar
 
-        </a>
+                    </a>
 
-    </div>
+                </div>
 
-</form>
+            </form>
+
+            <div class="row mb-3">
+
+                <div class="col-md-4">
+
+                    <div class="card border-primary shadow-sm">
+
+                        <div class="card-body text-center">
+
+                            <small class="text-muted">
+
+                                Movimientos encontrados
+
+                            </small>
+
+                            <h2 class="mb-0">
+
+                                <?= number_format($summary['movimientos']) ?>
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="card border-success shadow-sm">
+
+                        <div class="card-body text-center">
+
+                            <small class="text-muted">
+
+                                Unidades ingresadas
+
+                            </small>
+
+                            <h2 class="mb-0 text-success">
+
+                                <?= number_format($summary['entradas']) ?>
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+                <div class="col-md-4">
+
+                    <div class="card border-danger shadow-sm">
+
+                        <div class="card-body text-center">
+
+                            <small class="text-muted">
+
+                                Unidades salidas
+
+                            </small>
+
+                            <h2 class="mb-0 text-danger">
+
+                                <?= number_format($summary['salidas']) ?>
+
+                            </h2>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
 
             <table class="table table-hover mb-0">
 
@@ -129,14 +206,14 @@
                     <tr>
 
                         <th>Fecha</th>
-<th>Artículo</th>
-<th>Tipo</th>
-<th>Cantidad</th>
-<th>Stock</th>
-<th>Caso</th>
-<th>Usuario</th>
-<th>Motivo</th>
-<th>Observación</th>
+                        <th>Artículo</th>
+                        <th>Tipo</th>
+                        <th>Cantidad</th>
+                        <th>Stock</th>
+                        <th>Caso</th>
+                        <th>Usuario</th>
+                        <th>Motivo</th>
+                        <th>Observación</th>
 
                     </tr>
 
@@ -144,145 +221,144 @@
 
                 <tbody>
 
-<?php if (empty($movements)): ?>
+                    <?php if (empty($movements)): ?>
 
-<tr>
+                        <tr>
 
-    <td colspan="9" class="text-center text-muted p-4">
+                            <td colspan="9" class="text-center text-muted p-4">
 
-        <i class="bi bi-search"></i>
+                                <i class="bi bi-search"></i>
 
-        No se encontraron movimientos.
+                                No se encontraron movimientos.
 
-    </td>
+                            </td>
 
-</tr>
+                        </tr>
 
-<?php else: ?>
+                    <?php else: ?>
 
-    <?php foreach($movements as $m): ?>
+                        <?php foreach ($movements as $m): ?>
 
-                    <tr>
+                            <tr>
 
-                        <td>
+                                <td>
 
-                            <?= date('d/m/Y H:i', strtotime($m['fecha'])) ?>
+                                    <?= date('d/m/Y H:i', strtotime($m['fecha'])) ?>
 
-                        </td>
+                                </td>
 
-                        <td>
+                                <td>
 
-                            <strong><?= htmlspecialchars($m['codigo']) ?></strong><br>
+                                    <strong><?= htmlspecialchars($m['codigo']) ?></strong><br>
 
-                            <small><?= htmlspecialchars($m['articulo']) ?></small>
+                                    <small><?= htmlspecialchars($m['articulo']) ?></small>
 
-                        </td>
+                                </td>
 
-                        <td>
+                                <td>
 
-<?php
+                                    <?php
 
-switch($m['tipo']){
+                                    switch ($m['tipo']) {
 
-case 'compra':
+                                        case 'compra':
 
-    echo '<span class="badge bg-success">
+                                            echo '<span class="badge bg-success">
             <i class="bi bi-cart-plus"></i>
             Compra
           </span>';
 
-break;
+                                            break;
 
-case 'consumo':
+                                        case 'consumo':
 
-    echo '<span class="badge bg-danger">
+                                            echo '<span class="badge bg-danger">
             <i class="bi bi-tools"></i>
             Consumo
           </span>';
 
-break;
+                                            break;
 
-case 'ajuste_entrada':
+                                        case 'ajuste_entrada':
 
-    echo '<span class="badge bg-primary">
+                                            echo '<span class="badge bg-primary">
             <i class="bi bi-arrow-up-circle"></i>
             Ajuste +
           </span>';
 
-break;
+                                            break;
 
-case 'ajuste_salida':
+                                        case 'ajuste_salida':
 
-    echo '<span class="badge bg-warning text-dark">
+                                            echo '<span class="badge bg-warning text-dark">
             <i class="bi bi-arrow-down-circle"></i>
             Ajuste -
           </span>';
 
-break;
+                                            break;
+                                    }
 
-}
+                                    ?>
 
-?>
+                                </td>
 
-</td>
+                                <td>
 
-                        <td>
+                                    <?= $m['cantidad'] ?>
 
-                            <?= $m['cantidad'] ?>
+                                </td>
 
-                        </td>
+                                <td>
 
-                        <td>
+                                    <span class="badge bg-secondary">
 
-<span class="badge bg-secondary">
+                                        <?= $m['stock_resultante'] ?>
 
-<?= $m['stock_resultante'] ?>
+                                    </span>
 
-</span>
+                                </td>
 
-</td>
+                                <td>
 
-                        <td>
+                                    <?php if ($m['caso']): ?>
 
-                            <?php if($m['caso']): ?>
+                                        <a
+                                            href="index.php?controller=mechanic&action=viewCase&case_id=<?= $m['caso'] ?>">
 
-<a
-    href="index.php?controller=mechanic&action=viewCase&case_id=<?= $m['caso'] ?>">
+                                            Caso #<?= $m['caso'] ?>
 
-    Caso #<?= $m['caso'] ?>
+                                        </a>
 
-</a>
+                                    <?php else: ?>
 
-<?php else: ?>
+                                        —
 
-—
+                                    <?php endif; ?>
 
-<?php endif; ?>
+                                </td>
 
-                        </td>
-                        
-                        <td>
-                            
-                            <?= htmlspecialchars($m['usuario']) ?>
-                            
-                        </td>
+                                <td>
 
-                        <td>
-                            
-                            <?= htmlspecialchars($m['motivo']) ?>
-                            
-                        </td>
-                        <td>
-                            <?= htmlspecialchars($m['observacion'] ?: '—') ?>
-                        </td>
+                                    <?= htmlspecialchars($m['usuario']) ?>
 
-                    </tr>
+                                </td>
 
-                <?php endforeach; ?>
+                                <td>
 
-<?php endif; ?>
+                                    <?= htmlspecialchars($m['motivo']) ?>
 
-</tbody>
+                                </td>
+                                <td>
+                                    <?= htmlspecialchars($m['observacion'] ?: '—') ?>
+                                </td>
+
+                            </tr>
+
+                        <?php endforeach; ?>
+
+                    <?php endif; ?>
+
+                </tbody>
 
             </table>
 

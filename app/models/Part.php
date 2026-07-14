@@ -457,14 +457,16 @@ class Part extends BaseModel
 
         if (!empty($filters['buscar'])) {
 
-            $where[] = "(
-            p.codigo LIKE :buscar
-            OR
-            p.nombre LIKE :buscar
-        )";
+    $where[] = "(
+        p.codigo LIKE :buscar_codigo
+        OR
+        p.nombre LIKE :buscar_nombre
+    )";
 
-            $params[':buscar'] = '%' . $filters['buscar'] . '%';
-        }
+    $params[':buscar_codigo'] = '%' . $filters['buscar'] . '%';
+
+    $params[':buscar_nombre'] = '%' . $filters['buscar'] . '%';
+}
 
         if (!empty($filters['tipo'])) {
 

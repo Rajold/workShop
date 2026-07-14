@@ -701,13 +701,40 @@ public function kardex(): void
 
     $movements = $this->partModel->getAllMovements($filters);
 
+$summary = [
+
+    'movimientos' => count($movements),
+
+    'entradas' => 0,
+
+    'salidas' => 0
+
+];
+
+foreach ($movements as $m) {
+
+    if (in_array($m['tipo'], ['compra', 'ajuste_entrada'])) {
+
+        $summary['entradas'] += $m['cantidad'];
+
+    }
+
+    if (in_array($m['tipo'], ['consumo', 'ajuste_salida'])) {
+
+        $summary['salidas'] += $m['cantidad'];
+
+    }
+
+}
+
     $this->render(
-        'inventory/kardex',
-        [
-            'title'     => 'Kardex General',
-            'movements' => $movements,
-            'filters'   => $filters
-        ]
-    );
+    'inventory/kardex',
+    [
+        'title'     => 'Kardex General',
+        'movements' => $movements,
+        'filters'   => $filters,
+        'summary'   => $summary
+    ]
+);
 }
 }
