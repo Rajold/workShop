@@ -1,174 +1,121 @@
-<div class="container mt-4">
+Una estructura sencilla podría ser:
 
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>
-            <i class="bi bi-box-seam"></i>
-            Inventario
-        </h2>
+CCC-TTT-EEE-MMM
 
-        <a href="index.php?controller=inventory&action=create"
-           class="btn btn-primary">
-            <i class="bi bi-plus-circle"></i>
-            Nuevo artículo
-        </a>
-    </div>
+Donde:
 
-    <form method="GET" class="row g-2 mb-4">
+CCC = Categoría (3 letras)
+TTT = Tipo o función (3 letras)
+EEE = Especificación (2-4 caracteres)
+MMM = Número consecutivo o variante
+Ejemplos de categorías
+Categoría	Código
+Bombillos	BOM
+Guayas	GUA
+Bujías	BUJ
+Relays	REL
+Bobinas	BOB
+Llantas	LLA
+Baterías	BAT
+Tornillos	TOR
+Bandas de freno	BDF
+Pastillas de freno	PDF
+Empaquetaduras	EMP
+Retenedores	RET
+Rodamientos	ROD
+Bombillos
 
-        <input type="hidden" name="controller" value="inventory">
-        <input type="hidden" name="action" value="index">
+Aquí el segundo bloque identifica el uso.
 
-        <div class="col-md-10">
-            <input
-                type="text"
-                class="form-control"
-                name="q"
-                placeholder="Buscar por código, nombre o marca..."
-                value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
-        </div>
+Artículo	Código
+Bombillo LED	BOM-LED-001
+Bombillo Stop	BOM-STP-001
+Bombillo Direccional	BOM-DIR-001
+Bombillo Faro Principal	BOM-FAR-001
+Bombillo Tablero	BOM-TAB-001
+Bombillo Posición	BOM-POS-001
 
-        <div class="col-md-2 d-grid">
-            <button class="btn btn-secondary">
-                Buscar
-            </button>
-        </div>
+Si hay diferentes voltajes:
 
-    </form>
+BOM-FAR-12V-001
+BOM-FAR-24V-001
 
-    <div class="row mb-4">
+O diferentes referencias:
 
-        <div class="col-md-3">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h3><?= count($parts) ?></h3>
-                    <small>Total artículos</small>
-                </div>
-            </div>
-        </div>
+BOM-FAR-H4-001
+BOM-FAR-H7-001
+Guayas
+Artículo	Código
+Guaya de freno	GUA-FRE-001
+Guaya de embrague	GUA-EMB-001
+Guaya acelerador	GUA-ACE-001
+Guaya velocímetro	GUA-VEL-001
+Guaya choke	GUA-CHO-001
+Bujías
 
-        <div class="col-md-3">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h3>0</h3>
-                    <small>Stock bajo</small>
-                </div>
-            </div>
-        </div>
+Puedes usar la referencia.
 
-        <div class="col-md-3">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h3>0</h3>
-                    <small>Sin existencias</small>
-                </div>
-            </div>
-        </div>
+BUJ-CR7HSA
+BUJ-D8EA
+BUJ-BPR6ES
+Relays
+REL-12V-30A
+REL-12V-40A
+REL-24V-40A
+Bobinas
+BOB-125-001
+BOB-150-001
+BOB-GEN-001
+Rodamientos
 
-        <div class="col-md-3">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h3>0</h3>
-                    <small>Herramientas</small>
-                </div>
-            </div>
-        </div>
+Lo mejor es usar directamente el número del fabricante.
 
-    </div>
+ROD-6201
+ROD-6202
+ROD-6305
+Retenedores
+RET-20X35X7
+RET-25X40X8
+Tornillos
+TOR-M6X20
+TOR-M8X25
+TOR-M10X40
+Llantas
+LLA-90/90-18
+LLA-100/80-17
+LLA-120/70-17
+Baterías
+BAT-YTX7A
+BAT-12N7
+BAT-12V9AH
+Si manejas varias marcas
 
-    <div class="card">
+Puedes agregar la marca al final.
 
-        <div class="card-body p-0">
+Ejemplos:
 
-            <table class="table table-hover mb-0">
+BOM-FAR-H4-PHI (Philips)
+BOM-FAR-H4-OSR (Osram)
+BAT-YTX7A-MOT (Motobatt)
+ROD-6202-NSK
+ROD-6202-KOY
+Mi recomendación
 
-                <thead class="table-dark">
+Evitaría usar códigos totalmente numéricos como 00012458, porque obligan a consultar una lista cada vez.
 
-                    <tr>
+En un taller de motos funciona muy bien un código del estilo:
 
-                        <th>Código</th>
-                        <th>Artículo</th>
-                        <th>Tipo</th>
-                        <th>Marca</th>
-                        <th>Stock</th>
-                        <th>Estado</th>
-                        <th width="170">Acciones</th>
+Categoría – Función – Medida/Referencia – Marca (opcional)
 
-                    </tr>
+Por ejemplo:
 
-                </thead>
-
-                <tbody>
-
-                <?php if (empty($parts)): ?>
-
-                    <tr>
-
-                        <td colspan="7" class="text-center p-4 text-muted">
-
-                            No hay artículos registrados.
-
-                        </td>
-
-                    </tr>
-
-                <?php else: ?>
-
-                    <?php foreach ($parts as $part): ?>
-
-                        <tr>
-
-                            <td><?= htmlspecialchars($part['codigo']) ?></td>
-
-                       <a href="#"
-                                   class="btn btn-sm btn-warning">
-                                    Editar
-                                </a>      <td><?= htmlspecialchars($part['nombre']) ?></td>
-
-                            <td><?= htmlspecialchars($part['tipo']) ?></td>
-
-                            <td><?= htmlspecialchars($part['marca']) ?></td>
-
-                            <td><?= $part['stock_actual'] ?></td>
-
-                            <td>
-
-                                <?php if ($part['activo']): ?>
-
-                                    <span class="badge bg-success">
-                                        Activo
-                                    </span>
-
-                                <?php else: ?>
-
-                                    <span class="badge bg-danger">
-                                        Inactivo
-                                    </span>
-
-                                <?php endif; ?>
-
-                            </td>
-
-                            <td>
-
-                                <a href="#"
-                                   class="btn btn-sm btn-warning">
-                                    Editar
-                                </a>
-
-                            </td>
-
-                        </tr>
-
-                    <?php endforeach; ?>
-
-                <?php endif; ?>
-
-                </tbody>
-
-            </table>
-
-        </div>
-
-    </div>
-
-</div>
+BOM-FAR-H4
+BOM-DIR-12V
+GUA-FRE-AKT125
+GUA-EMB-CG150
+BAT-YTX7A
+TOR-M8X25
+ROD-6202
+RET-20X35X7
+PDF-PUL180
+BDF-CG125
