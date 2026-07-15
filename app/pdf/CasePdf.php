@@ -175,6 +175,13 @@ $this->tablaDosColumnas([
     //==============================
 
     $this->titulo("CAUSA REPORTADA");
+    $this->SetFont('Arial','',10);
+
+    $this->MultiCell(
+        0,
+        6,
+        $caso['causa']
+    );
 
     $this->Ln(4);
 
@@ -228,13 +235,7 @@ $this->tablaDosColumnas([
 
 
 
-    $this->SetFont('Arial','',10);
-
-    $this->MultiCell(
-        0,
-        6,
-        $caso['causa']
-    );
+    
 
     $this->Ln(4);
 
