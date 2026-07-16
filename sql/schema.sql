@@ -379,6 +379,158 @@ CONSTRAINT `fk_movimiento_caso`
 DEFAULT CHARSET=utf8mb4
 COLLATE=utf8mb4_unicode_ci;
 
+CREATE TABLE marcas_moto (
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    nombre VARCHAR(100) NOT NULL,
+
+    activo TINYINT(1) NOT NULL DEFAULT 1,
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT uk_marcas_moto_nombre
+        UNIQUE (nombre)
+
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE tipos_moto (
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    nombre VARCHAR(100) NOT NULL,
+
+    activo TINYINT(1) NOT NULL DEFAULT 1,
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT uk_tipos_moto_nombre
+        UNIQUE (nombre)
+
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE fabricante_repuesto (
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    nombre VARCHAR(100) NOT NULL,
+
+    descripcion TEXT DEFAULT NULL,
+
+    activo TINYINT(1) NOT NULL DEFAULT 1,
+
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    CONSTRAINT uk_fabricante_nombre
+        UNIQUE (nombre)
+
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE modelos_moto (
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    marca_moto_id INT NOT NULL,
+
+    tipo_moto_id INT NOT NULL,
+
+    linea VARCHAR(30) NOT NULL,
+
+    cilindrada SMALLINT UNSIGNED DEFAULT NULL,
+
+    activo TINYINT(1) NOT NULL DEFAULT 1,
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    KEY idx_marca (marca_moto_id),
+
+    KEY idx_tipo (tipo_moto_id),
+
+    KEY idx_linea (linea),
+
+    KEY idx_cilindrada (cilindrada),
+
+    CONSTRAINT fk_modelo_marca
+        FOREIGN KEY (marca_moto_id)
+        REFERENCES marcas_moto(id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT,
+
+    CONSTRAINT fk_modelo_tipo
+        FOREIGN KEY (tipo_moto_id)
+        REFERENCES tipos_moto(id)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT,
+
+    CONSTRAINT uk_modelo_moto
+        UNIQUE (
+            marca_moto_id,
+            tipo_moto_id,
+            linea,
+            cilindrada
+        )
+
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE aplicacion_parte (
+
+    id INT AUTO_INCREMENT PRIMARY KEY,
+
+    parte_id INT NOT NULL,
+
+    modelo_moto_id INT NOT NULL,
+
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+        ON UPDATE CURRENT_TIMESTAMP,
+
+    KEY idx_parte (parte_id),
+
+    KEY idx_modelo (modelo_moto_id),
+
+    CONSTRAINT fk_aplicacion_parte
+        FOREIGN KEY (parte_id)
+        REFERENCES partes(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT fk_aplicacion_modelo
+        FOREIGN KEY (modelo_moto_id)
+        REFERENCES modelos_moto(id)
+        ON UPDATE CASCADE
+        ON DELETE CASCADE,
+
+    CONSTRAINT uk_aplicacion
+        UNIQUE (
+            parte_id,
+            modelo_moto_id
+        )
+
+) ENGINE=InnoDB
+DEFAULT CHARSET=utf8mb4
+COLLATE=utf8mb4_unicode_ci;
+
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
