@@ -102,36 +102,40 @@ class Part extends BaseModel
         $sql = "
         INSERT INTO partes (
             codigo,
-            categoria_id,
-            tipo,
-            nombre,
-            marca,
-            created_by,
-            unidad,
-            stock_actual,
-            stock_minimo,
-            costo,
-            precio_venta,
-            ubicacion,
-            codigo_barras,
-            activo
+categoria_id,
+tipo,
+nombre,
+marca,
+fabricante_repuesto_id,
+numero_parte,
+created_by,
+unidad,
+stock_actual,
+stock_minimo,
+costo,
+precio_venta,
+ubicacion,
+codigo_barras,
+activo
         )
         VALUES (
-            :codigo,
-            :categoria_id,
-            :tipo,
-            :nombre,
-            :marca,
-            :created_by,
-            :unidad,
-            0,
-            :stock_minimo,
-            :costo,
-            :precio_venta,
-            :ubicacion,
-            :codigo_barras,
-            :activo
-        )
+    :codigo,
+    :categoria_id,
+    :tipo,
+    :nombre,
+    :marca,
+    :fabricante_repuesto_id,
+    :numero_parte,
+    :created_by,
+    :unidad,
+    0,
+    :stock_minimo,
+    :costo,
+    :precio_venta,
+    :ubicacion,
+    :codigo_barras,
+    :activo
+)
     ";
 
         $stmt = $this->db->prepare($sql);
@@ -142,6 +146,8 @@ class Part extends BaseModel
             ':tipo'           => $data['tipo'],
             ':nombre'         => $data['nombre'],
             ':marca'          => $data['marca'] ?? null,
+            ':fabricante_repuesto_id' => $data['fabricante_repuesto_id'] ?? null,
+            ':numero_parte'           => $data['numero_parte'] ?? null,
             ':created_by'     => $data['created_by'] ?? null,
             ':unidad'         => $data['unidad'],
             ':stock_minimo'   => $data['stock_minimo'] ?: 0,
@@ -168,7 +174,9 @@ class Part extends BaseModel
             tipo = :tipo,
             nombre = :nombre,
             marca = :marca,
-            unidad = :unidad,
+fabricante_repuesto_id = :fabricante_repuesto_id,
+numero_parte = :numero_parte,
+unidad = :unidad,
             stock_minimo = :stock_minimo,
             costo = :costo,
             precio_venta = :precio_venta,
@@ -187,6 +195,8 @@ class Part extends BaseModel
             ':tipo'           => $data['tipo'],
             ':nombre'         => $data['nombre'],
             ':marca'          => $data['marca'] ?? null,
+            ':fabricante_repuesto_id' => $data['fabricante_repuesto_id'] ?? null,
+':numero_parte'           => $data['numero_parte'] ?? null,
             ':unidad'         => $data['unidad'],
             ':stock_minimo'   => $data['stock_minimo'] ?: 0,
             ':costo'          => $data['costo'] ?: 0,
@@ -457,16 +467,16 @@ class Part extends BaseModel
 
         if (!empty($filters['buscar'])) {
 
-    $where[] = "(
+            $where[] = "(
         p.codigo LIKE :buscar_codigo
         OR
         p.nombre LIKE :buscar_nombre
     )";
 
-    $params[':buscar_codigo'] = '%' . $filters['buscar'] . '%';
+            $params[':buscar_codigo'] = '%' . $filters['buscar'] . '%';
 
-    $params[':buscar_nombre'] = '%' . $filters['buscar'] . '%';
-}
+            $params[':buscar_nombre'] = '%' . $filters['buscar'] . '%';
+        }
 
         if (!empty($filters['tipo'])) {
 

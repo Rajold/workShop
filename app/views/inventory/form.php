@@ -152,19 +152,53 @@ function field($name, $part, $old)
                         </select>
                     </div>
 
-                    <div class="col-md-6 mb-3">
+                    <div class="mb-3">
 
                         <label class="form-label">
 
-                            Marca
+                            Fabricante
+
+                        </label>
+
+                        <select
+                            name="fabricante_repuesto_id"
+                            class="form-select">
+
+                            <option value="">
+
+                                Seleccione...
+
+                            </option>
+
+                            <?php foreach ($manufacturers as $manufacturer): ?>
+
+                                <option
+                                    value="<?= $manufacturer['id'] ?>"
+                                    <?= (($part['fabricante_repuesto_id'] ?? '') == $manufacturer['id']) ? 'selected' : '' ?>>
+
+                                    <?= htmlspecialchars($manufacturer['nombre']) ?>
+
+                                </option>
+
+                            <?php endforeach; ?>
+
+                        </select>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Número de parte
 
                         </label>
 
                         <input
                             type="text"
+                            name="numero_parte"
                             class="form-control"
-                            name="marca"
-                            value="<?= field('marca', $part, $old) ?>">
+                            value="<?= htmlspecialchars($part['numero_parte'] ?? '') ?>">
 
                     </div>
 

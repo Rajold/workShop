@@ -30,8 +30,13 @@ $action = $_GET['action'] ?? ($controller === 'auth' ? 'login' : 'index');
 $controller = preg_replace('/[^a-z0-9_]/i','', $controller);
 $action = preg_replace('/[^a-z0-9_]/i','', $action);
 
-$controllerClass = ucfirst($controller) . 'Controller';
+$controllerClass = str_replace(
+    ' ',
+    '',
+    ucwords(str_replace(['_', '-'], ' ', $controller))
+) . 'Controller';
 $controllerFile = __DIR__ . '/../app/controllers/' . $controllerClass . '.php';
+
 
 
 if (file_exists($controllerFile)) {

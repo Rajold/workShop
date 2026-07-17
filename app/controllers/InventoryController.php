@@ -7,6 +7,7 @@ class InventoryController extends BaseController
 {
     private Part $partModel;
     private InventoryService $inventoryService;
+    private FabricanteRepuesto $manufacturerModel;
 
 
     public function __construct(PDO $pdo)
@@ -15,6 +16,7 @@ class InventoryController extends BaseController
 
         $this->partModel = new Part($pdo);
         $this->inventoryService = new InventoryService($pdo);
+        $this->manufacturerModel = new FabricanteRepuesto($pdo);
     }
 
     /**
@@ -49,7 +51,8 @@ class InventoryController extends BaseController
         $this->render('inventory/form', [
             'part' => null,
             'categories' => $this->partModel->categories(),
-            'title' => 'Nuevo artículo'
+            'title' => 'Nuevo artículo',
+            'manufacturers' => $this->manufacturerModel->active()
         ]);
     }
 
@@ -73,6 +76,7 @@ class InventoryController extends BaseController
 
         $part = $this->partModel->findById($id);
 
+
         if (!$part) {
 
             $this->error('El artículo no existe.');
@@ -85,7 +89,10 @@ class InventoryController extends BaseController
         $this->render('inventory/form', [
             'part' => $part,
             'categories' => $this->partModel->categories(),
-            'title' => 'Editar artículo'
+            'title' => 'Editar artículo',
+            'manufacturers' => $this->manufacturerModel->active()
+
+
         ]);
     }
 
@@ -94,6 +101,15 @@ class InventoryController extends BaseController
         $this->ensureLogged();
 
         $data = $_POST;
+        // Fabricante
+        $data['fabricante_repuesto_id'] =
+            !empty($_POST['fabricante_repuesto_id'])
+            ? (int)$_POST['fabricante_repuesto_id']
+            : null;
+
+        // Número de parte
+        $data['numero_parte'] =
+            trim($_POST['numero_parte'] ?? '');
 
         $id = (int)($data['id'] ?? 0);
 
@@ -118,7 +134,19 @@ class InventoryController extends BaseController
         $data['precio_venta'] = $data['precio_venta'] !== ''
             ? (float)$data['precio_venta']
             : 0;
+        // Compatibilidad temporal con la columna "marca"
+        $data['marca'] = null;
 
+        if ($data['fabricante_repuesto_id']) {
+
+            $fabricante = $this->manufacturerModel
+                ->find($data['fabricante_repuesto_id']);
+
+            if ($fabricante) {
+
+                $data['marca'] = $fabricante['nombre'];
+            }
+        }
         $data['id'] = $id;
 
         // Validación básica
@@ -155,6 +183,16 @@ class InventoryController extends BaseController
 
         $data = $_POST;
 
+        // Fabricante
+        $data['fabricante_repuesto_id'] =
+            !empty($_POST['fabricante_repuesto_id'])
+            ? (int)$_POST['fabricante_repuesto_id']
+            : null;
+
+        // Número de parte
+        $data['numero_parte'] =
+            trim($_POST['numero_parte'] ?? '');
+
         // Normalizar valores numéricos
         $data['stock_minimo'] = $data['stock_minimo'] !== ''
             ? (float)$data['stock_minimo']
@@ -170,6 +208,20 @@ class InventoryController extends BaseController
 
         // Usuario que crea el registro
         $data['created_by'] = $_SESSION['user_id'];
+
+        // Compatibilidad temporal con la columna "marca"
+        $data['marca'] = null;
+
+        if ($data['fabricante_repuesto_id']) {
+
+            $fabricante = $this->manufacturerModel
+                ->find($data['fabricante_repuesto_id']);
+
+            if ($fabricante) {
+
+                $data['marca'] = $fabricante['nombre'];
+            }
+        }
 
         // Validación básica
         if (empty($data['codigo']) || empty($data['nombre'])) {
@@ -545,196 +597,191 @@ class InventoryController extends BaseController
     }
 
     public function adjustStock(): void
-{
-    $this->ensureLogged();
+    {
+        $this->ensureLogged();
 
-    $id = (int)($_GET['id'] ?? 0);
+        $id = (int)($_GET['id'] ?? 0);
 
-    $part = $this->partModel->findById($id);
+        $part = $this->partModel->findById($id);
 
-    if (!$part) {
+        if (!$part) {
 
-        $this->error('Artículo no encontrado.');
-
-        $this->redirect(
-            'index.php?controller=inventory&action=index'
-        );
-    }
-
-    $this->render(
-        'inventory/adjust_stock',
-        [
-            'title' => 'Ajuste de inventario',
-            'part'  => $part
-        ]
-    );
-}
-
-public function saveAdjustment(): void
-{
-    $this->ensureLogged();
-
-    if (!$this->isPost()) {
-
-        $this->redirect(
-            'index.php?controller=inventory&action=index'
-        );
-    }
-
-    $id = (int)$_POST['id'];
-
-    $tipo = $_POST['tipo'];
-
-    $cantidad = (float)$_POST['cantidad'];
-
-    $motivo = trim($_POST['motivo']);
-
-    $observacion = trim($_POST['observacion']);
-
-    $part = $this->partModel->findById($id);
-
-    if (!$part) {
-
-        $this->error('Artículo no encontrado.');
-
-        $this->redirect(
-            'index.php?controller=inventory&action=index'
-        );
-    }
-
-    if ($tipo === 'entrada') {
-
-        $nuevoStock = $part['stock_actual'] + $cantidad;
-
-        $tipoMovimiento = 'ajuste_entrada';
-
-    } else {
-
-        if ($cantidad > $part['stock_actual']) {
-
-            $this->error(
-                'No es posible dejar el stock negativo.'
-            );
+            $this->error('Artículo no encontrado.');
 
             $this->redirect(
-                'index.php?controller=inventory&action=adjustStock&id=' . $id
+                'index.php?controller=inventory&action=index'
             );
         }
 
-        $nuevoStock = $part['stock_actual'] - $cantidad;
-
-        $tipoMovimiento = 'ajuste_salida';
-    }
-
-    try {
-
-        $this->pdo->beginTransaction();
-
-        if (!$this->partModel->updateStock(
-            $id,
-            $nuevoStock
-        )) {
-
-            throw new Exception(
-                'No fue posible actualizar el stock.'
-            );
-        }
-
-        if (!$this->partModel->registerMovement([
-
-            'parte_id'         => $id,
-            'usuario_id'       => $_SESSION['user_id'],
-            'caso_id'          => null,
-
-            'tipo'             => $tipoMovimiento,
-
-            'motivo'           => $motivo,
-
-            'cantidad'         => $cantidad,
-
-            'stock_resultante' => $nuevoStock,
-
-            'costo_unitario'   => $part['costo'],
-
-            'observacion'      => $observacion
-
-        ])) {
-
-            throw new Exception(
-                'No fue posible registrar el movimiento.'
-            );
-        }
-
-        $this->pdo->commit();
-
-        $this->success(
-            'Ajuste realizado correctamente.'
-        );
-
-    } catch (Throwable $e) {
-
-        if ($this->pdo->inTransaction()) {
-            $this->pdo->rollBack();
-        }
-
-        $this->error(
-            $e->getMessage()
+        $this->render(
+            'inventory/adjust_stock',
+            [
+                'title' => 'Ajuste de inventario',
+                'part'  => $part
+            ]
         );
     }
 
-    $this->redirect(
-        'index.php?controller=inventory&action=index'
-    );
-}
+    public function saveAdjustment(): void
+    {
+        $this->ensureLogged();
 
-public function kardex(): void
-{
-    $this->ensureLogged();
+        if (!$this->isPost()) {
 
-    $filters = [
+            $this->redirect(
+                'index.php?controller=inventory&action=index'
+            );
+        }
 
-        'buscar' => trim($_GET['buscar'] ?? ''),
+        $id = (int)$_POST['id'];
 
-        'tipo' => trim($_GET['tipo'] ?? '')
+        $tipo = $_POST['tipo'];
 
-    ];
+        $cantidad = (float)$_POST['cantidad'];
 
-    $movements = $this->partModel->getAllMovements($filters);
+        $motivo = trim($_POST['motivo']);
 
-$summary = [
+        $observacion = trim($_POST['observacion']);
 
-    'movimientos' => count($movements),
+        $part = $this->partModel->findById($id);
 
-    'entradas' => 0,
+        if (!$part) {
 
-    'salidas' => 0
+            $this->error('Artículo no encontrado.');
 
-];
+            $this->redirect(
+                'index.php?controller=inventory&action=index'
+            );
+        }
 
-foreach ($movements as $m) {
+        if ($tipo === 'entrada') {
 
-    if (in_array($m['tipo'], ['compra', 'ajuste_entrada'])) {
+            $nuevoStock = $part['stock_actual'] + $cantidad;
 
-        $summary['entradas'] += $m['cantidad'];
+            $tipoMovimiento = 'ajuste_entrada';
+        } else {
 
+            if ($cantidad > $part['stock_actual']) {
+
+                $this->error(
+                    'No es posible dejar el stock negativo.'
+                );
+
+                $this->redirect(
+                    'index.php?controller=inventory&action=adjustStock&id=' . $id
+                );
+            }
+
+            $nuevoStock = $part['stock_actual'] - $cantidad;
+
+            $tipoMovimiento = 'ajuste_salida';
+        }
+
+        try {
+
+            $this->pdo->beginTransaction();
+
+            if (!$this->partModel->updateStock(
+                $id,
+                $nuevoStock
+            )) {
+
+                throw new Exception(
+                    'No fue posible actualizar el stock.'
+                );
+            }
+
+            if (!$this->partModel->registerMovement([
+
+                'parte_id'         => $id,
+                'usuario_id'       => $_SESSION['user_id'],
+                'caso_id'          => null,
+
+                'tipo'             => $tipoMovimiento,
+
+                'motivo'           => $motivo,
+
+                'cantidad'         => $cantidad,
+
+                'stock_resultante' => $nuevoStock,
+
+                'costo_unitario'   => $part['costo'],
+
+                'observacion'      => $observacion
+
+            ])) {
+
+                throw new Exception(
+                    'No fue posible registrar el movimiento.'
+                );
+            }
+
+            $this->pdo->commit();
+
+            $this->success(
+                'Ajuste realizado correctamente.'
+            );
+        } catch (Throwable $e) {
+
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            $this->error(
+                $e->getMessage()
+            );
+        }
+
+        $this->redirect(
+            'index.php?controller=inventory&action=index'
+        );
     }
 
-    if (in_array($m['tipo'], ['consumo', 'ajuste_salida'])) {
+    public function kardex(): void
+    {
+        $this->ensureLogged();
 
-        $summary['salidas'] += $m['cantidad'];
+        $filters = [
 
+            'buscar' => trim($_GET['buscar'] ?? ''),
+
+            'tipo' => trim($_GET['tipo'] ?? '')
+
+        ];
+
+        $movements = $this->partModel->getAllMovements($filters);
+
+        $summary = [
+
+            'movimientos' => count($movements),
+
+            'entradas' => 0,
+
+            'salidas' => 0
+
+        ];
+
+        foreach ($movements as $m) {
+
+            if (in_array($m['tipo'], ['compra', 'ajuste_entrada'])) {
+
+                $summary['entradas'] += $m['cantidad'];
+            }
+
+            if (in_array($m['tipo'], ['consumo', 'ajuste_salida'])) {
+
+                $summary['salidas'] += $m['cantidad'];
+            }
+        }
+
+        $this->render(
+            'inventory/kardex',
+            [
+                'title'     => 'Kardex General',
+                'movements' => $movements,
+                'filters'   => $filters,
+                'summary'   => $summary
+            ]
+        );
     }
-
-}
-
-    $this->render(
-    'inventory/kardex',
-    [
-        'title'     => 'Kardex General',
-        'movements' => $movements,
-        'filters'   => $filters,
-        'summary'   => $summary
-    ]
-);
-}
 }
