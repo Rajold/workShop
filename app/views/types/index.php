@@ -3,8 +3,8 @@
 <p>
     <a
         class="btn btn-primary"
-        href="index.php?controller=fabricante_repuesto&action=create">
-        Nuevo fabricante
+        href="index.php?controller=tipo_moto&action=create">
+        Nuevo tipo
     </a>
 </p>
 
@@ -14,7 +14,6 @@
         <tr>
             <th>ID</th>
             <th>Nombre</th>
-            <th>Descripción</th>
             <th>Estado</th>
             <th style="width:260px">Acciones</th>
         </tr>
@@ -22,37 +21,36 @@
 
     <tbody>
 
-    <?php foreach ($manufacturers as $m): ?>
+        <?php foreach ($types as $type): ?>
         <tr>
 
-            <td><?= $m['id'] ?></td>
+            <td><?= $type['id'] ?></td>
 
-            <td><?= htmlspecialchars($m['nombre']) ?></td>
+            <td><?= htmlspecialchars($type['nombre']) ?></td>
 
-            <td><?= htmlspecialchars($m['descripcion'] ?? '') ?></td>
 
             <td>
-                <?= $m['activo']
+                <?= $type['activo']
                     ? '<span class="badge bg-success">Activo</span>'
                     : '<span class="badge bg-secondary">Inactivo</span>' ?>
             </td>
 
             <td>
                 <a
-                    href="index.php?controller=fabricante_repuesto&action=edit&id=<?= $m['id'] ?>"
+                    href="index.php?controller=fabricante_repuesto&action=edit&id=<?= $type['id'] ?>"
                     class="btn btn-sm btn-warning">
                     Editar
                 </a>
 
                 <a
-                    href="index.php?controller=fabricante_repuesto&action=toggle&id=<?= $m['id'] ?>"
+                    href="index.php?controller=fabricante_repuesto&action=toggle&id=<?= $type['id'] ?>"
                     class="btn btn-sm btn-info">
-                    <?= $m['activo'] ? 'Desactivar' : 'Activar' ?>
+                    <?= $type['activo'] ? 'Desactivar' : 'Activar' ?>
                 </a>
 
-                <?php if ($m['can_delete']): ?>
+                <?php if ($type['can_delete']): ?>
                     <a
-                        href="index.php?controller=fabricante_repuesto&action=delete&id=<?= $m['id'] ?>"
+                        href="index.php?controller=fabricante_repuesto&action=delete&id=<?= $type['id'] ?>"
                         class="btn btn-sm btn-danger"
                         onclick="return confirm('¿Eliminar este fabricante?');">
                         Eliminar

@@ -1,50 +1,12 @@
 <?php
 
-class FabricanteRepuesto extends BaseModel
+class FabricanteRepuesto extends CatalogModel
 {
     protected string $table = 'fabricante_repuesto';
 
-    public function all(): array
-    {
-        $stmt = $this->db->query("
-            SELECT *
-            FROM fabricante_repuesto
-            ORDER BY activo DESC, nombre
-        ");
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function active(): array
-    {
-        $stmt = $this->db->query("
-            SELECT *
-            FROM fabricante_repuesto
-            WHERE activo = 1
-            ORDER BY nombre
-        ");
-
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    public function find(int $id): ?array
+    public function create(array $data): bool
     {
         $stmt = $this->db->prepare("
-            SELECT *
-            FROM fabricante_repuesto
-            WHERE id = :id
-        ");
-
-        $stmt->execute([
-            ':id' => $id
-        ]);
-
-        return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
-    }
-
-    public function create(array $data): bool
-{
-    $stmt = $this->db->prepare("
         INSERT INTO fabricante_repuesto
         (
             nombre,
@@ -57,15 +19,15 @@ class FabricanteRepuesto extends BaseModel
         )
     ");
 
-    return $stmt->execute([
-        ':nombre' => trim($data['nombre']),
-        ':descripcion' => trim($data['descripcion'] ?? '')
-    ]);
-}
+        return $stmt->execute([
+            ':nombre' => trim($data['nombre']),
+            ':descripcion' => trim($data['descripcion'] ?? '')
+        ]);
+    }
 
-public function update(array $data): bool
-{
-    $stmt = $this->db->prepare("
+    public function update(array $data): bool
+    {
+        $stmt = $this->db->prepare("
         UPDATE fabricante_repuesto
         SET
             nombre = :nombre,
@@ -73,25 +35,12 @@ public function update(array $data): bool
         WHERE id = :id
     ");
 
-    return $stmt->execute([
-        ':id' => $data['id'],
-        ':nombre' => trim($data['nombre']),
-        ':descripcion' => trim($data['descripcion'] ?? '')
-    ]);
-}
-
-public function toggle(int $id): bool
-{
-    $stmt = $this->db->prepare("
-        UPDATE fabricante_repuesto
-        SET activo = NOT activo
-        WHERE id = :id
-    ");
-
-    return $stmt->execute([
-        ':id' => $id
-    ]);
-}
+        return $stmt->execute([
+            ':id' => $data['id'],
+            ':nombre' => trim($data['nombre']),
+            ':descripcion' => trim($data['descripcion'] ?? '')
+        ]);
+    }
 
     public function canDelete(int $id): bool
     {
@@ -120,4 +69,5 @@ public function toggle(int $id): bool
             ':id' => $id
         ]);
     }
+
 }

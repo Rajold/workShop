@@ -1,6 +1,6 @@
 <?php
 
-class FabricanteRepuestoController extends BaseController
+class FabricanteRepuestoController extends CatalogController
 {
     private FabricanteRepuesto $manufacturerModel;
 
@@ -9,15 +9,27 @@ class FabricanteRepuestoController extends BaseController
         parent::__construct($pdo);
 
         $this->manufacturerModel = new FabricanteRepuesto($pdo);
+        $this->model = $this->manufacturerModel;
+        $this->route = 'fabricante_repuesto';
+        $this->entityName = 'Fabricante';
     }
 
     public function index(): void
     {
         $this->ensureLogged();
 
+        $manufacturers = $this->manufacturerModel->all();
+
+        foreach ($manufacturers as &$manufacturer) {
+            $manufacturer['can_delete'] =
+                $this->manufacturerModel->canDelete($manufacturer['id']);
+        }
+
+        unset($manufacturer);
+
         $this->render('manufacturers/index', [
             'title' => 'Fabricantes de repuestos',
-            'manufacturers' => $this->manufacturerModel->all()
+            'manufacturers' => $manufacturers
         ]);
     }
 
@@ -32,54 +44,100 @@ class FabricanteRepuestoController extends BaseController
     }
 
     public function store(): void
-{
-    $this->ensureLogged();
+    {
+        $this->ensureLogged();
 
-    $data = $_POST;
+        $data = $_POST;
 
-    if (empty(trim($data['nombre'] ?? ''))) {
+        if (empty(trim($data['nombre'] ?? ''))) {
 
-        $this->error('Debe ingresar el nombre del fabricante.');
+            $this->error('Debe ingresar el nombre del fabricante.');
+
+            $this->redirect(
+                'index.php?controller=fabricante_repuesto&action=create'
+            );
+
+            return;
+        }
+
+        if ($this->manufacturerModel->create($data)) {
+
+            $this->success('Fabricante creado correctamente.');
+        } else {
+
+            $this->error('No fue posible crear el fabricante.');
+        }
 
         $this->redirect(
-            'index.php?controller=fabricante_repuesto&action=create'
+            'index.php?controller=fabricante_repuesto&action=index'
         );
-
-        return;
     }
-
-    if ($this->manufacturerModel->create($data)) {
-
-        $this->success('Fabricante creado correctamente.');
-
-    } else {
-
-        $this->error('No fue posible crear el fabricante.');
-
-    }
-
-    $this->redirect(
-        'index.php?controller=fabricante_repuesto&action=index'
-    );
-}
 
     public function edit(): void
     {
-        // lo implementaremos en el siguiente paso
+        $this->ensureLogged();
+
+        $id = (int)($_GET['id'] ?? 0);
+
+        $manufacturer = $this->manufacturerModel->find($id);
+
+        if (!$manufacturer) {
+
+            $this->error('Fabricante no encontrado.');
+
+            $this->redirect(
+                'index.php?controller=fabricante_repuesto&action=index'
+            );
+
+            return;
+        }
+
+        $this->render('manufacturers/form', [
+            'title' => 'Editar fabricante',
+            'manufacturer' => $manufacturer
+        ]);
     }
 
     public function update(): void
     {
-        // lo implementaremos en el siguiente paso
-    }
+        $this->ensureLogged();
 
-    public function toggle(): void
-    {
-        // lo implementaremos en el siguiente paso
-    }
+        $data = $_POST;
 
-    public function delete(): void
-    {
-        // lo implementaremos en el siguiente paso
+        $data['id'] = (int)($data['id'] ?? 0);
+
+        if ($data['id'] <= 0) {
+
+            $this->error('Fabricante no válido.');
+
+            $this->redirect(
+                'index.php?controller=fabricante_repuesto&action=index'
+            );
+
+            return;
+        }
+
+        if (empty(trim($data['nombre'] ?? ''))) {
+
+            $this->error('Debe ingresar un nombre.');
+
+            $this->redirect(
+                'index.php?controller=fabricante_repuesto&action=edit&id=' . $data['id']
+            );
+
+            return;
+        }
+
+        if ($this->manufacturerModel->update($data)) {
+
+            $this->success('Fabricante actualizado correctamente.');
+        } else {
+
+            $this->error('No fue posible actualizar el fabricante.');
+        }
+
+        $this->redirect(
+            'index.php?controller=fabricante_repuesto&action=index'
+        );
     }
 }
