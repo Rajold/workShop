@@ -8,14 +8,14 @@ class ModeloMotoController extends BaseController
 
     private TipoMoto $typeModel;
 
-    public function __construct()
-    {
-        $this->modelModel = new ModeloMoto();
+   public function __construct(PDO $pdo)
+{
+    parent::__construct($pdo);
 
-        $this->brandModel = new MarcaMoto();
-
-        $this->typeModel = new TipoMoto();
-    }
+    $this->modelModel = new ModeloMoto($pdo);
+    $this->brandModel = new MarcaMoto($pdo);
+    $this->typeModel = new TipoMoto($pdo);
+}
 
     public function index(): void
 {

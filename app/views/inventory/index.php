@@ -23,6 +23,7 @@
     Kardex General
     
 </a>
+
 </div>
     </div>
 
@@ -240,37 +241,36 @@
                                 <td>
 
                                     <a
+                                        href="index.php?controller=inventory&action=edit&id=<?= $part['id'] ?>"
+                                        class="btn btn-sm btn-warning">
+                                        
+                                        <i class="bi bi-pencil"></i>
+                                        Editar
+                                        
+                                    </a>
+                                    <a
+                                        href="index.php?controller=inventory&action=applications&id=<?= $part['id'] ?>"
+                                        class="btn btn-sm btn-primary">
+                                        Aplicaciones
+</a>
+                                    <a
                                         href="index.php?controller=inventory&action=movements&id=<?= $part['id'] ?>"
                                         class="btn btn-sm btn-info">
 
                                         <i class="bi bi-clock-history"></i>
                                         Movimientos
-
-                                    </a>
-                                    <a
-                                        href="index.php?controller=inventory&action=adjustStock&id=<?= $part['id'] ?>"
-                                        class="btn btn-warning btn-sm">
-
-                                        <i class="bi bi-sliders"></i>
-
-                                        Ajuste
-
                                     </a>
                                     <a
                                         href="index.php?controller=inventory&action=addStock&id=<?= $part['id'] ?>"
                                         class="btn btn-success btn-sm">
-
                                         <i class="bi bi-box-arrow-in-down"></i>
-
                                         Stock
-
                                     </a>
                                     <a
-                                        href="index.php?controller=inventory&action=edit&id=<?= $part['id'] ?>"
-                                        class="btn btn-sm btn-warning">
-
-                                        <i class="bi bi-pencil"></i>
-                                        Editar
+                                        href="index.php?controller=inventory&action=adjustStock&id=<?= $part['id'] ?>"
+                                        class="btn btn-warning btn-sm">
+                                        <i class="bi bi-sliders"></i>
+                                        Ajuste
 
                                     </a>
 

@@ -8,6 +8,8 @@ class InventoryController extends BaseController
     private Part $partModel;
     private InventoryService $inventoryService;
     private FabricanteRepuesto $manufacturerModel;
+    private AplicacionParte $applicationModel;
+    private ModeloMoto $motorcycleModel;
 
 
     public function __construct(PDO $pdo)
@@ -17,6 +19,10 @@ class InventoryController extends BaseController
         $this->partModel = new Part($pdo);
         $this->inventoryService = new InventoryService($pdo);
         $this->manufacturerModel = new FabricanteRepuesto($pdo);
+        $this->applicationModel = new AplicacionParte($pdo);
+        $this->motorcycleModel = new ModeloMoto($pdo);
+        $this->applicationModel = new AplicacionParte($pdo);
+        $this->motorcycleModel = new ModeloMoto($pdo);
     }
 
     /**
@@ -784,4 +790,72 @@ class InventoryController extends BaseController
             ]
         );
     }
+
+    public function applications(): void
+{
+    $this->ensureLogged();
+
+    $partId = (int)($_GET['id'] ?? 0);
+
+    $part = $this->partModel->findById($partId);
+
+    if (!$part) {
+
+        $this->error('El repuesto no existe.');
+
+        $this->redirect(
+            'index.php?controller=inventory&action=index'
+        );
+
+        return;
+    }
+
+    $this->render(
+        'inventory/applications',
+        [
+
+            'title' => 'Aplicaciones del repuesto',
+
+            'part' => $part,
+
+            'groups' => $this->motorcycleModel->groupedByBrand(),
+
+            'selected' => $this->applicationModel
+                ->getModelIdsByPart($partId)
+
+        ]
+    );
+}
+
+public function saveApplications(): void
+{
+    $this->ensureLogged();
+
+    $partId = (int)($_POST['part_id'] ?? 0);
+
+    $models = $_POST['models'] ?? [];
+
+    try {
+
+        $this->applicationModel->sync(
+            $partId,
+            $models
+        );
+
+        $this->success(
+            'Las aplicaciones se guardaron correctamente.'
+        );
+
+    } catch (Throwable $e) {
+
+        $this->error(
+            'Ocurrió un error al guardar las aplicaciones.'
+        );
+    }
+
+    $this->redirect(
+        'index.php?controller=inventory&action=applications&id=' . $partId
+    );
+}
+
 }

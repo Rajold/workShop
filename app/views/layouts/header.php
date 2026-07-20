@@ -27,6 +27,7 @@
           <li class="nav-item"><a class="nav-link" href="index.php?controller=mechanic&action=dashboard">Panel</a></li>
           <li class="nav-item"><a class="nav-link" href="index.php?controller=report&action=form">Reportes</a></li>
           <li class="nav-item"><a class="nav-link" href="index.php?controller=inventory&action=index"><i class="bi bi-box-seam"></i> Inventario</a></li>
+          <li class="nav-item"><a class="nav-link" href="index.php?controller=modelo_moto&action=index"><i class="bi bi-box-seam"></i> Motocicletas</a></li>
         <?php endif; ?>
       </ul>
       <ul class="navbar-nav">

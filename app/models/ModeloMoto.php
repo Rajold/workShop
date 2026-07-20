@@ -133,4 +133,36 @@ public function delete(int $id): bool
         ':id' => $id
     ]);
 }
+
+public function groupedByBrand(): array
+{
+    $stmt = $this->db->query("
+        SELECT
+            mm.id,
+            mm.linea,
+            mm.cilindrada,
+            ma.nombre AS marca
+        FROM modelos_moto mm
+        INNER JOIN marcas_moto ma
+            ON ma.id = mm.marca_moto_id
+        WHERE mm.activo = 1
+          AND ma.activo = 1
+        ORDER BY
+            ma.nombre,
+            mm.linea,
+            mm.cilindrada
+    ");
+
+    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $result = [];
+
+    foreach ($rows as $row) {
+
+        $result[$row['marca']][] = $row;
+
+    }
+
+    return $result;
+}
 }
