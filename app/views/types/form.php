@@ -2,7 +2,7 @@
 
 <form
     method="post"
-    action="index.php?controller=tipo_moto&action=<?= isset($type['id']) ? 'update' : 'store' ?>"
+    action="index.php?controller=tipo_moto&action=<?= isset($type['id']) ? 'update' : 'store' ?>">
 
     <?php if (isset($type['id'])): ?>
         <input

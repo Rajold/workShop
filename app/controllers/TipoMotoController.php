@@ -15,23 +15,25 @@ class TipoMotoController extends CatalogController
     }
 
     public function index(): void
-    {
-        $this->ensureLogged();
+{
+    $this->ensureLogged();
 
-        $manufacturers = $this->typeModel->all();
+    $types = $this->typeModel->all();
 
-        foreach ($manufacturers as &$manufacturer) {
-            $manufacturer['can_delete'] =
-                $this->typeModel->canDelete($manufacturer['id']);
-        }
+    foreach ($types as &$type) {
 
-        unset($manufacturer);
+        $type['can_delete'] =
+            $this->typeModel->canDelete($type['id']);
 
-        $this->render('types/index', [
-    'title' => 'Tipos de motocicleta',
-    'types' => $this->typeModel->all()
-]);
     }
+
+    unset($type);
+
+    $this->render('types/index', [
+        'title' => 'Tipos de motocicleta',
+        'types' => $types
+    ]);
+}
 
     public function create(): void
     {
@@ -72,31 +74,30 @@ class TipoMotoController extends CatalogController
             'index.php?controller=tipo_moto&action=index'
         );
     }
+public function edit(): void
+{
+    $this->ensureLogged();
 
-    public function edit(): void
-    {
-        $this->ensureLogged();
+    $id = (int)($_GET['id'] ?? 0);
 
-        $id = (int)($_GET['id'] ?? 0);
+    $type = $this->typeModel->find($id);
 
-        $manufacturer = $this->typeModel->find($id);
+    if (!$type) {
 
-        if (!$manufacturer) {
+        $this->error('Tipo de motocicleta no encontrado.');
 
-            $this->error('Fabricante no encontrado.');
+        $this->redirect(
+            'index.php?controller=tipo_moto&action=index'
+        );
 
-            $this->redirect(
-                'index.php?controller=tipo_moto&action=index'
-            );
-
-            return;
-        }
-
-        $this->render('types/form', [
-    'title' => 'Editar tipo',
-    'type' => $type
-]);
+        return;
     }
+
+    $this->render('types/form', [
+        'title' => 'Editar tipo',
+        'type' => $type
+    ]);
+}
 
     public function update(): void
     {

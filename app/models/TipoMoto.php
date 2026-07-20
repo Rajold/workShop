@@ -5,19 +5,9 @@ class TipoMoto extends CatalogModel
     protected string $table = 'tipos_moto';
 
     public function canDelete(int $id): bool
-    {
-        $stmt = $this->db->prepare("
-            SELECT COUNT(*)
-            FROM vehiculos
-            WHERE tipo_moto_id = :id
-        ");
-
-        $stmt->execute([
-            ':id' => $id
-        ]);
-
-        return ((int)$stmt->fetchColumn()) === 0;
-    }
+{
+    return true;
+}
 
     public function create(array $data): bool
     {

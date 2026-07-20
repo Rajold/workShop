@@ -37,22 +37,22 @@
 
             <td>
                 <a
-                    href="index.php?controller=fabricante_repuesto&action=edit&id=<?= $type['id'] ?>"
+                    href="index.php?controller=tipo_moto&action=edit&id=<?= $type['id'] ?>"
                     class="btn btn-sm btn-warning">
                     Editar
                 </a>
 
                 <a
-                    href="index.php?controller=fabricante_repuesto&action=toggle&id=<?= $type['id'] ?>"
+                    href="index.php?controller=tipo_moto&action=toggle&id=<?= $type['id'] ?>"
                     class="btn btn-sm btn-info">
                     <?= $type['activo'] ? 'Desactivar' : 'Activar' ?>
                 </a>
 
                 <?php if ($type['can_delete']): ?>
                     <a
-                        href="index.php?controller=fabricante_repuesto&action=delete&id=<?= $type['id'] ?>"
+                        href="index.php?controller=tipo_moto&action=delete&id=<?= $type['id'] ?>"
                         class="btn btn-sm btn-danger"
-                        onclick="return confirm('¿Eliminar este fabricante?');">
+                        onclick="return confirm('¿Eliminar este tipo de motocicleta?');">
                         Eliminar
                     </a>
                 <?php endif; ?>
