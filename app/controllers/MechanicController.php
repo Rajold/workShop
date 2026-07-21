@@ -9,6 +9,7 @@ class MechanicController extends BaseController
     protected RepairCase $caseModel;
     protected WorkSession $sessionModel;
     protected User $userModel;
+    private ModeloMoto $motorcycleModel;
 
     public function __construct(PDO $pdo)
     {
@@ -24,6 +25,7 @@ class MechanicController extends BaseController
         $this->caseModel = new RepairCase($pdo);
         $this->sessionModel = new WorkSession($pdo);
         $this->userModel = new User($pdo);
+        $this->motorcycleModel = new ModeloMoto($pdo);
     }
 
     public function dashboard(): void
@@ -35,17 +37,35 @@ class MechanicController extends BaseController
     {
         $vehicles = [];
 
+        $criterio = 'placa';
+        $valor = '';
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
             $criterio = trim($_POST['criterio'] ?? 'placa');
             $valor    = trim($_POST['valor'] ?? '');
 
-            $vehicles = $this->vehicleModel->search($criterio, $valor);
+            $vehicles = $this->vehicleModel->search(
+                $criterio,
+                $valor
+            );
         }
 
-        $this->render('mechanic/vehicle_search', [
-            'vehicles' => $vehicles
-        ]);
+        $this->render(
+            'mechanic/vehicle_search',
+            [
+
+                'vehicles' => $vehicles,
+
+                'criterio' => $criterio,
+
+                'valor' => $valor,
+
+                'motorcycleModels' =>
+                $this->motorcycleModel->allForPicker()
+
+            ]
+        );
     }
 
 
@@ -53,13 +73,25 @@ class MechanicController extends BaseController
     {
         $this->ensureLogged();
 
+        
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
                 'placa' => trim($_POST['placa']),
+
                 'marca' => trim($_POST['marca'] ?? ''),
+
                 'modelo' => trim($_POST['modelo'] ?? ''),
+
+                'modelo_moto_id' =>
+                !empty($_POST['modelo_moto_id'])
+                    ? (int)$_POST['modelo_moto_id']
+                    : null,
+
                 'color' => trim($_POST['color'] ?? ''),
+
                 'propietario' => trim($_POST['propietario'] ?? ''),
+
                 'telefono' => trim($_POST['telefono'] ?? '')
             ];
 

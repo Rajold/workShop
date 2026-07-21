@@ -165,4 +165,52 @@ public function groupedByBrand(): array
 
     return $result;
 }
+
+public function allForPicker(): array
+{
+    $stmt = $this->db->query("
+        SELECT
+
+            mm.id,
+
+            ma.nombre AS marca,
+
+            tm.nombre AS tipo,
+
+            mm.linea,
+
+            mm.cilindrada,
+
+            CONCAT(
+                mm.linea,
+                ' ',
+                mm.cilindrada
+            ) AS short_name,
+
+            CONCAT(
+                ma.nombre,
+                ' ',
+                mm.linea,
+                ' ',
+                mm.cilindrada
+            ) AS display_name
+
+        FROM modelos_moto mm
+
+        INNER JOIN marcas_moto ma
+            ON ma.id = mm.marca_moto_id
+
+        INNER JOIN tipos_moto tm
+            ON tm.id = mm.tipo_moto_id
+
+        WHERE mm.activo = 1
+
+        ORDER BY
+            ma.nombre,
+            mm.linea,
+            mm.cilindrada
+    ");
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 }

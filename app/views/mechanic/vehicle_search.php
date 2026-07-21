@@ -11,68 +11,68 @@
 
             <table class="table table-hover align-middle">
                 <thead>
-<tr>
-    <th>Placa</th>
-    <th>Marca</th>
-    <th>Modelo</th>
-    <th>Propietario</th>
-    <th>Estado</th>
-    <th>Último ingreso</th>
-    <th></th>
-</tr>
-</thead>
+                    <tr>
+                        <th>Placa</th>
+                        <th>Marca</th>
+                        <th>Modelo</th>
+                        <th>Propietario</th>
+                        <th>Estado</th>
+                        <th>Último ingreso</th>
+                        <th></th>
+                    </tr>
+                </thead>
 
                 <tbody>
 
-                <?php foreach ($vehicles as $vehicle): ?>
+                    <?php foreach ($vehicles as $vehicle): ?>
 
-                    <tr>
+                        <tr>
 
-                        <td>
-                            <strong><?= htmlspecialchars($vehicle['placa']) ?></strong>
-                        </td>
+                            <td>
+                                <strong><?= htmlspecialchars($vehicle['placa']) ?></strong>
+                            </td>
 
-                        <td>
-                            <?= htmlspecialchars($vehicle['marca']) ?>
-                        </td>
+                            <td>
+                                <?= htmlspecialchars($vehicle['marca']) ?>
+                            </td>
 
-                        <td>
-                            <?= htmlspecialchars($vehicle['modelo']) ?>
-                        </td>
+                            <td>
+                                <?= htmlspecialchars($vehicle['modelo']) ?>
+                            </td>
 
-                        <td>
-                            <?= htmlspecialchars($vehicle['propietario']) ?>
-                        </td>
+                            <td>
+                                <?= htmlspecialchars($vehicle['propietario']) ?>
+                            </td>
 
-                        <td>
-<?php
-if (($vehicle['estado'] ?? '') === 'abierto') {
-    echo '<span class="badge bg-success">🟢 Abierto</span>';
-} elseif (($vehicle['estado'] ?? '') === 'cerrado') {
-    echo '<span class="badge bg-secondary">⚪ Cerrado</span>';
-} else {
-    echo '<span class="badge bg-light text-dark">Sin casos</span>';
-}
-?>
-</td>
+                            <td>
+                                <?php
+                                if (($vehicle['estado'] ?? '') === 'abierto') {
+                                    echo '<span class="badge bg-success">🟢 Abierto</span>';
+                                } elseif (($vehicle['estado'] ?? '') === 'cerrado') {
+                                    echo '<span class="badge bg-secondary">⚪ Cerrado</span>';
+                                } else {
+                                    echo '<span class="badge bg-light text-dark">Sin casos</span>';
+                                }
+                                ?>
+                            </td>
 
-<td>
-<?= htmlspecialchars($vehicle['fecha_ingreso'] ?? '-') ?>
-</td>
+                            <td>
+                                <?= htmlspecialchars($vehicle['fecha_ingreso'] ?? '-') ?>
+                            </td>
 
-                        <td class="text-end">
+                            <td class="text-end">
 
-                            <a
-                                class="btn btn-primary btn-sm"
-                                href="index.php?controller=mechanic&action=viewCase&veh_id=<?= $vehicle['id'] ?>">
-                                Ver ficha
-                            </a>
+                                <a
+                                    class="btn btn-primary btn-sm"
+                                    href="index.php?controller=mechanic&action=viewCase&veh_id=<?= $vehicle['id'] ?>">
+                                    Ver ficha
+                                </a>
 
-                        </td>
+                            </td>
 
-                    </tr>
+                        </tr>
 
-                <?php endforeach; ?>
+                    <?php endforeach; ?>
 
                 </tbody>
 
@@ -90,22 +90,18 @@ if (($vehicle['estado'] ?? '') === 'abierto') {
     <h4>Registrar nuevo vehículo</h4>
 
     <form method="post"
-          action="index.php?controller=mechanic&action=saveVehicle"
-          onsubmit="return validateVehicleForm(this)">
+        action="index.php?controller=mechanic&action=saveVehicle"
+        onsubmit="return validateVehicleForm(this)">
 
         <div class="mb-2">
             <input name="placa" class="form-control" placeholder="Placa"
-            value="<?= ($criterio ?? '') === 'placa' ? htmlspecialchars($valor ?? '') : '' ?>" required>
+                value="<?= ($criterio ?? '') === 'placa' ? htmlspecialchars($valor ?? '') : '' ?>" required>
         </div>
+        <?php require __DIR__ . '/../components/motorcycle_picker.php'; ?>
+        
 
-        <div class="mb-2">
-            <input name="marca" class="form-control" placeholder="Marca"
-            value="<?= ($criterio ?? '') === 'marca' ? htmlspecialchars($valor ?? '') : '' ?>" required>
-        </div>
 
-        <div class="mb-2">
-            <input name="modelo" class="form-control" placeholder="Modelo">
-        </div>
+        
 
         <div class="mb-2">
             <input name="color" class="form-control" placeholder="Color">
@@ -113,7 +109,7 @@ if (($vehicle['estado'] ?? '') === 'abierto') {
 
         <div class="mb-2">
             <input name="propietario" class="form-control" placeholder="Propietario"
-            value="<?= ($criterio ?? '') === 'propietario' ? htmlspecialchars($valor ?? '') : '' ?>" required>
+                value="<?= ($criterio ?? '') === 'propietario' ? htmlspecialchars($valor ?? '') : '' ?>" required>
         </div>
 
         <div class="mb-2">
@@ -135,10 +131,30 @@ if (($vehicle['estado'] ?? '') === 'abierto') {
 <div class="mt-3">
 
     <a href="index.php?controller=mechanic&action=dashboard"
-       class="btn btn-secondary">
+        class="btn btn-secondary">
 
         ← Nueva búsqueda
 
     </a>
 
 </div>
+
+<script>
+    const picker = document.getElementById('modelo_moto_id');
+
+    if (picker) {
+
+        picker.addEventListener('change', function() {
+
+            const option = this.options[this.selectedIndex];
+
+            document.getElementById('marca').value =
+                option.dataset.brand ?? '';
+
+            document.getElementById('modelo').value =
+                option.dataset.model ?? '';
+
+        });
+
+    }
+</script>
