@@ -73,7 +73,7 @@ class MechanicController extends BaseController
     {
         $this->ensureLogged();
 
-        
+
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $data = [
@@ -138,12 +138,22 @@ class MechanicController extends BaseController
             'repuestos' => 0,
             'total' => 0
         ];
-
+        $compatibleParts = [];
+        $caseParts = [];
         $advanceModel = new Avance($this->pdo);
+        $casePartModel = new CasePart($this->pdo);
 
         if ($veh_id) {
             // 🚗 Obtener datos del vehículo y sus casos
             $vehicle = $this->vehicleModel->findById($veh_id);
+            if (!empty($vehicle['modelo_moto_id'])) {
+
+                $partModel = new Part($this->pdo);
+
+                $compatibleParts = $partModel->findByMotorcycleModel(
+                    (int)$vehicle['modelo_moto_id']
+                );
+            }
             $cases = $this->caseModel->findByVehicle($veh_id);
 
             // 🔍 Verificar si hay un caso abierto
@@ -169,8 +179,13 @@ class MechanicController extends BaseController
                 $totales = $advanceModel->getTotalesPorCaso((int)$caso['id']);
 
                 $activeSession = $this->sessionModel->getActiveByCaseAndMechanic(
+
                     (int)$caso['id'],
                     (int)($_SESSION['user_id'] ?? 0)
+                );
+
+                $caseParts = $casePartModel->findByCase(
+                    (int)$caso['id']
                 );
             }
         }
@@ -180,6 +195,18 @@ class MechanicController extends BaseController
 
             $descripcion = trim($_POST['nuevo_avance']);
             $tipo = trim($_POST['tipo'] ?? '');
+            if ($tipo !== 'Mano de obra') {
+
+                $this->error(
+                    'Tipo de avance no permitido.'
+                );
+
+                header(
+                    "Location: index.php?controller=mechanic&action=viewCase&case_id={$caso['id']}&veh_id={$veh_id}"
+                );
+
+                exit;
+            }
             $valor = (int)($_POST['valor'] ?? 0);
 
             if ($descripcion !== '' && $tipo !== '' && $activeSession) {
@@ -206,7 +233,9 @@ class MechanicController extends BaseController
             'avances'        => $avances,
             'activeSession'  => $activeSession,
             'hasOpenCase'    => $hasOpenCase,
-            'totales'        => $totales
+            'totales'        => $totales,
+            'compatibleParts' => $compatibleParts,
+            'caseParts' => $caseParts
         ]);
     }
 

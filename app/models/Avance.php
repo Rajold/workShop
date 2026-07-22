@@ -49,22 +49,46 @@ class Avance
     }
 
     public function getTotalesPorCaso(int $caseId): array
-    {
-        $stmt = $this->db->prepare("
+{
+    // Total mano de obra
+    $stmt = $this->db->prepare("
         SELECT
-            COALESCE(SUM(CASE WHEN tipo = 'Mano de obra' THEN valor ELSE 0 END), 0) AS mano_obra,
-            COALESCE(SUM(CASE WHEN tipo = 'Repuesto' THEN valor ELSE 0 END), 0) AS repuestos,
-            COALESCE(SUM(valor), 0) AS total
+            COALESCE(SUM(valor), 0)
         FROM avances
+        WHERE caso_id = :caso
+          AND tipo = 'Mano de obra'
+    ");
+
+    $stmt->execute([
+        ':caso' => $caseId
+    ]);
+
+    $manoObra = (float)$stmt->fetchColumn();
+
+    // Total repuestos
+    $stmt = $this->db->prepare("
+        SELECT
+            COALESCE(SUM(subtotal), 0)
+        FROM caso_repuestos
         WHERE caso_id = :caso
     ");
 
-        $stmt->execute([
-            ':caso' => $caseId
-        ]);
+    $stmt->execute([
+        ':caso' => $caseId
+    ]);
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
+    $repuestos = (float)$stmt->fetchColumn();
+
+    return [
+
+        'mano_obra' => $manoObra,
+
+        'repuestos' => $repuestos,
+
+        'total' => $manoObra + $repuestos
+
+    ];
+}
 
     public function getById(int $id): ?array
     {

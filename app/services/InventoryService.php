@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 require_once __DIR__ . '/../models/Part.php';
-require_once __DIR__ . '/../models/Avance.php';
+require_once __DIR__ . '/../models/CasePart.php';
 
 class InventoryService
 {
@@ -11,15 +11,13 @@ class InventoryService
 
     private Part $partModel;
 
-    private Avance $avanceModel;
+    private CasePart $casePartModel;
 
     public function __construct(PDO $pdo)
     {
         $this->db = $pdo;
-
         $this->partModel = new Part($pdo);
-
-        $this->avanceModel = new Avance($pdo);
+        $this->casePartModel = new CasePart($pdo);
     }
 
     public function confirmCart(
@@ -83,23 +81,23 @@ class InventoryService
                     );
                 }
 
-                $this->avanceModel->add(
+                $this->casePartModel->add([
 
-                    $caseId,
+                    'caso_id'         => $caseId,
 
-                    $userId,
+                    'parte_id'        => $part['id'],
 
-                    sprintf(
-                        'Repuesto: %s x %s',
-                        $item['nombre'],
-                        $item['cantidad']
-                    ),
+                    'usuario_id'      => $userId,
 
-                    'Repuesto',
+                    'cantidad'        => $item['cantidad'],
 
-                    (int)($item['precio_venta'] * $item['cantidad'])
+                    'costo_unitario'  => $part['costo'],
 
-                );
+                    'precio_unitario' => $item['precio_venta'],
+
+                    'subtotal'        => $item['precio_venta'] * $item['cantidad']
+
+                ]);
             }
 
             $this->db->commit();

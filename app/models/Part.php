@@ -502,4 +502,37 @@ unidad = :unidad,
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
+    public function findByMotorcycleModel(int $modeloMotoId): array
+{
+    $stmt = $this->db->prepare("
+        SELECT
+
+            p.id,
+            p.codigo,
+            p.nombre,
+            p.marca,
+            p.stock_actual,
+            p.stock_minimo,
+            p.ubicacion
+
+        FROM aplicacion_parte ap
+
+        INNER JOIN partes p
+            ON p.id = ap.parte_id
+
+        WHERE ap.modelo_moto_id = :modelo
+
+        AND p.activo = 1
+
+        ORDER BY
+            p.nombre
+    ");
+
+    $stmt->execute([
+        ':modelo' => $modeloMotoId
+    ]);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 }

@@ -8,11 +8,49 @@ require_once __DIR__ . '/BaseModel.php';
 class Vehicle extends BaseModel
 {
     public function findByPlate(string $placa)
-    {
-        $stmt = $this->db->prepare("SELECT * FROM vehiculos WHERE placa = :p LIMIT 1");
-        $stmt->execute([':p' => $placa]);
-        return $stmt->fetch() ?: null;
-    }
+{
+    $stmt = $this->db->prepare("
+        SELECT
+
+            v.*,
+
+            mm.linea,
+            mm.cilindrada,
+
+            ma.nombre AS marca_catalogo,
+
+            tm.nombre AS tipo_moto,
+
+            CONCAT(
+                ma.nombre,
+                ' ',
+                mm.linea,
+                ' ',
+                mm.cilindrada
+            ) AS display_name
+
+        FROM vehiculos v
+
+        LEFT JOIN modelos_moto mm
+            ON mm.id = v.modelo_moto_id
+
+        LEFT JOIN marcas_moto ma
+            ON ma.id = mm.marca_moto_id
+
+        LEFT JOIN tipos_moto tm
+            ON tm.id = mm.tipo_moto_id
+
+        WHERE v.placa = :p
+
+        LIMIT 1
+    ");
+
+    $stmt->execute([
+        ':p' => $placa
+    ]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+}
 
     public function findByBrand(string $marca)
     {
@@ -22,12 +60,49 @@ class Vehicle extends BaseModel
     }
     // Buscar vehículo por su ID
     public function findById(int $id): ?array
-    {
-        $stmt = $this->db->prepare("SELECT * FROM vehiculos WHERE id = :id LIMIT 1");
-        $stmt->execute([':id' => $id]);
-        $vehiculo = $stmt->fetch(PDO::FETCH_ASSOC);
-        return $vehiculo ?: null;
-    }
+{
+    $stmt = $this->db->prepare("
+        SELECT
+
+            v.*,
+
+            mm.linea,
+            mm.cilindrada,
+
+            ma.nombre AS marca_catalogo,
+
+            tm.nombre AS tipo_moto,
+
+            CONCAT(
+                ma.nombre,
+                ' ',
+                mm.linea,
+                ' ',
+                mm.cilindrada
+            ) AS display_name
+
+        FROM vehiculos v
+
+        LEFT JOIN modelos_moto mm
+            ON mm.id = v.modelo_moto_id
+
+        LEFT JOIN marcas_moto ma
+            ON ma.id = mm.marca_moto_id
+
+        LEFT JOIN tipos_moto tm
+            ON tm.id = mm.tipo_moto_id
+
+        WHERE v.id = :id
+
+        LIMIT 1
+    ");
+
+    $stmt->execute([
+        ':id' => $id
+    ]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC) ?: null;
+}
 
     public function create(array $data): int
     {
