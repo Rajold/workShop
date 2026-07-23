@@ -36,7 +36,10 @@ class RepairCase
             FROM casos c
             LEFT JOIN usuarios u ON c.mecanico_id = u.id
             WHERE c.vehiculo_id = ?
-            ORDER BY c.fecha_ingreso DESC, c.hora_ingreso DESC
+            ORDER BY
+    CASE WHEN c.estado = 'abierto' THEN 0 ELSE 1 END,
+    c.fecha_ingreso DESC,
+    c.id DESC
         ");
         $stmt->execute([$vehiculo_id]);
         return $stmt->fetchAll(PDO::FETCH_ASSOC);

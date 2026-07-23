@@ -142,10 +142,19 @@ class MechanicController extends BaseController
         $caseParts = [];
         $advanceModel = new Avance($this->pdo);
         $casePartModel = new CasePart($this->pdo);
+        $pendingModel = new Pending($this->pdo);
+        $pendingItems = [];
 
         if ($veh_id) {
             // 🚗 Obtener datos del vehículo y sus casos
             $vehicle = $this->vehicleModel->findById($veh_id);
+
+            if ($vehicle) {
+
+                $pendingItems = $pendingModel->findOpenByVehicle(
+                    (int)$vehicle['id']
+                );
+            }
             if (!empty($vehicle['modelo_moto_id'])) {
 
                 $partModel = new Part($this->pdo);
@@ -195,21 +204,35 @@ class MechanicController extends BaseController
 
             $descripcion = trim($_POST['nuevo_avance']);
             $tipo = trim($_POST['tipo'] ?? '');
-            if ($tipo !== 'Mano de obra') {
+            $descripcion = trim($_POST['nuevo_avance']);
 
-                $this->error(
-                    'Tipo de avance no permitido.'
-                );
+            $tipo = trim($_POST['tipo'] ?? '');
 
-                header(
-                    "Location: index.php?controller=mechanic&action=viewCase&case_id={$caso['id']}&veh_id={$veh_id}"
-                );
-
-                exit;
-            }
+            $valor = (int)($_POST['valor'] ?? 0);
             $valor = (int)($_POST['valor'] ?? 0);
 
             if ($descripcion !== '' && $tipo !== '' && $activeSession) {
+
+                if ($tipo === 'Pendiente') {
+
+                    $pendingModel->add([
+
+                        'vehiculo_id'     => $veh_id,
+
+                        'caso_origen_id'  => $caso['id'],
+
+                        'usuario_id'      => $_SESSION['user_id'],
+
+                        'descripcion'     => $descripcion
+
+                    ]);
+
+                    header(
+                        "Location: index.php?controller=mechanic&action=viewCase&case_id={$caso['id']}&veh_id={$veh_id}"
+                    );
+
+                    exit;
+                }
 
                 $advanceModel->add(
                     (int)$caso['id'],
@@ -235,7 +258,8 @@ class MechanicController extends BaseController
             'hasOpenCase'    => $hasOpenCase,
             'totales'        => $totales,
             'compatibleParts' => $compatibleParts,
-            'caseParts' => $caseParts
+            'caseParts' => $caseParts,
+            'pendingItems' => $pendingItems
         ]);
     }
 

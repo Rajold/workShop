@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Jul 22, 2026 at 08:04 AM
+-- Generation Time: Jul 23, 2026 at 07:31 AM
 -- Server version: 10.4.28-MariaDB
 -- PHP Version: 8.2.4
 
@@ -396,7 +396,22 @@ INSERT INTO `avances` (`id`, `caso_id`, `mecanico_id`, `descripcion`, `tipo`, `v
 (343, 92, 3, 'Terminales de batería.', 'Repuesto', 5000, '2026-07-19 00:05:36'),
 (344, 92, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-20 19:49:55'),
 (346, 101, 3, 'Revisión.', 'Mano de obra', 32000, '2026-07-22 05:37:48'),
-(347, 101, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-22 06:00:29');
+(347, 101, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-22 06:00:29'),
+(348, 100, 3, 'Ajuste de válvulas.\r\nCambio de terminales de bobinas de alta.', 'Mano de obra', 20000, '2026-07-22 16:26:49'),
+(349, 100, 3, 'Cambio de arranque.', 'Mano de obra', 10000, '2026-07-22 19:06:04'),
+(350, 102, 3, '🆕 Caso creado a partir del caso anterior #81', 'Mano de obra', 0, '2026-07-22 19:38:44'),
+(351, 100, 3, 'Lubricación.', 'Mano de obra', 9000, '2026-07-22 19:53:27'),
+(352, 100, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-22 19:54:17'),
+(353, 102, 3, 'Cambio aceite.', 'Mano de obra', 5000, '2026-07-22 23:49:56'),
+(354, 102, 3, 'Cambio de fuelles de barra.', 'Mano de obra', 20000, '2026-07-22 23:50:12'),
+(355, 102, 3, 'Cambio de mangos.', 'Mano de obra', 5000, '2026-07-22 23:50:33'),
+(356, 103, 3, 'Cambio de rodmientos.', 'Mano de obra', 10000, '2026-07-23 00:36:26'),
+(357, 103, 3, 'Observación: Se le informa al cliente, la manzana trasera bandas y porta plato deben cambiarse. Cliente dice pongamos rodamientos nuevos solamente... después los cambio.', 'Mano de obra', 0, '2026-07-23 03:05:38'),
+(358, 103, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-23 03:07:31'),
+(359, 102, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-23 04:29:54'),
+(360, 104, 3, '🆕 Caso creado a partir del caso anterior #102', 'Mano de obra', 0, '2026-07-23 04:31:21'),
+(361, 95, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-23 04:39:11'),
+(362, 104, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-23 05:28:52');
 
 -- --------------------------------------------------------
 
@@ -514,10 +529,13 @@ INSERT INTO `casos` (`id`, `vehiculo_id`, `mecanico_id`, `fecha_ingreso`, `hora_
 (92, 86, 3, '2026-07-16', '12:56:01', 'Se incendió ramal en el relay de arranque.', NULL, NULL, 'cerrado', '2026-07-20 14:49:55', NULL, 93000, 0, 0.00),
 (93, 87, 3, '2026-07-17', '15:11:12', 'Se acelera solita', NULL, NULL, 'cerrado', '2026-07-18 11:53:46', NULL, 5000, 0, 0.00),
 (94, 9, 3, '2026-07-17', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #69', '', 'cerrado', '2026-07-17 18:17:34', NULL, 0, 0, 0.00),
-(95, 88, 3, '2026-07-18', '11:57:46', 'Se queda acelerada.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
+(95, 88, 3, '2026-07-18', '11:57:46', 'Se queda acelerada.', NULL, NULL, 'cerrado', '2026-07-22 23:39:11', NULL, 10000, 0, 0.00),
 (96, 89, 3, '2026-07-20', '14:52:23', 'Motor suena mal.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
-(100, 93, 3, '2026-07-21', '22:58:25', '67890\'oj987n987gybhj', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
-(101, 94, 3, '2026-07-22', '00:06:14', 'sdfghjkl5678', NULL, NULL, 'cerrado', '2026-07-22 01:00:29', NULL, 36000, 0, 0.00);
+(100, 93, 3, '2026-07-21', '22:58:25', 'No funciona el arranque eléctrico, a veces pierde fuerza y tironea.', NULL, NULL, 'cerrado', '2026-07-22 14:54:17', NULL, 40400, 0, 0.00),
+(101, 94, 3, '2026-07-22', '00:06:14', 'sdfghjkl5678', NULL, NULL, 'cerrado', '2026-07-22 01:00:29', NULL, 36000, 0, 0.00),
+(102, 78, 3, '2026-07-22', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #81', '', 'cerrado', '2026-07-22 23:29:54', NULL, 30000, 0, 0.00),
+(103, 95, 3, '2026-07-22', '19:35:59', 'Manzana rueda trasera se mueve.', NULL, NULL, 'cerrado', '2026-07-22 22:07:31', NULL, 40000, 0, 0.00),
+(104, 78, 3, '2026-07-22', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #102', '', 'cerrado', '2026-07-23 00:28:52', NULL, 0, 0, 0.00);
 
 -- --------------------------------------------------------
 
@@ -543,7 +561,11 @@ CREATE TABLE `caso_repuestos` (
 
 INSERT INTO `caso_repuestos` (`id`, `caso_id`, `parte_id`, `usuario_id`, `cantidad`, `costo_unitario`, `precio_unitario`, `subtotal`, `created_at`) VALUES
 (1, 101, 2, 3, 2.00, 400.00, 1000.00, 2000.00, '2026-07-22 05:57:00'),
-(2, 101, 2, 3, 2.00, 400.00, 1000.00, 2000.00, '2026-07-22 05:59:38');
+(2, 101, 2, 3, 2.00, 400.00, 1000.00, 2000.00, '2026-07-22 05:59:38'),
+(3, 100, 5, 3, 2.00, 500.00, 700.00, 1400.00, '2026-07-22 16:53:46'),
+(4, 103, 7, 3, 1.00, 3500.00, 9000.00, 9000.00, '2026-07-23 03:00:11'),
+(5, 103, 8, 3, 1.00, 2000.00, 5000.00, 5000.00, '2026-07-23 03:03:27'),
+(6, 103, 6, 3, 2.00, 3500.00, 8000.00, 16000.00, '2026-07-23 03:07:09');
 
 -- --------------------------------------------------------
 
@@ -588,7 +610,7 @@ INSERT INTO `categorias_partes` (`id`, `nombre`, `descripcion`, `activo`, `creat
 (21, 'Limpieza', 'Productos de limpieza', 1, '2026-07-10 09:01:58', '2026-07-10 09:01:58'),
 (22, 'Herramientas', 'Herramientas del taller', 1, '2026-07-10 09:01:58', '2026-07-10 09:01:58'),
 (23, 'Accesorios', 'Accesorios para vehículos', 1, '2026-07-10 09:01:58', '2026-07-10 09:01:58'),
-(24, 'Otros', 'Categoría general', 1, '2026-07-10 09:01:58', '2026-07-10 09:01:58');
+(24, 'Eléctrico', 'Terminales, cables, sockets, bobinasEtc.', 1, '2026-07-10 09:01:58', '2026-07-22 11:47:41');
 
 -- --------------------------------------------------------
 
@@ -611,7 +633,10 @@ CREATE TABLE `fabricante_repuesto` (
 
 INSERT INTO `fabricante_repuesto` (`id`, `nombre`, `descripcion`, `activo`, `created_at`, `updated_at`) VALUES
 (1, 'Choho', 'La fuerza que lo resiste todo', 1, '2026-07-22 04:25:39', '2026-07-22 04:25:39'),
-(2, 'Casarella', '\"¡Dale a tu moto Cassarella!', 1, '2026-07-22 04:25:39', '2026-07-22 04:25:39');
+(2, 'Casarella', '\"¡Dale a tu moto Cassarella!', 1, '2026-07-22 04:25:39', '2026-07-22 04:25:39'),
+(3, 'Sin marca', 'Fabricante desconocido.', 1, '2026-07-22 04:25:39', '2026-07-22 04:25:39'),
+(4, 'Pfi', 'American Engineering Inside', 1, '2026-07-22 04:25:39', '2026-07-22 04:25:39'),
+(5, 'Koyo', 'De experto para expertos!', 1, '2026-07-22 04:25:39', '2026-07-23 02:55:09');
 
 -- --------------------------------------------------------
 
@@ -672,7 +697,11 @@ INSERT INTO `modelos_moto` (`id`, `marca_moto_id`, `tipo_moto_id`, `linea`, `cil
 (9, 8, 7, 'Nkd', 125, 1, '2026-07-20 19:55:02', '2026-07-20 19:55:02'),
 (10, 7, 7, 'Discover', 125, 1, '2026-07-20 19:55:02', '2026-07-20 19:55:02'),
 (11, 7, 7, 'Discover', 100, 1, '2026-07-20 19:55:02', '2026-07-20 19:55:02'),
-(12, 7, 7, 'Discover', 150, 1, '2026-07-20 19:55:02', '2026-07-20 19:55:02');
+(12, 7, 7, 'Discover', 150, 1, '2026-07-20 19:55:02', '2026-07-20 19:55:02'),
+(13, 4, 6, 'Crypton', 115, 1, '2026-07-23 00:34:42', '2026-07-23 00:34:42'),
+(14, 1, 3, 'Xlr', 125, 1, '2026-07-23 03:20:22', '2026-07-23 03:20:22'),
+(15, 1, 7, 'Cbf', 125, 1, '2026-07-23 03:20:55', '2026-07-23 03:20:55'),
+(16, 1, 7, 'Cbf', 150, 1, '2026-07-23 03:21:12', '2026-07-23 03:21:12');
 
 -- --------------------------------------------------------
 
@@ -705,7 +734,15 @@ INSERT INTO `movimientos_inventario` (`id`, `parte_id`, `usuario_id`, `caso_id`,
 (4, 1, 3, NULL, 'compra', 'Compra inicial', 15.00, 15.00, 34000.00, '', '2026-07-21 23:07:25'),
 (5, 4, 3, NULL, 'compra', 'Compra inicial', 20.00, 20.00, 18000.00, '', '2026-07-21 23:29:50'),
 (8, 2, 3, 101, 'consumo', 'Consumo durante reparación', 2.00, 8.00, 400.00, 'Aplicado desde WorkShop', '2026-07-22 00:57:00'),
-(9, 2, 3, 101, 'consumo', 'Consumo durante reparación', 2.00, 6.00, 400.00, 'Aplicado desde WorkShop', '2026-07-22 00:59:38');
+(9, 2, 3, 101, 'consumo', 'Consumo durante reparación', 2.00, 6.00, 400.00, 'Aplicado desde WorkShop', '2026-07-22 00:59:38'),
+(10, 5, 3, NULL, 'compra', 'Compra inicial', 10.00, 10.00, 500.00, '', '2026-07-22 11:52:35'),
+(11, 5, 3, 100, 'consumo', 'Consumo durante reparación', 2.00, 8.00, 500.00, 'Aplicado desde WorkShop', '2026-07-22 11:53:46'),
+(12, 6, 3, NULL, 'compra', 'Compra inicial', 4.00, 4.00, 3500.00, '', '2026-07-22 21:57:38'),
+(13, 7, 3, NULL, 'compra', 'Compra inicial', 2.00, 2.00, 3500.00, '', '2026-07-22 21:59:43'),
+(14, 7, 3, 103, 'consumo', 'Consumo durante reparación', 1.00, 1.00, 3500.00, 'Aplicado desde WorkShop', '2026-07-22 22:00:11'),
+(15, 8, 3, NULL, 'compra', 'Compra inicial', 2.00, 2.00, 2000.00, '', '2026-07-22 22:03:10'),
+(16, 8, 3, 103, 'consumo', 'Consumo durante reparación', 1.00, 1.00, 2000.00, 'Aplicado desde WorkShop', '2026-07-22 22:03:27'),
+(17, 6, 3, 103, 'consumo', 'Consumo durante reparación', 2.00, 2.00, 3500.00, 'Aplicado desde WorkShop', '2026-07-22 22:07:09');
 
 -- --------------------------------------------------------
 
@@ -744,7 +781,38 @@ CREATE TABLE `partes` (
 INSERT INTO `partes` (`id`, `codigo`, `categoria_id`, `tipo`, `nombre`, `marca`, `fabricante_repuesto_id`, `numero_parte`, `created_by`, `unidad`, `stock_actual`, `stock_reservado`, `stock_minimo`, `costo`, `precio_venta`, `ubicacion`, `codigo_barras`, `imagen`, `activo`, `created_at`, `updated_at`) VALUES
 (1, 'CunDir001', 16, 'repuesto', 'Cunas de dirección.', 'Choho', 1, '', 3, 'Unidad', 15.00, 0.00, 10.00, 18000.00, 34000.00, 'NA', '22201GF6000LS', NULL, 1, '2026-07-13 17:56:39', '2026-07-22 01:01:51'),
 (2, 'BombDirRedCruz', 11, 'repuesto', 'Bombillo direccional redondo pata cruzada', NULL, NULL, 'hjkl8', 3, 'Unidad', 6.00, 0.00, 10.00, 400.00, 1000.00, '', 'hjkñ', NULL, 1, '2026-07-20 13:34:53', '2026-07-22 00:59:38'),
-(4, 'CunDir002', 16, 'repuesto', 'Cunas de dirección.', 'Casarella', 2, '67890l', 3, 'Unidad', 20.00, 0.00, 5.00, 18000.00, 32000.00, '', 'bnmo', NULL, 1, '2026-07-21 23:28:25', '2026-07-21 23:29:50');
+(4, 'CunDir002', 16, 'repuesto', 'Cunas de dirección.', 'Casarella', 2, '67890l', 3, 'Unidad', 20.00, 0.00, 5.00, 18000.00, 32000.00, '', 'bnmo', NULL, 1, '2026-07-21 23:28:25', '2026-07-21 23:29:50'),
+(5, 'TermPlanoHemb', 24, 'insumo', 'Terminales planos hembra', 'Sin marca', 3, '6777y', 3, 'Unidad', 8.00, 0.00, 20.00, 500.00, 700.00, 'NA', '22201GF6000LS', NULL, 1, '2026-07-22 11:52:21', '2026-07-22 11:53:46'),
+(6, 'RodBol6301', 16, 'repuesto', 'Rodamiento 6301', 'Koyo', 5, 'jkjk', 3, 'Unidad', 2.00, 0.00, 20.00, 3500.00, 8000.00, 'Vitrina', '56789', NULL, 1, '2026-07-22 21:56:41', '2026-07-22 22:07:09'),
+(7, 'RodBol6004', 16, 'repuesto', 'Rodamiento 6004', 'Pfi', 4, '34t', 3, 'Unidad', 1.00, 0.00, 20.00, 3500.00, 9000.00, 'Vitrina', '56890okhggfw45sy', NULL, 1, '2026-07-22 21:59:25', '2026-07-22 22:00:11'),
+(8, 'TornPbandas15mm', 19, 'repuesto', 'Tornillo Porta bandas 15mm', 'Sin marca', 3, 'N/A', 3, 'Unidad', 1.00, 0.00, 10.00, 2000.00, 5000.00, 'Gabeta', 'N/A', NULL, 1, '2026-07-22 22:02:44', '2026-07-22 22:03:27');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `pendientes`
+--
+
+CREATE TABLE `pendientes` (
+  `id` int(11) NOT NULL,
+  `vehiculo_id` int(11) NOT NULL,
+  `caso_origen_id` int(11) NOT NULL,
+  `caso_resuelto_id` int(11) DEFAULT NULL,
+  `usuario_id` int(11) NOT NULL,
+  `descripcion` text NOT NULL,
+  `estado` enum('pendiente','resuelto','descartado') NOT NULL DEFAULT 'pendiente',
+  `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+  `resolved_at` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `pendientes`
+--
+
+INSERT INTO `pendientes` (`id`, `vehiculo_id`, `caso_origen_id`, `caso_resuelto_id`, `usuario_id`, `descripcion`, `estado`, `created_at`, `resolved_at`) VALUES
+(1, 78, 102, NULL, 3, 'Cliente debe $33000!', 'pendiente', '2026-07-23 04:26:53', NULL),
+(2, 89, 96, NULL, 3, 'Cobrar bien duro. :)', 'pendiente', '2026-07-23 04:59:34', NULL),
+(3, 78, 104, NULL, 3, 'Corregir la altura de la suspensión según el usuario decida después de probar el veículo.', 'pendiente', '2026-07-23 05:28:34', NULL);
 
 -- --------------------------------------------------------
 
@@ -899,9 +967,13 @@ INSERT INTO `sesiones_trabajo` (`id`, `caso_id`, `mecanico_id`, `fecha_inicio`, 
 (155, 92, 3, '2026-07-16', '12:56:05', '2026-07-20', '14:49:55', 6294),
 (156, 93, 3, '2026-07-17', '15:11:17', '2026-07-18', '11:53:46', 1662),
 (157, 94, 3, '2026-07-17', '18:11:43', '2026-07-17', '18:17:33', 426),
-(158, 95, 3, '2026-07-18', '11:57:51', NULL, NULL, 0),
-(161, 100, 3, '2026-07-21', '22:58:34', NULL, NULL, 0),
-(162, 101, 3, '2026-07-22', '00:37:09', '2026-07-22', '01:00:29', 443);
+(158, 95, 3, '2026-07-18', '11:57:51', '2026-07-22', '23:39:11', 6881),
+(161, 100, 3, '2026-07-21', '22:58:34', '2026-07-22', '14:54:17', 1376),
+(162, 101, 3, '2026-07-22', '00:37:09', '2026-07-22', '01:00:29', 443),
+(163, 102, 3, '2026-07-22', '14:38:51', '2026-07-22', '23:29:54', 951),
+(164, 103, 3, '2026-07-22', '19:36:03', '2026-07-22', '22:07:31', 571),
+(165, 96, 3, '2026-07-22', '23:40:28', NULL, NULL, 0),
+(166, 104, 3, '2026-07-23', '00:27:18', '2026-07-23', '00:28:52', 422);
 
 -- --------------------------------------------------------
 
@@ -1052,8 +1124,9 @@ INSERT INTO `vehiculos` (`id`, `placa`, `marca`, `modelo`, `modelo_moto_id`, `co
 (87, 'HNM14H', 'Bajaj', 'Boxer Ct', NULL, 'Azul', 'Salomón Artunduaga.', '3212919177'),
 (88, 'FKA24C', 'Jincheng', 'Rocket 110', NULL, 'Azul', 'Refrigeradores', ''),
 (89, 'WHV31G', 'Akt', 'Nkd', NULL, 'Gris', 'Jean Carlos', ''),
-(93, 'PWN16E', 'Bajaj', 'Discover 150', 12, 'Negro', 'venMotos', '67890'),
-(94, 'xxx12e', 'Bajaj', 'Discover 100', 11, 'Negro', 'cliente de prueba', '567890');
+(93, 'PWN16E', 'Bajaj', 'Discover 150', 12, 'Negro', 'venMotos Marcos', '3146381494'),
+(94, 'xxx12e', 'Bajaj', 'Discover 100', 11, 'Negro', 'cliente de prueba', '567890'),
+(95, 'XCE33E', 'Yamaha', 'Crypton 115', 13, 'Negro', 'Mono Jr', '3507529413');
 
 --
 -- Indexes for dumped tables
@@ -1150,6 +1223,16 @@ ALTER TABLE `partes`
   ADD KEY `idx_numero_parte` (`numero_parte`);
 
 --
+-- Indexes for table `pendientes`
+--
+ALTER TABLE `pendientes`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `vehiculo_id` (`vehiculo_id`),
+  ADD KEY `caso_origen_id` (`caso_origen_id`),
+  ADD KEY `caso_resuelto_id` (`caso_resuelto_id`),
+  ADD KEY `usuario_id` (`usuario_id`);
+
+--
 -- Indexes for table `sesiones_trabajo`
 --
 ALTER TABLE `sesiones_trabajo`
@@ -1193,19 +1276,19 @@ ALTER TABLE `aplicacion_parte`
 -- AUTO_INCREMENT for table `avances`
 --
 ALTER TABLE `avances`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=348;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=363;
 
 --
 -- AUTO_INCREMENT for table `casos`
 --
 ALTER TABLE `casos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=102;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=105;
 
 --
 -- AUTO_INCREMENT for table `caso_repuestos`
 --
 ALTER TABLE `caso_repuestos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT for table `categorias_partes`
@@ -1217,7 +1300,7 @@ ALTER TABLE `categorias_partes`
 -- AUTO_INCREMENT for table `fabricante_repuesto`
 --
 ALTER TABLE `fabricante_repuesto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT for table `marcas_moto`
@@ -1229,25 +1312,31 @@ ALTER TABLE `marcas_moto`
 -- AUTO_INCREMENT for table `modelos_moto`
 --
 ALTER TABLE `modelos_moto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `movimientos_inventario`
 --
 ALTER TABLE `movimientos_inventario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
 
 --
 -- AUTO_INCREMENT for table `partes`
 --
 ALTER TABLE `partes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+
+--
+-- AUTO_INCREMENT for table `pendientes`
+--
+ALTER TABLE `pendientes`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `sesiones_trabajo`
 --
 ALTER TABLE `sesiones_trabajo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=167;
 
 --
 -- AUTO_INCREMENT for table `tipos_moto`
@@ -1265,7 +1354,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `vehiculos`
 --
 ALTER TABLE `vehiculos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=96;
 
 --
 -- Constraints for dumped tables
@@ -1322,6 +1411,15 @@ ALTER TABLE `partes`
   ADD CONSTRAINT `fk_partes_categoria` FOREIGN KEY (`categoria_id`) REFERENCES `categorias_partes` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_partes_created_by` FOREIGN KEY (`created_by`) REFERENCES `usuarios` (`id`) ON DELETE SET NULL ON UPDATE CASCADE,
   ADD CONSTRAINT `fk_partes_fabricante` FOREIGN KEY (`fabricante_repuesto_id`) REFERENCES `fabricante_repuesto` (`id`) ON DELETE SET NULL ON UPDATE CASCADE;
+
+--
+-- Constraints for table `pendientes`
+--
+ALTER TABLE `pendientes`
+  ADD CONSTRAINT `pendientes_ibfk_1` FOREIGN KEY (`vehiculo_id`) REFERENCES `vehiculos` (`id`),
+  ADD CONSTRAINT `pendientes_ibfk_2` FOREIGN KEY (`caso_origen_id`) REFERENCES `casos` (`id`),
+  ADD CONSTRAINT `pendientes_ibfk_3` FOREIGN KEY (`caso_resuelto_id`) REFERENCES `casos` (`id`),
+  ADD CONSTRAINT `pendientes_ibfk_4` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`);
 
 --
 -- Constraints for table `sesiones_trabajo`

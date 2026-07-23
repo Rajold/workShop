@@ -18,6 +18,33 @@
     <h2 class="mb-4">Ficha del vehículo</h2>
 
     <?php if ($vehicle): ?>
+
+        <?php if (!empty($pendingItems)): ?>
+
+            <div class="alert alert-warning shadow-sm mb-4">
+
+                <h5 class="mb-3">
+                    ⚠ Pendientes del vehículo
+                </h5>
+
+                <ul class="mb-0">
+
+                    <?php foreach ($pendingItems as $pending): ?>
+
+                        <li>
+
+                            <?= htmlspecialchars($pending['descripcion']) ?>
+
+                        </li>
+
+                    <?php endforeach; ?>
+
+                </ul>
+
+            </div>
+
+        <?php endif; ?>
+
         <div class="card shadow-sm mb-4 border-0">
             <div class="card-body">
 
@@ -374,21 +401,29 @@
 
                             <select name="tipo" class="form-control" required>
                                 <option value="">Seleccione...</option>
-                                <option value="Repuesto">Repuesto</option>
-                                <option value="Mano de obra">Mano de obra</option>
+
+                                <option value="Mano de obra">
+                                    Mano de obra
+                                </option>
+
+                                <option value="Pendiente">
+                                    Pendiente
+                                </option>
                             </select>
                         </div>
 
-                        <div class="mb-3">
+                        <div class="mb-3" id="valorContainer">
+
                             <label class="form-label">Valor</label>
 
                             <input
                                 type="number"
                                 class="form-control"
+                                id="valor"
                                 name="valor"
                                 min="0"
-                                step="0.01"
-                                required>
+                                step="0.01">
+
                         </div>
                         <button type="submit" class="btn btn-success">Guardar avance</button>
                     </form>
@@ -552,16 +587,14 @@
 
                                 <select name="tipo" class="form-control" required>
 
-                                    <option value="">
-
-                                        Seleccione...
-
-                                    </option>
+                                    <option value="">Seleccione...</option>
 
                                     <option value="Mano de obra">
-
                                         Mano de obra
+                                    </option>
 
+                                    <option value="Pendiente">
+                                        Pendiente
                                     </option>
 
                                 </select>
@@ -803,4 +836,40 @@
         });
 
     });
+</script>
+
+<script>
+
+const tipo = document.querySelector('select[name="tipo"]');
+
+const valorContainer = document.getElementById('valorContainer');
+
+const valor = document.getElementById('valor');
+
+function actualizarFormulario() {
+
+    if (!tipo) return;
+
+    if (tipo.value === 'Pendiente') {
+
+        valorContainer.style.display = 'none';
+
+        valor.required = false;
+
+        valor.value = '';
+
+    } else {
+
+        valorContainer.style.display = '';
+
+        valor.required = true;
+
+    }
+
+}
+
+tipo.addEventListener('change', actualizarFormulario);
+
+actualizarFormulario();
+
 </script>
