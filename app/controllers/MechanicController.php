@@ -382,6 +382,117 @@ class MechanicController extends BaseController
         exit;
     }
 
+    public function resolvePendingAsLabor()
+    {
+        $this->ensureLogged();
+
+        $pendingId = (int)($_GET['pending_id'] ?? 0);
+        $caseId    = (int)($_GET['case_id'] ?? 0);
+        $vehId     = (int)($_GET['veh_id'] ?? 0);
+
+        $pendingModel = new Pending($this->pdo);
+        $advanceModel = new Avance($this->pdo);
+
+        $pending = $pendingModel->findById($pendingId);
+
+        if (!$pending) {
+
+            $this->error('Pendiente no encontrado.');
+
+            header(
+                "Location: index.php?controller=mechanic&action=viewCase&case_id={$caseId}&veh_id={$vehId}"
+            );
+            exit;
+        }
+
+        $advanceModel->add(
+
+            $caseId,
+
+            $_SESSION['user_id'],
+
+            $pending['descripcion'],
+
+            'Mano de obra',
+
+            0
+
+        );
+
+        $pendingModel->resolve(
+            $pendingId,
+            $caseId
+        );
+
+        $this->success(
+            'Pendiente convertido en mano de obra.'
+        );
+
+        header(
+            "Location: index.php?controller=mechanic&action=viewCase&case_id={$caseId}&veh_id={$vehId}"
+        );
+
+        exit;
+    }
+
+    public function resolvePending()
+    {
+        $this->ensureLogged();
+
+        $pendingId = (int)$_POST['pending_id'];
+        $caseId    = (int)$_POST['case_id'];
+        $vehId     = (int)$_POST['veh_id'];
+
+        $descripcion = trim($_POST['descripcion']);
+        $valor = (int)$_POST['valor'];
+
+        $pendingModel = new Pending($this->pdo);
+        $advanceModel = new Avance($this->pdo);
+
+        $pending = $pendingModel->findById($pendingId);
+
+        if (!$pending) {
+
+            $_SESSION['error_message'] = 'Pendiente no encontrado.';
+
+            header(
+                "Location: index.php?controller=mechanic&action=viewCase&case_id={$caseId}&veh_id={$vehId}"
+            );
+
+            exit;
+        }
+
+        $advanceModel->add(
+
+            $caseId,
+
+            (int)$_SESSION['user_id'],
+
+            $descripcion,
+
+            'Mano de obra',
+
+            $valor
+
+        );
+
+        $pendingModel->resolve(
+            $pendingId,
+            $caseId
+        );
+
+        $_SESSION['success_message'] =
+            'Pendiente convertido en mano de obra.';
+
+        
+
+        header(
+            "Location: index.php?controller=mechanic&action=viewCase&case_id={$caseId}&veh_id={$vehId}"
+        );
+
+        exit;
+    }
+
     public function endSession()
     {
         $this->ensureLogged();

@@ -19,6 +19,7 @@
 
     <?php if ($vehicle): ?>
 
+
         <?php if (!empty($pendingItems)): ?>
 
             <div class="alert alert-warning shadow-sm mb-4">
@@ -371,6 +372,86 @@
                 <p><strong>Estado:</strong> <?= htmlspecialchars($caso['estado'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
             </div>
         </div>
+
+        <?php if (!empty($pendingItems)): ?>
+
+            <div class="card border-warning shadow-sm mt-4 mb-4">
+
+                <div class="card-header bg-warning">
+
+                    <strong>📌 Pendientes del vehículo</strong>
+
+                </div>
+
+                <div class="card-body">
+
+                    <?php foreach ($pendingItems as $pending): ?>
+
+                        <div class="border rounded p-3 mb-3">
+
+                            <div class="mb-2">
+
+                                <?= nl2br(htmlspecialchars($pending['descripcion'])) ?>
+
+                            </div>
+
+                            <small class="text-muted">
+
+                                Creado en caso #<?= $pending['caso_origen'] ?>
+
+                                ·
+
+                                <?= htmlspecialchars($pending['usuario']) ?>
+
+                            </small>
+
+                            <div class="mt-3">
+
+                                <button
+                                    type="button"
+                                    class="btn btn-success btn-sm btn-resolve-pending"
+
+                                    data-bs-toggle="modal"
+                                    data-bs-target="#resolvePendingModal"
+
+                                    data-pending-id="<?= $pending['id'] ?>"
+                                    data-case-id="<?= $caso['id'] ?>"
+                                    data-veh-id="<?= $veh_id ?>"
+                                    data-description="<?= htmlspecialchars($pending['descripcion'], ENT_QUOTES) ?>">
+
+                                    👨‍🔧 Convertir en mano de obra
+
+                                </button>
+
+                                <a
+                                    href="index.php?controller=inventory&action=selectForCase&case_id=<?= $caso['id'] ?>&veh_id=<?= $veh_id ?>&pending_id=<?= $pending['id'] ?>"
+                                    class="btn btn-primary btn-sm">
+
+                                    🔩 Convertir en repuesto
+
+                                </a>
+
+                                <a
+                                    href="index.php?controller=mechanic&action=discardPending&pending_id=<?= $pending['id'] ?>&case_id=<?= $caso['id'] ?>&veh_id=<?= $veh_id ?>"
+                                    class="btn btn-outline-danger btn-sm"
+
+                                    onclick="return confirm('¿Descartar este pendiente?');">
+
+                                    ❌ Descartar
+
+                                </a>
+
+                            </div>
+
+                        </div>
+
+                    <?php endforeach; ?>
+
+                </div>
+
+            </div>
+
+        <?php endif; ?>
 
         <?php if ($caso['estado'] === 'abierto'): ?>
             <div class="alert alert-info">
@@ -778,6 +859,143 @@
     </div>
 </div>
 
+<!-- Modal convertir pendiente a mano de obra -->
+<div
+    class="modal fade"
+    id="resolvePendingModal"
+    tabindex="-1">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form
+                method="post"
+                action="index.php?controller=mechanic&action=resolvePending">
+
+                <div class="modal-header">
+
+                    <h5 class="modal-title">
+
+                        Resolver pendiente
+
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <input
+                        type="hidden"
+                        name="pending_id"
+                        id="pending_id">
+
+                    <input
+                        type="hidden"
+                        name="case_id"
+                        id="case_id">
+
+                    <input
+                        type="hidden"
+                        name="veh_id"
+                        id="veh_id">
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Descripción
+
+                        </label>
+
+                        <textarea
+                            class="form-control"
+                            rows="4"
+                            name="descripcion"
+                            id="descripcion"
+                            required></textarea>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+
+                            Valor mano de obra
+
+                        </label>
+
+                        <input
+                            type="number"
+                            class="form-control"
+                            name="valor"
+                            value="0"
+                            min="0"
+                            required>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal"
+                        type="button">
+
+                        Cancelar
+
+                    </button>
+
+                    <button
+                        class="btn btn-success"
+                        type="submit">
+
+                        Guardar
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<script>
+
+document.querySelectorAll('.btn-resolve-pending').forEach(function(button){
+
+    button.addEventListener('click', function(){
+
+        document.getElementById('pending_id').value =
+            this.dataset.pendingId;
+
+        document.getElementById('case_id').value =
+            this.dataset.caseId;
+
+        document.getElementById('veh_id').value =
+            this.dataset.vehId;
+
+        document.getElementById('descripcion').value =
+            this.dataset.description;
+
+    });
+
+});
+
+</script>
+
 <script>
     const costoTotal = <?= (int)$totales['total'] ?>;
 
@@ -839,37 +1057,35 @@
 </script>
 
 <script>
+    const tipo = document.querySelector('select[name="tipo"]');
 
-const tipo = document.querySelector('select[name="tipo"]');
+    const valorContainer = document.getElementById('valorContainer');
 
-const valorContainer = document.getElementById('valorContainer');
+    const valor = document.getElementById('valor');
 
-const valor = document.getElementById('valor');
+    function actualizarFormulario() {
 
-function actualizarFormulario() {
+        if (!tipo) return;
 
-    if (!tipo) return;
+        if (tipo.value === 'Pendiente') {
 
-    if (tipo.value === 'Pendiente') {
+            valorContainer.style.display = 'none';
 
-        valorContainer.style.display = 'none';
+            valor.required = false;
 
-        valor.required = false;
+            valor.value = '';
 
-        valor.value = '';
+        } else {
 
-    } else {
+            valorContainer.style.display = '';
 
-        valorContainer.style.display = '';
+            valor.required = true;
 
-        valor.required = true;
+        }
 
     }
 
-}
+    tipo.addEventListener('change', actualizarFormulario);
 
-tipo.addEventListener('change', actualizarFormulario);
-
-actualizarFormulario();
-
+    actualizarFormulario();
 </script>

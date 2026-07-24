@@ -60,6 +60,24 @@ class Pending extends BaseModel
         ]);
     }
 
+public function findById(int $id): ?array
+{
+    $stmt = $this->db->prepare("
+        SELECT *
+        FROM pendientes
+        WHERE id = :id
+        LIMIT 1
+    ");
+
+    $stmt->execute([
+        ':id' => $id
+    ]);
+
+    $pending = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $pending ?: null;
+}
+
     public function resolve(
         int $id,
         int $caseId
