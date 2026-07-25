@@ -23,7 +23,8 @@ class InventoryService
     public function confirmCart(
         int $caseId,
         int $vehId,
-        int $userId
+        int $userId,
+        int $pendingId = 0
     ): void {
         $cart = $_SESSION['case_cart'][$caseId] ?? [];
 
@@ -100,6 +101,20 @@ class InventoryService
                 ]);
             }
 
+            if ($pendingId > 0) {
+
+                $pendingModel = new Pending($this->db);
+
+                if (!$pendingModel->resolve(
+                    $pendingId,
+                    $caseId
+                )) {
+
+                    throw new Exception(
+                        'No fue posible resolver el pendiente.'
+                    );
+                }
+            }
             $this->db->commit();
 
             $this->clearCart($caseId);

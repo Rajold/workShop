@@ -505,4 +505,35 @@ class MechanicController extends BaseController
             exit;
         }
     }
+
+    public function discardPending(): void
+{
+    $this->ensureLogged();
+
+    $pendingId = (int)($_GET['pending_id'] ?? 0);
+    $caseId    = (int)($_GET['case_id'] ?? 0);
+    $vehId     = (int)($_GET['veh_id'] ?? 0);
+
+    $pendingModel = new Pending($this->pdo);
+
+    if (!$pendingModel->findById($pendingId)) {
+
+        $this->error('Pendiente no encontrado.');
+
+    } elseif ($pendingModel->discard($pendingId)) {
+
+        $this->success('Pendiente descartado correctamente.');
+
+    } else {
+
+        $this->error('No fue posible descartar el pendiente.');
+
+    }
+
+    header(
+        "Location: index.php?controller=mechanic&action=viewCase&case_id={$caseId}&veh_id={$vehId}"
+    );
+
+    exit;
+}
 }

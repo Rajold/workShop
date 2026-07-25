@@ -263,6 +263,7 @@ class InventoryController extends BaseController
 
         $caseId = (int)($_GET['case_id'] ?? 0);
         $vehId  = (int)($_GET['veh_id'] ?? 0);
+        $pendingId = (int)($_GET['pending_id'] ?? 0);
 
         $search = trim($_GET['q'] ?? '');
 
@@ -271,6 +272,7 @@ class InventoryController extends BaseController
         $this->render('inventory/select_for_case', [
             'caseId' => $caseId,
             'vehId'  => $vehId,
+            'pendingId' => $pendingId,
             'parts'  => $parts,
             'search' => $search
         ]);
@@ -282,6 +284,7 @@ class InventoryController extends BaseController
 
         $caseId = (int)($_POST['case_id'] ?? 0);
         $vehId  = (int)($_POST['veh_id'] ?? 0);
+        $pendingId = (int)($_POST['pending_id'] ?? 0);
         $partId = (int)($_POST['parte_id'] ?? 0);
         $cantidad = (float)($_POST['cantidad'] ?? 1);
 
@@ -302,8 +305,11 @@ class InventoryController extends BaseController
             $this->error('Artículo no encontrado.');
 
             $this->redirect(
-                "index.php?controller=inventory&action=selectForCase&case_id={$caseId}&veh_id={$vehId}"
-            );
+    "index.php?controller=inventory&action=selectForCase"
+    . "&case_id={$caseId}"
+    . "&veh_id={$vehId}"
+    . "&pending_id={$pendingId}"
+);
 
             return;
         }
@@ -342,8 +348,11 @@ class InventoryController extends BaseController
         $this->success('Artículo agregado al carrito.');
 
         $this->redirect(
-            "index.php?controller=inventory&action=selectForCase&case_id={$caseId}&veh_id={$vehId}"
-        );
+    "index.php?controller=inventory&action=selectForCase"
+    . "&case_id={$caseId}"
+    . "&veh_id={$vehId}"
+    . "&pending_id={$pendingId}"
+);
     }
 
     public function removeFromCart(): void
@@ -379,14 +388,16 @@ class InventoryController extends BaseController
         $this->ensureLogged();
 
         $caseId = (int)($_POST['case_id'] ?? 0);
-        $vehId  = (int)($_POST['veh_id'] ?? 0);
+$vehId  = (int)($_POST['veh_id'] ?? 0);
+$pendingId = (int)($_POST['pending_id'] ?? 0);
 
         try {
 
             $this->inventoryService->confirmCart(
                 $caseId,
                 $vehId,
-                (int)$_SESSION['user_id']
+                (int)$_SESSION['user_id'],
+                $pendingId
             );
 
             $this->success(

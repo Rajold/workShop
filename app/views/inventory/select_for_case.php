@@ -23,6 +23,8 @@
         <input type="hidden" name="action" value="selectForCase">
         <input type="hidden" name="case_id" value="<?= $caseId ?>">
         <input type="hidden" name="veh_id" value="<?= $vehId ?>">
+        <input type="hidden" name="pending_id" value="<?= $pendingId ?>">
+
 
         <div class="col-md-10">
 
@@ -32,7 +34,6 @@
                 class="form-control"
                 placeholder="Buscar artículo..."
                 value="<?= htmlspecialchars($search) ?>">
-
         </div>
 
         <div class="col-md-2 d-grid">
@@ -101,26 +102,18 @@
                             class="d-flex align-items-center gap-2">
 
                             <input
-                                type="hidden"
-                                name="case_id"
+                                type="hidden" name="case_id"
                                 value="<?= $caseId ?>">
 
-                            <input
-                                type="hidden"
-                                name="veh_id"
-                                value="<?= $vehId ?>">
+                            <input type="hidden" name="veh_id" value="<?= $vehId ?>">
+                            
+                            <input type="hidden" name="pending_id" value="<?= $pendingId ?>">
 
-                            <input
-                                type="hidden"
-                                name="parte_id"
-                                value="<?= $part['id'] ?>">
+                            <input type="hidden" name="pending_id" value="<?= $pendingId ?>">
 
-                            <input
-                                type="number"
-                                name="cantidad"
-                                value="1"
-                                min="1"
-                                max="<?= (int)$part['stock_actual'] ?>"
+                            <input type="hidden" name="parte_id" value="<?= $part['id'] ?>">
+
+                            <input type="number" name="cantidad" value="1" min="1" max="<?= (int)$part['stock_actual'] ?>"
                                 class="form-control form-control-sm"
                                 style="width:75px">
 
@@ -212,7 +205,7 @@
 
                         <td><?= $item['cantidad'] ?></td>
 
-                        <?= number_format($item['precio_venta'],0,',','.') ?>
+                        <?= number_format($item['precio_venta'], 0, ',', '.') ?>
 
                         <td>
 
@@ -230,24 +223,19 @@
                                 action="index.php?controller=inventory&action=removeFromCart">
 
                                 <input
-                                    type="hidden"
-                                    name="case_id"
-                                    value="<?= $caseId ?>">
+                                    type="hidden" name="case_id" value="<?= $caseId ?>">
 
                                 <input
-                                    type="hidden"
-                                    name="veh_id"
-                                    value="<?= $vehId ?>">
+                                    type="hidden" name="veh_id" value="<?= $vehId ?>">
 
                                 <input
-                                    type="hidden"
-                                    name="part_id"
-                                    value="<?= $item['part_id'] ?>">
+                                    type="hidden" name="pending_id" value="<?= $pendingId ?>">
+
+                                <input
+                                    type="hidden" name="part_id" value="<?= $item['part_id'] ?>">
 
                                 <button
-                                    type="submit"
-                                    class="btn btn-sm btn-outline-danger"
-                                    title="Eliminar">
+                                    type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
 
                                     <i class="bi bi-trash"></i>
                                     Eliminar
@@ -286,36 +274,34 @@
 
         </table>
 
-<div class="text-end mt-3">
+        <div class="text-end mt-3">
 
-    <form
-        method="POST"
-        action="index.php?controller=inventory&action=confirmCart">
+            <form
+                method="POST"
+                action="index.php?controller=inventory&action=confirmCart">
 
-        <input
-            type="hidden"
-            name="case_id"
-            value="<?= $caseId ?>">
+                <input
+                    type="hidden" name="case_id" value="<?= $caseId ?>">
 
-        <input
-            type="hidden"
-            name="veh_id"
-            value="<?= $vehId ?>">
+                <input
+                    type="hidden" name="veh_id" value="<?= $vehId ?>">
 
-        <button
-            type="submit"
-            class="btn btn-success btn-lg">
+                <input
+                    type="hidden" name="pending_id" value="<?= $pendingId ?>">
 
-            <i class="bi bi-check-circle"></i>
+                <button
+                    type="submit" class="btn btn-success btn-lg">
 
-            Añadir repuestos al caso
+                    <i class="bi bi-check-circle"></i>
 
-        </button>
+                    Añadir repuestos al caso
 
-    </form>
+                </button>
 
-</div>
+            </form>
 
-<?php endif; ?>
+        </div>
+
+    <?php endif; ?>
 
 </div>
