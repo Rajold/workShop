@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checklist de Entrega - Taller de Motocicletas</title>
+
+<style>
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    margin:40px;
+    color:#222;
+}
+
+h1{
+    text-align:center;
+    color:#0b4f8a;
+    margin-bottom:5px;
+}
+
+h2{
+    background:#0b4f8a;
+    color:white;
+    padding:8px;
+    font-size:16px;
+    margin-top:30px;
+}
+
+.datos{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:12px;
+    margin:20px 0;
+}
+
+.campo{
+    border-bottom:1px solid #444;
+    padding:6px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    margin-top:10px;
+}
+
+th{
+    background:#0b4f8a;
+    color:white;
+    padding:10px;
+    border:1px solid #999;
+}
+
+td{
+    border:1px solid #999;
+    padding:8px;
+}
+
+.check{
+    width:40px;
+    text-align:center;
+    font-size:20px;
+}
+
+textarea{
+    width:100%;
+    height:120px;
+    margin-top:10px;
+    resize:none;
+}
+
+.firmas{
+    display:flex;
+    justify-content:space-between;
+    margin-top:70px;
+}
+
+.firma{
+    width:40%;
+    text-align:center;
+}
+
+.linea{
+    border-top:1px solid #000;
+    margin-top:60px;
+    padding-top:8px;
+}
+
+@media print{
+
+body{
+    margin:15px;
+}
+
+button{
+    display:none;
+}
+
+}
+</style>
+
+</head>
+<body>
+
+<h1>CHECKLIST DE ENTREGA</h1>
+<p style="text-align:center;">Taller de Motocicletas</p>
+
+<div class="datos">
+
+<div class="campo"><strong>Cliente:</strong></div>
+<div class="campo"><strong>Fecha:</strong></div>
+
+<div class="campo"><strong>Motocicleta:</strong></div>
+<div class="campo"><strong>Placa:</strong></div>
+
+<div class="campo"><strong>Kilometraje:</strong></div>
+<div class="campo"><strong>Orden de Trabajo:</strong></div>
+
+<div class="campo"><strong>Técnico Responsable:</strong></div>
+<div class="campo"><strong>Hora de Entrega:</strong></div>
+
+</div>
+
+<h2>1. Orden de Trabajo</h2>
+
+<table>
+<tr>
+<th>Verificación</th>
+<th class="check">✓</th>
+</tr>
+
+<tr><td>Reparación realizada según la orden de trabajo.</td><td></td></tr>
+<tr><td>Repuestos instalados correctamente.</td><td></td></tr>
+<tr><td>Tornillería ajustada.</td><td></td></tr>
+
+</table>
+
+<h2>2. Motor</h2>
+
+<table>
+
+<tr><td>Arranque normal.</td><td class="check"></td></tr>
+<tr><td>Ralentí estable.</td><td></td></tr>
+<tr><td>Sin fugas de aceite.</td><td></td></tr>
+<tr><td>Sin fugas de combustible.</td><td></td></tr>
+<tr><td>Sin ruidos anormales.</td><td></td></tr>
+
+</table>
+
+<h2>3. Transmisión</h2>
+
+<table>
+
+<tr><td>Embrague funcionando correctamente.</td><td></td></tr>
+<tr><td>Cambios suaves.</td><td></td></tr>
+<tr><td>Cadena limpia, lubricada y tensionada.</td><td></td></tr>
+
+</table>
+
+<h2>4. Frenos</h2>
+
+<table>
+
+<tr><td>Freno delantero operativo.</td><td></td></tr>
+<tr><td>Freno trasero operativo.</td><td></td></tr>
+<tr><td>Nivel de líquido de frenos correcto.</td><td></td></tr>
+
+</table>
+
+<h2>5. Suspensión</h2>
+
+<table>
+
+<tr><td>Sin fugas.</td><td></td></tr>
+<tr><td>Funcionamiento correcto.</td><td></td></tr>
+
+</table>
+
+<h2>6. Dirección</h2>
+
+<table>
+
+<tr><td>Manillar sin holguras.</td><td></td></tr>
+<tr><td>Dirección suave.</td><td></td></tr>
+
+</table>
+
+<h2>7. Llantas</h2>
+
+<table>
+
+<tr><td>Presión correcta.</td><td></td></tr>
+<tr><td>Desgaste aceptable.</td><td></td></tr>
+<tr><td>Ejes correctamente ajustados.</td><td></td></tr>
+
+</table>
+
+<h2>8. Sistema Eléctrico</h2>
+
+<table>
+
+<tr><td>Luces altas y bajas.</td><td></td></tr>
+<tr><td>Direccionales.</td><td></td></tr>
+<tr><td>Luz de freno.</td><td></td></tr>
+<tr><td>Claxon.</td><td></td></tr>
+<tr><td>Tablero e indicadores.</td><td></td></tr>
+<tr><td>Carga de batería correcta.</td><td></td></tr>
+
+</table>
+
+<h2>9. Prueba Dinámica</h2>
+
+<table>
+
+<tr><td>Prueba de ruta realizada.</td><td></td></tr>
+<tr><td>Sin vibraciones.</td><td></td></tr>
+<tr><td>Frenado correcto.</td><td></td></tr>
+<tr><td>Aceleración normal.</td><td></td></tr>
+
+</table>
+
+<h2>10. Limpieza</h2>
+
+<table>
+
+<tr><td>Motocicleta limpia.</td><td></td></tr>
+<tr><td>Sin residuos de grasa.</td><td></td></tr>
+<tr><td>Herramientas retiradas.</td><td></td></tr>
+
+</table>
+
+<h2>11. Entrega al Cliente</h2>
+
+<table>
+
+<tr><td>Se explicaron los trabajos realizados.</td><td></td></tr>
+<tr><td>Se entregaron los repuestos sustituidos (si aplica).</td><td></td></tr>
+<tr><td>Se informó la garantía del servicio.</td><td></td></tr>
+<tr><td>Se recomendó el próximo mantenimiento.</td><td></td></tr>
+
+</table>
+
+<h2>Observaciones</h2>
+
+<textarea></textarea>
+
+<h2>Estado General No Relacionado con la Reparación</h2>
+
+<textarea></textarea>
+
+<div class="firmas">
+
+<div class="firma">
+<div class="linea">
+<strong>Técnico Responsable</strong>
+</div>
+</div>
+
+<div class="firma">
+<div class="linea">
+<strong>Cliente</strong>
+</div>
+</div>
+
+</div>
+
+<br><br>
+
+<button onclick="window.print()">
+🖨️ Imprimir Checklist
+</button>
+
+</body>
+</html>
