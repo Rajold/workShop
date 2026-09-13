@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 12, 2026 at 02:34 AM
+-- Generation Time: Sep 13, 2026 at 01:38 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -162,7 +162,9 @@ INSERT INTO `aplicacion_parte` (`id`, `parte_id`, `modelo_moto_id`, `created_at`
 (155, 23, 10, '2026-09-10 16:24:50', '2026-09-10 16:24:50'),
 (156, 23, 55, '2026-09-10 16:24:50', '2026-09-10 16:24:50'),
 (157, 23, 57, '2026-09-10 16:24:50', '2026-09-10 16:24:50'),
-(158, 23, 56, '2026-09-10 16:24:50', '2026-09-10 16:24:50');
+(158, 23, 56, '2026-09-10 16:24:50', '2026-09-10 16:24:50'),
+(160, 60, 48, '2026-09-12 19:23:23', '2026-09-12 19:23:23'),
+(161, 60, 58, '2026-09-12 19:23:23', '2026-09-12 19:23:23');
 
 -- --------------------------------------------------------
 
@@ -219,136 +221,6 @@ INSERT INTO `avances` (`id`, `caso_id`, `mecanico_id`, `descripcion`, `tipo`, `v
 (43, 12, 3, 'Falla de encendido solucionada.', 'Repuesto', 0, '2025-10-30 19:48:47'),
 (44, 12, 3, 'Cambio de pines Direccionales traseras y delanteras.', 'Repuesto', 0, '2025-10-30 22:49:15'),
 (45, 12, 3, 'ya mucho. Me voy pa la casa.', 'Repuesto', 0, '2025-10-31 01:16:50'),
-(46, 12, 4, 'Se fue por fin.', 'Repuesto', 0, '2025-11-01 01:02:32'),
-(47, 12, 4, '✅ Caso cerrado por el mecánico.', 'Repuesto', 0, '2025-11-01 01:02:44'),
-(48, 13, 4, 'Batería se puso a cargar pero no mantiene carga.', 'Repuesto', 0, '2025-11-01 16:22:48'),
-(49, 13, 4, 'Ajuste de válvulas, cambio de oRings tapas de válvulas.', 'Repuesto', 0, '2025-11-01 17:06:44'),
-(50, 13, 4, 'Cambio de cadena, cambio de llanta y neumàtico, cambio de bandas.\r\nPendiente empaque tapa y cambio de retenes volante.', 'Repuesto', 0, '2025-11-02 00:41:30'),
-(51, 12, 4, '✅ Caso cerrado por el mecánico.', 'Repuesto', 0, '2025-11-04 13:42:26'),
-(52, 17, 4, 'Se cambia el mando por el de segunda, el soporte del botón start está rota pero aún así funciona sin problemas.', 'Repuesto', 0, '2025-11-04 21:35:01'),
-(53, 18, 4, 'Bomba no se escucha, Comprobar voltages hacia la bomba', 'Repuesto', 0, '2025-11-04 23:07:07'),
-(54, 18, 4, 'La bomba está alimentada correctamente, Desmontar la bomba para revisión', 'Repuesto', 0, '2025-11-04 23:07:41'),
-(55, 18, 4, 'Bomba atascada con suciedad y gasolina envejecida, limbiar y despegar.\r\nLa bomba ahora funciona correctamente pero sale combustible negro', 'Repuesto', 0, '2025-11-04 23:08:48'),
-(56, 18, 4, 'Limpieza de conductos y montaje.\r\nMoto enciende correctamente, re armar y probar.', 'Repuesto', 0, '2025-11-04 23:09:40'),
-(57, 18, 4, '✅ Caso cerrado por el mecánico.', 'Repuesto', 0, '2025-11-04 23:09:48'),
-(58, 19, 4, 'Cambiar escobillas y hacer mantenimiento.', 'Repuesto', 0, '2025-11-05 15:06:31'),
-(59, 19, 4, '✅ Caso cerrado por el mecánico.', 'Repuesto', 0, '2025-11-05 15:06:37'),
-(60, 21, 4, 'Pendiente a hacer mantenimiento general.', 'Repuesto', 0, '2025-11-05 15:55:35'),
-(61, 20, 4, 'Rearmar mando derecho, limar imperfecciones en la base del carburador.', 'Repuesto', 0, '2025-11-05 19:55:12'),
-(62, 20, 4, '✅ Caso cerrado por el mecánico.', 'Repuesto', 0, '2025-11-05 19:55:19'),
-(63, 22, 4, 'Baterìa en carga.', 'Repuesto', 0, '2025-11-05 20:04:06'),
-(64, 22, 4, 'Pedal de arranque se queda abajo. A desmontar!', 'Repuesto', 0, '2025-11-05 20:12:31'),
-(65, 22, 4, 'Ajuste de vàlvulas', 'Repuesto', 0, '2025-11-06 19:03:33'),
-(66, 22, 4, 'Vàlvulas fuera de ajuste, Cortina y aguja de carburador dañados.', 'Repuesto', 0, '2025-11-06 20:13:51'),
-(67, 22, 4, 'Pendiente a cambio de empaque de culatìn.', 'Repuesto', 0, '2025-11-06 20:14:12'),
-(68, 23, 4, 'Cambio de bobina de carga y luces.\r\ncambio regulador.\r\ncambio de batería.\r\nOrganizar cableado.', 'Repuesto', 0, '2025-11-07 14:21:19'),
-(69, 23, 4, 'Buscar rodamiento que falta.', 'Repuesto', 0, '2025-11-07 15:16:33'),
-(70, 23, 4, 'Rodamiento 36000', 'Repuesto', 0, '2025-11-07 15:16:46'),
-(71, 22, 4, 'cadenilla sedida, guías gastadas.\r\nVariador dañado, se debe cambiar.', 'Repuesto', 0, '2025-11-07 22:25:40'),
-(72, 22, 4, 'Cambio de pastilla de freno trasero.', 'Repuesto', 0, '2025-11-10 19:35:46'),
-(73, 23, 4, 'Aplicar removedor de pintura a las carcazas centrales.', 'Repuesto', 0, '2025-11-10 19:36:53'),
-(74, 24, 4, 'Cambio de terminales de bobinas de carga y luces.\r\nDiafragma perforado.', 'Repuesto', 0, '2025-11-11 16:14:07'),
-(75, 24, 4, 'Aplicado t7000 al diafragma para tapar perforación.', 'Repuesto', 0, '2025-11-11 16:31:04'),
-(76, 21, 4, 'Freno trasero grita.\r\nFreno delantero se atasca.', 'Repuesto', 0, '2025-11-11 16:32:05'),
-(77, 21, 4, 'Mantenimientp freno delantero .', 'Repuesto', 0, '2025-11-12 14:54:03'),
-(78, 21, 4, '✅ Caso cerrado por el mecánico.', 'Repuesto', 0, '2025-11-12 14:54:10'),
-(79, 22, 4, 'desarmar cabeza de fuerza para cambio de cadena y guías', 'Repuesto', 0, '2025-11-12 14:55:07'),
-(80, 25, 4, 'Guaya de ascelerador dañada, Diafragma de carburador en mal estado.', 'Repuesto', 0, '2025-11-12 16:11:23'),
-(81, 25, 4, 'Se Cambia la guaya de ascelerador\r\nreparar diafragma\r\ndesmontar carburador para mantenimiento\r\nfiltro de gasolina\r\narmado y ajuste de carburador', 'Repuesto', 0, '2025-11-13 00:05:38'),
-(82, 25, 4, 'no Hay luces', 'Repuesto', 0, '2025-11-13 14:51:05'),
-(83, 25, 4, 'Corrección de cableado en unidad de control de luces y cambio de bombillo.', 'Repuesto', 0, '2025-11-13 15:28:58'),
-(84, 25, 4, 'cambio bombillo Stop', 'Repuesto', 0, '2025-11-13 15:37:04'),
-(85, 26, 4, 'Rodamientos 6004-6202-6202', 'Repuesto', 0, '2025-11-13 17:13:12'),
-(86, 26, 4, 'Cambio de rodamientos rueda delantela 6202, 6202\r\nPendiente autorización para cambiar pastillas.', 'Repuesto', 0, '2025-11-13 20:13:07'),
-(87, 26, 4, 'pastillas no autorizadas. Nota: Disco de freno está torcido.', 'Repuesto', 0, '2025-11-13 20:39:40'),
-(88, 25, 4, 'Abrir tapa cluth para revisar resorte de crank', 'Repuesto', 0, '2025-11-13 20:40:23'),
-(89, 25, 4, 'resorte de crank roto.', 'Repuesto', 0, '2025-11-13 21:18:20'),
-(90, 25, 4, '✅ Caso cerrado por el mecánico.', 'Repuesto', 0, '2025-11-14 15:44:52'),
-(91, 27, 4, 'Motor desmontado', 'Repuesto', 0, '2025-11-14 17:26:04'),
-(92, 28, 4, '🆕 Caso creado a partir del caso anterior #20', 'Repuesto', 0, '2025-11-14 21:15:41'),
-(93, 28, 4, 'Cambiar guaya de embrague.', 'Repuesto', 0, '2025-11-14 21:16:07'),
-(94, 27, 4, 'motor desarmado.', 'Repuesto', 0, '2025-11-14 21:45:09'),
-(95, 27, 4, 'hacer rosca para tapón de aceite', 'Repuesto', 0, '2025-11-15 19:14:15'),
-(96, 27, 4, 'Pista de rodamiento de cigüeñal gastada, se lleva para rectificadora', 'Repuesto', 0, '2025-11-15 22:24:15'),
-(97, 30, 4, '✅ Caso cerrado por el mecánico.', 'Repuesto', 0, '2025-11-17 19:09:09'),
-(98, 27, 4, 'Cambio de barras, pendiente poner aceite.', 'Repuesto', 0, '2025-11-19 00:09:17'),
-(99, 27, 4, 'Cargar aceite en la suspensión delantera.', 'Repuesto', 0, '2025-11-27 15:00:58'),
-(100, 27, 4, 'Terminar de cerrar motor.', 'Repuesto', 0, '2025-11-27 15:01:36'),
-(101, 27, 4, 'Motor no enciende o se apaga después de un rato. Se pierde la corriente.', 'Repuesto', 0, '2025-11-27 15:02:06'),
-(102, 27, 4, 'falla de encendido:\r\nCdi bien.', 'Repuesto', 0, '2025-11-28 21:41:07'),
-(103, 31, 4, 'Se relaminó escape con acero inoxidable.\r\nAutomático nuevo.\r\nSe sugiere cambiar la batería.', 'Repuesto', 0, '2026-02-06 15:21:49'),
-(104, 29, 4, 'Revisar:\r\nDiscos embrague\r\nBarras\r\nLuz tablero\r\nCambiar Manzana\r\nBandas Pastillas Aceite\r\nRuido motor', 'Repuesto', 0, '2026-02-09 14:30:08'),
-(105, 29, 4, 'manzana agotada en el mercado.', 'Repuesto', 0, '2026-02-10 22:22:07'),
-(107, 33, 4, 'Listo', 'Repuesto', 0, '2026-02-20 21:16:50'),
-(108, 31, 4, 'Cambio manzana trasera.', 'Repuesto', 0, '2026-02-20 21:17:52'),
-(109, 34, 4, 'Fresado de prensa', 'Repuesto', 0, '2026-02-24 18:57:41'),
-(110, 33, 4, 'Fabricación Bujes Manubrio', 'Repuesto', 0, '2026-03-07 21:42:51'),
-(111, 33, 4, 'Arandelas de caucho para manubrio.', 'Repuesto', 0, '2026-03-07 21:43:17'),
-(112, 33, 4, 'Instalación cubiertas de manubrio.', 'Repuesto', 0, '2026-03-07 21:43:37'),
-(113, 33, 4, 'Tapizado de cojín.', 'Repuesto', 0, '2026-03-07 21:44:24'),
-(114, 33, 4, 'reconstrucción tapa aleta lateral izquierda.', 'Repuesto', 0, '2026-03-07 21:45:04'),
-(115, 35, 4, 'Biela, Empaquetadura, eje salida, eje cambios 180200.', 'Repuesto', 0, '2026-03-12 14:57:26'),
-(116, 37, 4, 'Cadenilla 94\r\nguías cadenilla\r\nempaquetadura completa\r\nsellos válvula\r\nguías válvula\r\ndisco árbol\r\nválvulas', 'Repuesto', 0, '2026-03-14 20:03:49'),
-(117, 39, 4, 'Instalar portaPlaca. 15\r\nCambiar Direccionales. 50\r\nCambia stop. 30\r\nCambio de bomba de freno. 55\r\nInstalar espejos. 15\r\nMantenimiento mandos 25\r\nInstalar posapies traseros 30\r\nInstalar cauchos posapies delanteros 15\r\nConectar luz piloto 8', 'Repuesto', 0, '2026-04-01 15:50:30'),
-(118, 39, 4, 'bateria 81', 'Repuesto', 0, '2026-04-01 15:53:17'),
-(120, 42, 4, 'cambio de empaquetadura.\r\nCambio termostato.\r\nCambio refrigerante.', 'Repuesto', 0, '2026-04-11 21:46:29'),
-(122, 43, 4, 'Motor sin aceite, trabajó en seco.\r\nVálvulas ajustadas.\r\nSwitch requiere recontrucción.\r\nReconstruir o cambiar ramal eléctrico.\r\nRueda suelta.', 'Repuesto', 0, '2026-04-16 16:43:24'),
-(123, 43, 4, 'Se ajustaron válvulas, motorn encendió con ruidos de desgaste.', 'Repuesto', 0, '2026-04-16 16:44:00'),
-(124, 44, 4, 'Reconstruir bomba de aceite (kit retenes).\r\nponer aceite 2T.\r\nponer switch.\r\nAjustar cunas de dirección.\r\nMotor se apaga en bajas RPM. \r\nCarburador suelto Abrazaderas de carburador.', 'Repuesto', 0, '2026-04-18 22:02:00'),
-(125, 45, 4, 'Tornillos de Bendix de arranque partidos.', 'Repuesto', 0, '2026-04-18 22:04:05'),
-(126, 45, 4, 'Palanca de cambios sin estría.', 'Repuesto', 0, '2026-04-18 22:04:48'),
-(127, 46, 4, 'Switch en mal estado, se hizo mantenimiento.', 'Repuesto', 0, '2026-04-20 14:24:56'),
-(128, 46, 4, 'Se sacó tornillo roto en una de las botellas.', 'Repuesto', 0, '2026-04-20 14:25:44'),
-(129, 42, 4, 'Se desmontó motor para cambiar junta de culata quemada. (El refrigerante estaba pasando hacia el cilindro).', 'Repuesto', 0, '2026-04-20 14:29:39'),
-(130, 42, 4, 'Desmontar radiador y cabeza de lucer para reparación por choque.', 'Repuesto', 0, '2026-04-20 14:30:30'),
-(131, 47, 4, 'Ajustar válvulas. \r\nRecablear bobina de pulsos.', 'Repuesto', 0, '2026-04-20 14:41:21'),
-(132, 44, 4, 'Fabricar acople sistema yeis.', 'Repuesto', 0, '2026-04-20 16:21:03'),
-(133, 44, 4, 'Guaya acelerador.', 'Repuesto', 0, '2026-04-22 16:08:46'),
-(134, 45, 4, 'Bombillo led 32.\r\nsocket H4 8.\r\nsockets y pines 16.\r\ntermo encogible 6\r\ncable 8\r\nempaque volante 6\r\ntornillos 4.2', 'Repuesto', 0, '2026-04-23 22:16:15'),
-(135, 33, 4, 'cambio amortiguadore 125\r\nretenedores 18\r\narranque falla al girar el manubrio.', 'Repuesto', 0, '2026-04-25 20:08:16'),
-(136, 33, 4, 'Juego retenedores tapa volante y ejes. 22', 'Repuesto', 0, '2026-04-25 20:30:51'),
-(137, 6, 4, 'Ajuste de válvulas.\r\nCambio manguera carburador.\r\nAjuste de carburador.', 'Repuesto', 0, '2026-04-28 14:19:43'),
-(138, 7, 4, 'Recablear direccionales y stop.\r\ncambiar manzana.\r\ncambiar eje trasero.', 'Repuesto', 0, '2026-05-02 22:55:02'),
-(139, 44, 4, 'Cablear Run.\r\nCablear pera neutro.\r\nRecablear Luces de tablero.\r\nAjuste de rueda y guardacadena.\r\ncambio de filtro de aire.\r\nhacer cabezas de guaya de acelerador y bomba.\r\nMontar guaya revoluciones.\r\nAbrir tapa cluth, instalar piñón de revoluciones.\r\nDireccional delantera derecha recablear.\r\nCambiar terminales sockets.', 'Repuesto', 0, '2026-05-05 18:20:41'),
-(140, 44, 4, 'Instalar portaPlaca.', 'Repuesto', 0, '2026-05-05 18:20:59'),
-(141, 49, 4, 'barra rayadas y torcidas.', 'Repuesto', 0, '2026-05-05 18:25:45'),
-(142, 50, 4, 'cambiar tapas cola.\r\nCambiar manigueta.\r\nBombillo stop.\r\nLubricar guayas.\r\nInstalar portaplaca.\r\nCambiar guaya de cojín.\r\nInstalar base posapié izquierda.\r\nCambiar posapiés delanteros.\r\nEnderezar manubrio.', 'Repuesto', 0, '2026-05-08 19:38:34'),
-(143, 51, 4, 'Instalar portaplaca.\r\nInstalar stop.\r\nInstalar direccionales.\r\nInstalar cabeza de luz.\r\nInstalar tablero.\r\nCambiar batería.\r\nSincronizar.\r\nReparar cableado.', 'Repuesto', 0, '2026-05-08 19:41:16'),
-(144, 51, 4, 'No apaga, cableado roto.\r\nArranque no funciona, Cableado faltante.\r\nIndicador de marchas no funciona, cambio de sensor.\r\nCambiar bomba de freno.\r\nCambiar base y manigueta de embrague.', 'Repuesto', 0, '2026-05-13 18:43:51'),
-(145, 52, 4, 'Reparación de motor.', 'Repuesto', 0, '2026-05-25 18:12:03'),
-(146, 53, 4, 'Ajuste de válvulas.\r\nEnrutado guaya de embrague.\r\nColocación correcta mando izquierdo y manigueta de embrague.\r\nAjuste de mezcla en carburador.', 'Repuesto', 0, '2026-05-25 19:53:29'),
-(147, 7, 4, 'Cambio de caja y reparación de motor (no árbol de levas ni balancines).', 'Repuesto', 0, '2026-06-03 13:04:24'),
-(148, 55, 4, 'Instalar tablero digital.\r\nreparar ramal eléctrico.\r\najustar válvulas y carburador.\r\ncambiar mando.', 'Repuesto', 0, '2026-06-16 21:16:51'),
-(149, 55, 4, 'cambio de terminales.\r\nCambio de automático.', 'Repuesto', 0, '2026-06-17 14:32:17'),
-(150, 55, 4, '✅ Caso cerrado por el mecánico.', 'Repuesto', 0, '2026-06-17 14:32:31'),
-(151, 37, 4, 'Moto continua tirando humo cuando el escape se calienta, el nivel de aceite de motor no ha bajado.\r\nBatería no carga.', 'Repuesto', 0, '2026-06-17 14:34:14'),
-(152, 37, 4, 'Cambio de regulador.\r\nCorrecciones de cableado ahogador automático.\r\nCambio líquido de freno.', 'Repuesto', 0, '2026-06-18 15:24:20'),
-(154, 58, 4, 'Tuerca y arandelas de presión primer embrague.', 'Mano de obra', 22000, '2026-06-22 21:08:59'),
-(162, 60, 4, 'testa\r\nCambio de refrigerante.\r\nCambio tren de arrastre.\r\nAjuste manillar.\r\nMantenimiento mando izquierdo. \r\nAjuste agarraderas pasajero.\r\nCambio de aceite.\r\nCambio filtro aceite.\r\nCambio empaque tapa rotor.\r\nBalanceo rueda trasera.', 'Mano de obra', 120000, '2026-07-03 04:57:33'),
-(166, 33, 4, 'Alinear manubrio', 'Mano de obra', 35000, '2026-07-03 06:48:11'),
-(167, 33, 4, 'tornillería', 'Repuesto', 3200, '2026-07-03 06:48:42'),
-(168, 61, 4, 'Instalar posapié derecho.\nInstalar pedal de freno y resorte.\nInstalación carburador nuevo.', 'Mano de obra', 30000, '2026-07-04 00:28:19'),
-(169, 61, 4, 'Tornillo posapié.\r\nResorte pedal freno.', 'Repuesto', 5000, '2026-07-04 00:28:47'),
-(170, 61, 4, 'Reparar cableado corona de bobinas y pulsora. 20\r\nReconexión switch. 5\r\nCambio de bandas. 10\r\nMantenimiento tapa depósito combustible. 10\r\nAjuste de válvulas. 15\r\nInstalación placa. 5\r\nMantenimiento de mandos. 15', 'Mano de obra', 80000, '2026-07-04 00:32:34'),
-(172, 62, 4, 'Ajuste de válvulas.', 'Mano de obra', 15000, '2026-07-04 15:38:24'),
-(173, 4, 4, 'Ajuste de válvulas.\r\nAjuste de tensor cadena levas.\r\nCambio de mirilla de nivél de aceite.', 'Mano de obra', 20000, '2026-07-04 15:41:29'),
-(174, 63, 4, 'Reconstruir sistema arranque eléctrico.', 'Mano de obra', 40000, '2026-07-04 23:26:30'),
-(175, 63, 4, 'ajustar válvulas.', 'Mano de obra', 15000, '2026-07-04 23:26:49'),
-(176, 63, 4, 'bombillos stop y direccional.', 'Repuesto', 2000, '2026-07-04 23:27:25'),
-(177, 63, 4, 'Reparar pera freno delantero', 'Mano de obra', 5000, '2026-07-04 23:27:47'),
-(178, 63, 4, 'Mantenimiento mando izquierdo.', 'Mano de obra', 10000, '2026-07-04 23:28:18'),
-(179, 64, 4, 'Cambio pedal de cambios.', 'Mano de obra', 5000, '2026-07-04 23:45:20'),
-(180, 64, 4, 'Instalar guaya velocímetro.', 'Mano de obra', 5000, '2026-07-04 23:46:11'),
-(181, 64, 4, 'Reconstruir cableado.', 'Mano de obra', 30000, '2026-07-04 23:46:58'),
-(182, 64, 4, 'Ajuste de válvulas.', 'Mano de obra', 15000, '2026-07-04 23:47:25'),
-(183, 64, 4, 'Fabricr guaya de sillín.', 'Mano de obra', 10000, '2026-07-04 23:47:58'),
-(184, 64, 4, 'Cambiar filtro de aire.', 'Mano de obra', 5000, '2026-07-04 23:48:16'),
-(185, 64, 4, 'MAntenimiento mando izquierdo.', 'Mano de obra', 15000, '2026-07-04 23:48:53'),
-(186, 62, 4, 'Instalar tapas frontal, tapa faro, direccionales y Switch de arranque.', 'Mano de obra', 20000, '2026-07-04 23:55:31'),
-(187, 62, 4, 'Mantenimiento mando izquierdo.', 'Mano de obra', 15000, '2026-07-04 23:57:07'),
-(188, 62, 4, 'Cambio de aceite.', 'Mano de obra', 5000, '2026-07-04 23:57:58'),
-(189, 63, 4, 'Cambio de aceite.', 'Mano de obra', 5000, '2026-07-04 23:58:23'),
-(190, 61, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-05 00:00:08'),
 (191, 53, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-06 03:23:33'),
 (192, 44, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-06 03:46:42'),
 (193, 45, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-06 03:47:09'),
@@ -390,70 +262,9 @@ INSERT INTO `avances` (`id`, `caso_id`, `mecanico_id`, `descripcion`, `tipo`, `v
 (231, 46, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-06 04:12:44'),
 (232, 49, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-06 04:13:03'),
 (233, 52, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-06 04:13:27'),
-(234, 66, 4, 'Limpieza filtro de aire y carburador.', 'Mano de obra', 30000, '2026-07-06 18:39:42'),
-(235, 67, 4, 'O-ring Tapón aceite.', 'Repuesto', 3000, '2026-07-06 19:49:33'),
-(236, 67, 4, 'Ajuste de válvulas', 'Mano de obra', 15000, '2026-07-06 20:06:43'),
-(237, 68, 4, 'Cambio guaya de embrague.', 'Mano de obra', 5000, '2026-07-06 21:21:07'),
-(238, 68, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-06 21:21:19'),
-(239, 68, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-06 21:21:47'),
-(240, 69, 4, '🆕 Caso creado a partir del caso anterior #6', 'Mano de obra', 0, '2026-07-06 23:11:42'),
-(241, 69, 4, 'completar aceite.', 'Mano de obra', 0, '2026-07-06 23:12:20'),
-(242, 67, 4, 'cambio escobillas y ajustes.', 'Mano de obra', 30000, '2026-07-07 00:25:57'),
-(243, 67, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-07 00:35:29'),
 (244, 70, 3, '🆕 Caso creado a partir del caso anterior #16', 'Mano de obra', 0, '2026-07-07 02:31:28'),
 (245, 70, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-07 02:32:37'),
-(246, 73, 4, 'Reparar motor. (no se cambian árbol de levas ni balancines).\r\nCaja dañada, cambiar completa.', 'Mano de obra', 300000, '2026-07-07 15:28:27'),
-(247, 73, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-07 15:28:48'),
-(248, 74, 4, '🆕 Caso creado a partir del caso anterior #73', 'Mano de obra', 0, '2026-07-07 15:31:38'),
-(249, 74, 4, 'Automático dañado dañó estrías del eje de cigüeñal, Cambiar arandelas de ajuste. \r\nSe recomienda cambiar automático por desgaste.', 'Mano de obra', 0, '2026-07-07 15:33:30'),
-(250, 76, 4, 'Ajuste de válvulas.', 'Mano de obra', 20000, '2026-07-07 16:32:59'),
-(251, 76, 4, 'Cambio de choque eléctrico.', 'Mano de obra', 10000, '2026-07-07 16:51:01'),
-(252, 76, 4, 'Mantenimiento carburador.\r\nCambio kit surtidores y diafragma.*\r\nReparación cubera rota remendada.', 'Mano de obra', 40000, '2026-07-07 18:14:49'),
-(253, 75, 4, 'Limpieza y ajuste de carburador.', 'Mano de obra', 30000, '2026-07-07 18:49:38'),
-(254, 75, 4, 'Cambio de terminales de choque y bobina de pulsos.', 'Repuesto', 15000, '2026-07-07 18:50:28'),
-(255, 64, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-07 19:43:38'),
-(256, 75, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-07 20:05:38'),
-(257, 76, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-07 20:54:39'),
-(258, 66, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-07 22:27:45'),
-(259, 69, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-07 22:28:07'),
-(260, 74, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-07 22:28:54'),
 (261, 72, 3, 'Recibido, pendiente llevar al taller.', 'Mano de obra', 0, '2026-07-08 05:19:30'),
-(262, 58, 4, 'Reflectores laterales.', 'Mano de obra', 12000, '2026-07-08 14:23:09'),
-(263, 58, 4, 'Espejos.', 'Mano de obra', 22000, '2026-07-08 14:23:26'),
-(264, 58, 4, 'Gasolina.', 'Mano de obra', 10000, '2026-07-08 14:23:40'),
-(265, 58, 4, 'Direccionales delanteros.', 'Mano de obra', 16000, '2026-07-08 14:24:36'),
-(267, 78, 4, '🆕 Caso creado a partir del caso anterior #13', 'Mano de obra', 0, '2026-07-08 14:41:39'),
-(268, 78, 4, 'Enderezar pedal de freno.', 'Mano de obra', 5000, '2026-07-08 14:42:08'),
-(269, 78, 4, 'Cambio de aceite.', 'Mano de obra', 3000, '2026-07-08 14:42:26'),
-(270, 78, 4, 'Cambio o-rings crburador.\r\nAlinear pedal freno.', 'Mano de obra', 27000, '2026-07-08 22:02:45'),
-(271, 78, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-08 22:06:48'),
-(275, 63, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-09 14:14:09'),
-(276, 62, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-09 14:14:23'),
-(277, 79, 4, '🆕 Caso creado a partir del caso anterior #37', 'Mano de obra', 0, '2026-07-09 15:15:45'),
-(278, 79, 4, 'Cambio de aceite.\r\nInstalación gato lateral.', 'Mano de obra', 10000, '2026-07-09 15:46:47'),
-(279, 79, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-09 15:47:01'),
-(280, 80, 4, 'Cargar batría.', 'Mano de obra', 7000, '2026-07-09 18:20:07'),
-(281, 80, 4, 'Reparar terminal negativo de batería.\r\nCambio de terminal negativo cable masa.', 'Mano de obra', 13000, '2026-07-09 18:21:15'),
-(282, 80, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-09 18:21:28'),
-(283, 81, 4, 'Cambio de guaya.', 'Mano de obra', 0, '2026-07-09 19:57:28'),
-(284, 81, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-09 19:57:39'),
-(286, 58, 4, 'Corrección de cableado.', 'Mano de obra', 30000, '2026-07-09 22:04:30'),
-(287, 58, 4, 'Mantenimiento mando izquierdo.', 'Mano de obra', 30000, '2026-07-09 22:04:59'),
-(288, 84, 4, '🆕 Caso creado a partir del caso anterior #49', 'Mano de obra', 0, '2026-07-10 15:22:15'),
-(289, 85, 4, 'Ajuste cunas de dirección.', 'Mano de obra', 9000, '2026-07-10 17:45:51'),
-(290, 77, 4, '3 Bujes para tornillo.', 'Repuesto', 3000, '2026-07-10 17:46:49'),
-(291, 77, 4, 'Cambio de cunas.', 'Mano de obra', 60000, '2026-07-10 21:09:12'),
-(292, 77, 4, 'Ajuste apertura deposito combustible.', 'Mano de obra', 10000, '2026-07-10 21:09:47'),
-(293, 84, 4, 'Enderezar manigueta freno.', 'Mano de obra', 3000, '2026-07-11 00:30:19'),
-(294, 84, 4, 'Calentar y enderezar guardabarror.', 'Mano de obra', 10000, '2026-07-11 00:34:25'),
-(295, 84, 4, 'Mantenimiento pinza de freno.', 'Mano de obra', 20000, '2026-07-11 00:35:02'),
-(296, 83, 4, 'Ajuste de válvulas.', 'Mano de obra', 15000, '2026-07-11 01:34:52'),
-(297, 83, 4, 'Ajuste carburador.', 'Mano de obra', 30000, '2026-07-11 01:35:12'),
-(298, 83, 4, 'Buje.', 'Repuesto', 3000, '2026-07-11 01:35:38'),
-(299, 83, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-11 14:01:26'),
-(300, 85, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-11 14:04:32'),
-(301, 84, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-11 14:06:04'),
-(302, 77, 4, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-07-11 15:02:54'),
 (304, 86, 3, 'Cambio guayas acelerador.', 'Mano de obra', 20000, '2026-07-12 01:50:15'),
 (305, 33, 3, 'Instalación guardabarro delantero y carenado para pintura.', 'Mano de obra', 10000, '2026-07-13 20:14:32'),
 (307, 33, 3, 'Bujes.', 'Repuesto', 2000, '2026-07-13 20:15:00'),
@@ -656,10 +467,11 @@ INSERT INTO `avances` (`id`, `caso_id`, `mecanico_id`, `descripcion`, `tipo`, `v
 (508, 152, 6, '🆕 Caso creado a partir del caso anterior #131', 'Mano de obra', 0, '2026-09-11 22:52:38'),
 (509, 152, 6, 'Tensionar y lubricar cadena.\r\nAbicar fuga de aceite.', 'Mano de obra', 30000, '2026-09-11 22:53:01'),
 (510, 151, 6, 'Cambio retenedor selector de cambios.', 'Mano de obra', 15000, '2026-09-11 23:55:02'),
-(511, 151, 6, 'Corte de cadena.', 'Mano de obra', 15000, '2026-09-11 23:55:18'),
-(512, 151, 6, 'Soldadura Escape.', 'Mano de obra', 35000, '2026-09-11 23:55:38'),
+(511, 151, 6, 'Corte y ajuste de cadena.', 'Mano de obra', 10000, '2026-09-11 23:55:18'),
+(512, 151, 6, 'Soldadura Escape.', 'Mano de obra', 30000, '2026-09-11 23:55:38'),
 (513, 151, 6, 'Reparación de rosca culata-escape.', 'Mano de obra', 20000, '2026-09-11 23:56:06'),
-(514, 151, 6, 'Cambio de bendix.', 'Mano de obra', 35000, '2026-09-12 00:01:23');
+(514, 151, 6, 'Cambio de bendix.', 'Mano de obra', 35000, '2026-09-12 00:01:23'),
+(515, 153, 7, 'Cambio Filtro Aire.', 'Mano de obra', 22000, '2026-09-12 19:25:42');
 
 -- --------------------------------------------------------
 
@@ -703,70 +515,70 @@ INSERT INTO `casos` (`id`, `vehiculo_id`, `mecanico_id`, `fecha_ingreso`, `hora_
 (14, 17, 3, '2025-10-29', '14:26:55', 'Tensionar freno trasero y cadena', NULL, NULL, 'cerrado', '2026-07-05 22:56:36', NULL, 0, 0, 0.00),
 (15, 18, 3, '2025-10-29', '16:10:33', 'Pierde aceite por empaque culatín.', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
 (16, 19, 3, '2025-10-30', '12:54:25', 'Motor suena mal', NULL, NULL, 'cerrado', '2026-07-05 22:56:57', NULL, 0, 0, 0.00),
-(17, 20, 4, '2025-11-04', '16:33:34', 'Cambiar mando derecho por mando de segunda, el mando de cambio tiene defecto en base de botón start.', NULL, NULL, 'cerrado', '2026-07-05 22:57:13', NULL, 0, 0, 0.00),
-(18, 21, 4, '2025-11-04', '18:06:00', 'Un mes en patios ahora no enciende', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
-(19, 22, 4, '2025-11-05', '09:28:42', 'No da arranque', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
-(20, 23, 4, '2025-11-05', '10:20:07', 'Mando derecho abierto, Acelerador no funciona.', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
-(21, 24, 4, '2025-11-05', '10:47:13', 'Cambio de baterìa.', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
-(22, 25, 4, '2025-11-05', '14:56:47', 'No enciende y si llega a hacerlo se ahoga, se recibe sin cubiertas de parte frontal.', NULL, NULL, 'cerrado', '2026-07-05 22:57:40', NULL, 0, 0, 0.00),
-(23, 26, 4, '2025-11-07', '09:20:06', 'Ajustar sistema eléctrico a 12v.', NULL, NULL, 'cerrado', '2026-07-05 22:57:55', NULL, 0, 0, 0.00),
-(24, 27, 4, '2025-11-11', '11:13:32', 'Descarga la batería, se ahoga', NULL, NULL, 'cerrado', '2026-07-05 22:58:13', NULL, 0, 0, 0.00),
-(25, 28, 4, '2025-11-12', '11:10:46', 'Se ahoga, Motor ascelerado, Alto consumo.', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
-(26, 29, 4, '2025-11-13', '11:46:52', 'Rodamientos rueda trasera', NULL, NULL, 'cerrado', '2026-07-05 22:58:31', NULL, 0, 0, 0.00),
-(27, 30, 4, '2025-11-14', '10:46:16', 'Motor trabajó sin aceite, suema mal, desmontar para revisar.', NULL, NULL, 'cerrado', '2026-07-05 22:58:52', NULL, 0, 0, 0.00),
-(28, 23, 4, '2025-11-14', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #20', '', 'cerrado', '2026-07-05 23:01:48', NULL, 0, 0, 0.00),
-(29, 31, 4, '2025-11-15', '09:10:46', 'Cambiar Guardabarro delantero, cambio de aceite, Cambiar Palanca de cambios.', NULL, NULL, 'cerrado', '2026-07-05 22:59:54', NULL, 0, 0, 0.00),
-(30, 32, 4, '2025-11-15', '18:29:58', 'Cambio de batería', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
-(31, 33, 4, '2026-02-06', '10:20:38', 'Escape roto, cambio de automático, revisar sistema de carga.', NULL, NULL, 'cerrado', '2026-07-05 22:59:38', NULL, 0, 0, 0.00),
-(33, 35, 4, '2026-02-20', '16:16:35', 'cambio carcazar headLight.\r\nCambio bombillos Hl\r\nFabricar bujes manubrio\r\nFabricar amortiguadores manubrio\r\ntornillos y chapetas\r\nNivelar aceite', NULL, NULL, 'cerrado', '2026-07-26 19:58:26', NULL, 70000, 0, 0.00),
-(34, 36, 4, '2026-02-24', '13:57:28', 'Embrague duro, cambios golpean.', NULL, NULL, 'cerrado', '2026-07-05 23:01:18', NULL, 0, 0, 0.00),
-(35, 37, 4, '2026-03-12', '09:56:26', 'Reparación completa de motor', NULL, NULL, 'cerrado', '2026-07-05 23:02:51', NULL, 0, 0, 0.00),
-(36, 38, 4, '2026-03-12', '09:59:18', 'Motor de arranque lento. Enciende con Pedal, batería nueva.\r\nCambio de regulador y Cdi quemados.', NULL, NULL, 'cerrado', '2026-07-05 23:02:16', NULL, 0, 0, 0.00),
-(37, 39, 4, '2026-03-12', '10:00:36', 'Motor frenado. Cadena de levas descarrilada.', NULL, NULL, 'cerrado', '2026-07-05 23:02:35', NULL, 0, 0, 0.00),
-(38, 40, 4, '2026-03-29', '12:57:26', 'Pendiente tornillo brazo soporte escape', NULL, NULL, 'cerrado', '2026-07-05 23:03:05', NULL, 0, 0, 0.00),
-(39, 41, 4, '2026-04-01', '09:26:36', 'Acondicionamiento', NULL, NULL, 'cerrado', '2026-07-05 23:03:20', NULL, 0, 0, 0.00),
-(40, 42, 4, '2026-04-01', '09:36:45', 'No enciende.', NULL, NULL, 'cerrado', '2026-07-05 23:03:40', NULL, 0, 0, 0.00),
-(42, 44, 4, '2026-04-11', '16:45:55', 'Refrigerante pasa a cilindro.', NULL, NULL, 'cerrado', '2026-07-05 23:11:55', NULL, 0, 0, 0.00),
-(43, 45, 4, '2026-04-16', '11:38:24', 'No enciende. Ramal dañado. Switch desarmado.', NULL, NULL, 'cerrado', '2026-07-05 23:12:24', NULL, 0, 0, 0.00),
-(44, 46, 4, '2026-04-18', '16:58:09', 'encamisar pista de rueda trasera.', NULL, NULL, 'cerrado', '2026-07-05 22:46:42', NULL, 0, 0, 0.00),
-(45, 47, 4, '2026-04-18', '17:03:26', 'Arranque se desliza.', NULL, NULL, 'cerrado', '2026-07-05 22:47:09', NULL, 0, 0, 0.00),
-(46, 48, 4, '2026-04-18', '17:06:29', 'Se niega a encender.', NULL, NULL, 'cerrado', '2026-07-05 23:12:44', NULL, 0, 0, 0.00),
-(47, 49, 4, '2026-04-20', '09:39:09', 'Se apaga o no enciende. \r\nCompresión baja.', NULL, NULL, 'cerrado', '2026-07-05 22:53:00', NULL, 0, 0, 0.00),
-(48, 50, 4, '2026-04-24', '17:42:59', 'Posapiés Roto. (rehacer rosca).\r\nEmbrague agarrotado.\r\nFaro suelto.\r\nManubrio suelto. (rehacer rosca).\r\nPedal de cambios torcido.', NULL, NULL, 'cerrado', '2026-07-05 22:47:30', NULL, 0, 0, 0.00),
-(49, 51, 4, '2026-05-05', '13:24:34', 'Barras soporte torcidos.', NULL, NULL, 'cerrado', '2026-07-05 23:13:03', NULL, 0, 0, 0.00),
-(50, 52, 4, '2026-05-08', '14:35:43', 'Cambiar tapas', NULL, NULL, 'cerrado', '2026-07-05 22:48:26', NULL, 0, 0, 0.00),
-(51, 53, 4, '2026-05-08', '14:39:32', 'Descuidada.', NULL, NULL, 'cerrado', '2026-07-05 22:48:43', NULL, 0, 0, 0.00),
-(52, 54, 4, '2026-05-25', '13:11:49', 'Moto se recibe con motor desarmado en caja de cartón.', NULL, NULL, 'cerrado', '2026-07-05 23:13:27', NULL, 0, 0, 0.00),
-(53, 55, 4, '2026-05-25', '13:13:23', 'Difícil encender, no se sostiene.', NULL, NULL, 'cerrado', '2026-07-05 22:23:33', NULL, 0, 0, 0.00),
-(54, 56, 4, '2026-05-25', '14:54:36', 'No enciende.', NULL, NULL, 'cerrado', '2026-07-05 22:52:48', NULL, 0, 0, 0.00),
-(55, 57, 4, '2026-06-06', '15:54:32', 'No se sostiene, suena mal, ramal dañado, sin tablero.', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
-(56, 58, 4, '2026-06-07', '11:44:21', 'No enciende en las mañanas.', NULL, NULL, 'cerrado', '2026-07-05 22:52:10', NULL, 0, 0, 0.00),
-(57, 59, 4, '2026-06-14', '10:47:27', 'Enciende con dols luces rojas destellando rápidamente', NULL, NULL, 'cerrado', '2026-07-05 22:51:54', NULL, 0, 0, 0.00),
-(58, 60, 4, '2026-06-22', '11:28:23', 'Motor suena mal. \r\nHacer Mantenimiento general.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
-(60, 62, 4, '2026-06-22', '16:15:29', 'Vibra cuando rápido.\r\nRueda trasera Pinchada.\r\nCambio tren de arrastre.\r\nAjustar Manillar.\r\nCambiar aceite.\r\nRevisar fuga de aceite.\r\nCambiar refrigerante.', NULL, NULL, 'cerrado', '2026-07-05 22:51:29', NULL, 120000, 0, 0.00),
-(61, 63, 4, '2026-07-03', '19:26:45', 'Avandonada. \r\nRevisar.', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
-(62, 64, 4, '2026-07-04', '10:37:54', 'Resurección.', NULL, NULL, 'cerrado', '2026-07-09 09:14:23', NULL, 55000, 0, 0.00),
-(63, 65, 4, '2026-07-04', '18:26:09', 'No funciona arranque', NULL, NULL, 'cerrado', '2026-07-09 09:14:09', NULL, 77000, 0, 0.00),
-(64, 66, 4, '2026-07-04', '18:44:38', 'Mantenimiento y correción de fallas.', NULL, NULL, 'cerrado', '2026-07-07 14:43:38', NULL, 85000, 0, 0.00),
-(66, 68, 4, '2026-07-06', '12:40:27', 'No enciende.', NULL, NULL, 'cerrado', '2026-07-07 17:27:45', NULL, 30000, 0, 0.00),
-(67, 69, 4, '2026-07-06', '14:42:14', 'Ajustar cunas de dirección.\r\nAjuste de válvulas.\r\nSincronizar carburador.\r\nArranque eléctrico no funciona.', NULL, NULL, 'cerrado', '2026-07-06 19:35:29', NULL, 48000, 0, 0.00),
-(68, 70, 4, '2026-07-06', '15:30:19', 'Guaya embrague rota.', NULL, NULL, 'cerrado', '2026-07-06 16:21:47', NULL, 5000, 0, 0.00),
-(69, 9, 4, '2026-07-06', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #6', '', 'cerrado', '2026-07-07 17:28:07', NULL, 0, 0, 0.00),
+(17, 20, NULL, '2025-11-04', '16:33:34', 'Cambiar mando derecho por mando de segunda, el mando de cambio tiene defecto en base de botón start.', NULL, NULL, 'cerrado', '2026-07-05 22:57:13', NULL, 0, 0, 0.00),
+(18, 21, NULL, '2025-11-04', '18:06:00', 'Un mes en patios ahora no enciende', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
+(19, 22, NULL, '2025-11-05', '09:28:42', 'No da arranque', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
+(20, 23, NULL, '2025-11-05', '10:20:07', 'Mando derecho abierto, Acelerador no funciona.', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
+(21, 24, NULL, '2025-11-05', '10:47:13', 'Cambio de baterìa.', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
+(22, 25, NULL, '2025-11-05', '14:56:47', 'No enciende y si llega a hacerlo se ahoga, se recibe sin cubiertas de parte frontal.', NULL, NULL, 'cerrado', '2026-07-05 22:57:40', NULL, 0, 0, 0.00),
+(23, 26, NULL, '2025-11-07', '09:20:06', 'Ajustar sistema eléctrico a 12v.', NULL, NULL, 'cerrado', '2026-07-05 22:57:55', NULL, 0, 0, 0.00),
+(24, 27, NULL, '2025-11-11', '11:13:32', 'Descarga la batería, se ahoga', NULL, NULL, 'cerrado', '2026-07-05 22:58:13', NULL, 0, 0, 0.00),
+(25, 28, NULL, '2025-11-12', '11:10:46', 'Se ahoga, Motor ascelerado, Alto consumo.', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
+(26, 29, NULL, '2025-11-13', '11:46:52', 'Rodamientos rueda trasera', NULL, NULL, 'cerrado', '2026-07-05 22:58:31', NULL, 0, 0, 0.00),
+(27, 30, NULL, '2025-11-14', '10:46:16', 'Motor trabajó sin aceite, suema mal, desmontar para revisar.', NULL, NULL, 'cerrado', '2026-07-05 22:58:52', NULL, 0, 0, 0.00),
+(28, 23, NULL, '2025-11-14', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #20', '', 'cerrado', '2026-07-05 23:01:48', NULL, 0, 0, 0.00),
+(29, 31, NULL, '2025-11-15', '09:10:46', 'Cambiar Guardabarro delantero, cambio de aceite, Cambiar Palanca de cambios.', NULL, NULL, 'cerrado', '2026-07-05 22:59:54', NULL, 0, 0, 0.00),
+(30, 32, NULL, '2025-11-15', '18:29:58', 'Cambio de batería', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
+(31, 33, NULL, '2026-02-06', '10:20:38', 'Escape roto, cambio de automático, revisar sistema de carga.', NULL, NULL, 'cerrado', '2026-07-05 22:59:38', NULL, 0, 0, 0.00),
+(33, 35, NULL, '2026-02-20', '16:16:35', 'cambio carcazar headLight.\r\nCambio bombillos Hl\r\nFabricar bujes manubrio\r\nFabricar amortiguadores manubrio\r\ntornillos y chapetas\r\nNivelar aceite', NULL, NULL, 'cerrado', '2026-07-26 19:58:26', NULL, 70000, 0, 0.00),
+(34, 36, NULL, '2026-02-24', '13:57:28', 'Embrague duro, cambios golpean.', NULL, NULL, 'cerrado', '2026-07-05 23:01:18', NULL, 0, 0, 0.00),
+(35, 37, NULL, '2026-03-12', '09:56:26', 'Reparación completa de motor', NULL, NULL, 'cerrado', '2026-07-05 23:02:51', NULL, 0, 0, 0.00),
+(36, 38, NULL, '2026-03-12', '09:59:18', 'Motor de arranque lento. Enciende con Pedal, batería nueva.\r\nCambio de regulador y Cdi quemados.', NULL, NULL, 'cerrado', '2026-07-05 23:02:16', NULL, 0, 0, 0.00),
+(37, 39, NULL, '2026-03-12', '10:00:36', 'Motor frenado. Cadena de levas descarrilada.', NULL, NULL, 'cerrado', '2026-07-05 23:02:35', NULL, 0, 0, 0.00),
+(38, 40, NULL, '2026-03-29', '12:57:26', 'Pendiente tornillo brazo soporte escape', NULL, NULL, 'cerrado', '2026-07-05 23:03:05', NULL, 0, 0, 0.00),
+(39, 41, NULL, '2026-04-01', '09:26:36', 'Acondicionamiento', NULL, NULL, 'cerrado', '2026-07-05 23:03:20', NULL, 0, 0, 0.00),
+(40, 42, NULL, '2026-04-01', '09:36:45', 'No enciende.', NULL, NULL, 'cerrado', '2026-07-05 23:03:40', NULL, 0, 0, 0.00),
+(42, 44, NULL, '2026-04-11', '16:45:55', 'Refrigerante pasa a cilindro.', NULL, NULL, 'cerrado', '2026-07-05 23:11:55', NULL, 0, 0, 0.00),
+(43, 45, NULL, '2026-04-16', '11:38:24', 'No enciende. Ramal dañado. Switch desarmado.', NULL, NULL, 'cerrado', '2026-07-05 23:12:24', NULL, 0, 0, 0.00),
+(44, 46, NULL, '2026-04-18', '16:58:09', 'encamisar pista de rueda trasera.', NULL, NULL, 'cerrado', '2026-07-05 22:46:42', NULL, 0, 0, 0.00),
+(45, 47, NULL, '2026-04-18', '17:03:26', 'Arranque se desliza.', NULL, NULL, 'cerrado', '2026-07-05 22:47:09', NULL, 0, 0, 0.00),
+(46, 48, NULL, '2026-04-18', '17:06:29', 'Se niega a encender.', NULL, NULL, 'cerrado', '2026-07-05 23:12:44', NULL, 0, 0, 0.00),
+(47, 49, NULL, '2026-04-20', '09:39:09', 'Se apaga o no enciende. \r\nCompresión baja.', NULL, NULL, 'cerrado', '2026-07-05 22:53:00', NULL, 0, 0, 0.00),
+(48, 50, NULL, '2026-04-24', '17:42:59', 'Posapiés Roto. (rehacer rosca).\r\nEmbrague agarrotado.\r\nFaro suelto.\r\nManubrio suelto. (rehacer rosca).\r\nPedal de cambios torcido.', NULL, NULL, 'cerrado', '2026-07-05 22:47:30', NULL, 0, 0, 0.00),
+(49, 51, NULL, '2026-05-05', '13:24:34', 'Barras soporte torcidos.', NULL, NULL, 'cerrado', '2026-07-05 23:13:03', NULL, 0, 0, 0.00),
+(50, 52, NULL, '2026-05-08', '14:35:43', 'Cambiar tapas', NULL, NULL, 'cerrado', '2026-07-05 22:48:26', NULL, 0, 0, 0.00),
+(51, 53, NULL, '2026-05-08', '14:39:32', 'Descuidada.', NULL, NULL, 'cerrado', '2026-07-05 22:48:43', NULL, 0, 0, 0.00),
+(52, 54, NULL, '2026-05-25', '13:11:49', 'Moto se recibe con motor desarmado en caja de cartón.', NULL, NULL, 'cerrado', '2026-07-05 23:13:27', NULL, 0, 0, 0.00),
+(53, 55, NULL, '2026-05-25', '13:13:23', 'Difícil encender, no se sostiene.', NULL, NULL, 'cerrado', '2026-07-05 22:23:33', NULL, 0, 0, 0.00),
+(54, 56, NULL, '2026-05-25', '14:54:36', 'No enciende.', NULL, NULL, 'cerrado', '2026-07-05 22:52:48', NULL, 0, 0, 0.00),
+(55, 57, NULL, '2026-06-06', '15:54:32', 'No se sostiene, suena mal, ramal dañado, sin tablero.', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
+(56, 58, NULL, '2026-06-07', '11:44:21', 'No enciende en las mañanas.', NULL, NULL, 'cerrado', '2026-07-05 22:52:10', NULL, 0, 0, 0.00),
+(57, 59, NULL, '2026-06-14', '10:47:27', 'Enciende con dols luces rojas destellando rápidamente', NULL, NULL, 'cerrado', '2026-07-05 22:51:54', NULL, 0, 0, 0.00),
+(58, 60, NULL, '2026-06-22', '11:28:23', 'Motor suena mal. \r\nHacer Mantenimiento general.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
+(60, 62, NULL, '2026-06-22', '16:15:29', 'Vibra cuando rápido.\r\nRueda trasera Pinchada.\r\nCambio tren de arrastre.\r\nAjustar Manillar.\r\nCambiar aceite.\r\nRevisar fuga de aceite.\r\nCambiar refrigerante.', NULL, NULL, 'cerrado', '2026-07-05 22:51:29', NULL, 120000, 0, 0.00),
+(61, 63, NULL, '2026-07-03', '19:26:45', 'Avandonada. \r\nRevisar.', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
+(62, 64, NULL, '2026-07-04', '10:37:54', 'Resurección.', NULL, NULL, 'cerrado', '2026-07-09 09:14:23', NULL, 55000, 0, 0.00),
+(63, 65, NULL, '2026-07-04', '18:26:09', 'No funciona arranque', NULL, NULL, 'cerrado', '2026-07-09 09:14:09', NULL, 77000, 0, 0.00),
+(64, 66, NULL, '2026-07-04', '18:44:38', 'Mantenimiento y correción de fallas.', NULL, NULL, 'cerrado', '2026-07-07 14:43:38', NULL, 85000, 0, 0.00),
+(66, 68, NULL, '2026-07-06', '12:40:27', 'No enciende.', NULL, NULL, 'cerrado', '2026-07-07 17:27:45', NULL, 30000, 0, 0.00),
+(67, 69, NULL, '2026-07-06', '14:42:14', 'Ajustar cunas de dirección.\r\nAjuste de válvulas.\r\nSincronizar carburador.\r\nArranque eléctrico no funciona.', NULL, NULL, 'cerrado', '2026-07-06 19:35:29', NULL, 48000, 0, 0.00),
+(68, 70, NULL, '2026-07-06', '15:30:19', 'Guaya embrague rota.', NULL, NULL, 'cerrado', '2026-07-06 16:21:47', NULL, 5000, 0, 0.00),
+(69, 9, NULL, '2026-07-06', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #6', '', 'cerrado', '2026-07-07 17:28:07', NULL, 0, 0, 0.00),
 (70, 19, 3, '2026-07-06', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #16', '', 'cerrado', '2026-07-06 21:32:37', NULL, 0, 0, 0.00),
 (72, 72, 3, '2026-07-06', '22:18:22', 'Motor sin compresión, la falla va y viene.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
-(73, 73, 4, '2026-06-04', '10:22:50', 'Caso de Control.', NULL, NULL, 'cerrado', '2026-07-07 10:28:47', NULL, 300000, 0, 0.00),
-(74, 73, 4, '2026-06-13', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #73', '', 'cerrado', '2026-07-07 17:28:54', NULL, 0, 0, 0.00),
-(75, 74, 4, '2026-07-07', '10:44:06', 'No enciende.', NULL, NULL, 'cerrado', '2026-07-07 15:05:38', NULL, 45000, 0, 0.00),
-(76, 75, 4, '2026-07-07', '10:46:52', 'Enciende pero se ahoga. No anda.', NULL, NULL, 'cerrado', '2026-07-07 15:54:39', NULL, 70000, 0, 0.00),
-(77, 76, 4, '2026-07-07', '15:53:42', 'Frente suspención torcido. Hala hacia los lados y golpea cunas.', NULL, NULL, 'cerrado', '2026-07-11 10:02:54', NULL, 73000, 0, 0.00),
-(78, 16, 4, '2026-07-08', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #13', '', 'cerrado', '2026-07-08 17:06:48', NULL, 35000, 0, 0.00),
-(79, 39, 4, '2026-07-09', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #37', '', 'cerrado', '2026-07-09 10:47:01', NULL, 10000, 0, 0.00),
-(80, 77, 4, '2026-07-09', '11:35:33', 'Batería descargada.', NULL, NULL, 'cerrado', '2026-07-09 13:21:27', NULL, 20000, 0, 0.00),
-(81, 78, 4, '2026-07-09', '13:25:26', 'Cambiar guaya velocímetro.', NULL, NULL, 'cerrado', '2026-07-09 14:57:39', NULL, 0, 0, 0.00),
-(82, 79, 4, '2026-07-09', '15:17:30', 'Quemado, rebobinar', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
-(83, 80, 4, '2026-07-10', '10:21:21', 'Se ahoga.', NULL, NULL, 'cerrado', '2026-07-11 09:01:25', NULL, 48000, 0, 0.00),
-(84, 51, 4, '2026-07-10', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #49', '', 'cerrado', '2026-07-11 09:06:04', NULL, 33000, 0, 0.00),
-(85, 81, 4, '2026-07-10', '11:41:33', 'Ajustar cunas de dirección.', NULL, NULL, 'cerrado', '2026-07-11 09:04:32', NULL, 9000, 0, 0.00),
+(73, 73, NULL, '2026-06-04', '10:22:50', 'Caso de Control.', NULL, NULL, 'cerrado', '2026-07-07 10:28:47', NULL, 300000, 0, 0.00),
+(74, 73, NULL, '2026-06-13', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #73', '', 'cerrado', '2026-07-07 17:28:54', NULL, 0, 0, 0.00),
+(75, 74, NULL, '2026-07-07', '10:44:06', 'No enciende.', NULL, NULL, 'cerrado', '2026-07-07 15:05:38', NULL, 45000, 0, 0.00),
+(76, 75, NULL, '2026-07-07', '10:46:52', 'Enciende pero se ahoga. No anda.', NULL, NULL, 'cerrado', '2026-07-07 15:54:39', NULL, 70000, 0, 0.00),
+(77, 76, NULL, '2026-07-07', '15:53:42', 'Frente suspención torcido. Hala hacia los lados y golpea cunas.', NULL, NULL, 'cerrado', '2026-07-11 10:02:54', NULL, 73000, 0, 0.00),
+(78, 16, NULL, '2026-07-08', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #13', '', 'cerrado', '2026-07-08 17:06:48', NULL, 35000, 0, 0.00),
+(79, 39, NULL, '2026-07-09', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #37', '', 'cerrado', '2026-07-09 10:47:01', NULL, 10000, 0, 0.00),
+(80, 77, NULL, '2026-07-09', '11:35:33', 'Batería descargada.', NULL, NULL, 'cerrado', '2026-07-09 13:21:27', NULL, 20000, 0, 0.00),
+(81, 78, NULL, '2026-07-09', '13:25:26', 'Cambiar guaya velocímetro.', NULL, NULL, 'cerrado', '2026-07-09 14:57:39', NULL, 0, 0, 0.00),
+(82, 79, NULL, '2026-07-09', '15:17:30', 'Quemado, rebobinar', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
+(83, 80, NULL, '2026-07-10', '10:21:21', 'Se ahoga.', NULL, NULL, 'cerrado', '2026-07-11 09:01:25', NULL, 48000, 0, 0.00),
+(84, 51, NULL, '2026-07-10', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #49', '', 'cerrado', '2026-07-11 09:06:04', NULL, 33000, 0, 0.00),
+(85, 81, NULL, '2026-07-10', '11:41:33', 'Ajustar cunas de dirección.', NULL, NULL, 'cerrado', '2026-07-11 09:04:32', NULL, 9000, 0, 0.00),
 (86, 82, 3, '2026-07-11', '15:18:09', 'Acelerador no funciona.', NULL, NULL, 'cerrado', '2026-07-18 11:55:57', NULL, 20000, 0, 0.00),
 (87, 83, 3, '2026-07-13', '16:27:53', 'La dirección golpea al frenar o pasar huecos.', NULL, NULL, 'cerrado', '2026-07-18 11:55:22', NULL, 124000, 0, 0.00),
 (88, 84, 3, '2026-07-14', '08:53:54', 'Embrague se queda abierto, a veces truena.\r\nCambiar direccionales.\r\nPortaplato se mueve.', NULL, NULL, 'cerrado', '2026-07-15 10:47:00', NULL, 100000, 0, 0.00),
@@ -829,7 +641,8 @@ INSERT INTO `casos` (`id`, `vehiculo_id`, `mecanico_id`, `fecha_ingreso`, `hora_
 (148, 123, 6, '2026-09-07', '10:58:44', 'Alto consumo de aceite.', NULL, NULL, 'cerrado', '2026-09-10 19:02:57', NULL, 560300, 0, 0.00),
 (150, 125, 6, '2026-09-08', '08:13:46', 'Se ahoga, no desvoca.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
 (151, 35, 6, '2026-09-08', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #33', '', 'abierto', NULL, NULL, NULL, 0, 0.00),
-(152, 16, 6, '2026-09-11', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #131', '', 'abierto', NULL, NULL, NULL, 0, 0.00);
+(152, 16, 6, '2026-09-11', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #131', '', 'abierto', NULL, NULL, NULL, 0, 0.00),
+(153, 126, 7, '2026-09-12', '14:22:50', 'Perdió velocidad final.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00);
 
 -- --------------------------------------------------------
 
@@ -903,7 +716,8 @@ INSERT INTO `caso_repuestos` (`id`, `caso_id`, `parte_id`, `usuario_id`, `cantid
 (48, 150, 57, 6, 30.00, 60.00, 200.00, 6000.00, '2026-09-10 15:49:23'),
 (49, 148, 58, 6, 1.00, 15000.00, 15300.00, 15300.00, '2026-09-10 16:17:23'),
 (50, 148, 59, 6, 1.00, 21000.00, 45000.00, 45000.00, '2026-09-10 16:25:15'),
-(51, 151, 50, 6, 1.00, 15500.00, 25000.00, 25000.00, '2026-09-12 00:00:27');
+(51, 151, 50, 6, 1.00, 15500.00, 25000.00, 25000.00, '2026-09-12 00:00:27'),
+(52, 153, 60, 7, 1.00, 12000.00, 18000.00, 18000.00, '2026-09-12 19:24:35');
 
 -- --------------------------------------------------------
 
@@ -1036,7 +850,8 @@ INSERT INTO `marcas_moto` (`id`, `nombre`, `activo`, `created_at`, `updated_at`)
 (11, 'Kymco', 1, '2026-07-20 02:07:04', '2026-07-20 02:07:04'),
 (12, 'Victory', 1, '2026-07-20 02:07:04', '2026-07-20 02:07:04'),
 (13, 'Ceronte', 1, '2026-07-20 02:07:04', '2026-07-20 02:07:04'),
-(14, 'Hero', 1, '2026-07-20 02:07:04', '2026-07-20 02:07:04');
+(14, 'Hero', 1, '2026-07-20 02:07:04', '2026-07-20 02:07:04'),
+(15, 'Um', 1, '2026-07-20 02:07:04', '2026-07-20 02:07:04');
 
 -- --------------------------------------------------------
 
@@ -1112,7 +927,9 @@ INSERT INTO `modelos_moto` (`id`, `marca_moto_id`, `tipo_moto_id`, `linea`, `cil
 (54, 8, 6, 'Flex', 125, 1, '2026-09-08 13:23:09', '2026-09-08 13:23:09'),
 (55, 7, 7, 'Pulsar', 180, 1, '2026-09-10 16:23:38', '2026-09-10 16:23:38'),
 (56, 7, 7, 'Pulsar Ug', 180, 1, '2026-09-10 16:24:05', '2026-09-10 16:24:05'),
-(57, 7, 7, 'Pulsar', 220, 1, '2026-09-10 16:24:20', '2026-09-10 16:24:20');
+(57, 7, 7, 'Pulsar', 220, 1, '2026-09-10 16:24:20', '2026-09-10 16:24:20'),
+(58, 2, 7, 'Gs', 125, 1, '2026-09-12 19:19:38', '2026-09-12 19:19:38'),
+(59, 2, 7, 'Gs', 500, 1, '2026-09-12 19:19:55', '2026-09-12 19:19:55');
 
 -- --------------------------------------------------------
 
@@ -1247,7 +1064,9 @@ INSERT INTO `movimientos_inventario` (`id`, `parte_id`, `usuario_id`, `caso_id`,
 (109, 59, 6, NULL, 'compra', 'Compra inicial', 1.00, 1.00, 21000.00, '', '2026-09-10 11:22:37'),
 (110, 59, 6, 148, 'consumo', 'Consumo durante reparación', 1.00, 0.00, 21000.00, 'Aplicado desde WorkShop', '2026-09-10 11:25:15'),
 (111, 50, 6, NULL, 'compra', 'Compra inicial', 1.00, 1.00, 15500.00, '', '2026-09-11 18:59:41'),
-(112, 50, 6, 151, 'consumo', 'Consumo durante reparación', 1.00, 0.00, 15500.00, 'Aplicado desde WorkShop', '2026-09-11 19:00:27');
+(112, 50, 6, 151, 'consumo', 'Consumo durante reparación', 1.00, 0.00, 15500.00, 'Aplicado desde WorkShop', '2026-09-11 19:00:27'),
+(113, 60, 7, NULL, 'compra', 'Compra inicial', 1.00, 1.00, 12000.00, '', '2026-09-12 14:24:01'),
+(114, 60, 7, 153, 'consumo', 'Consumo durante reparación', 1.00, 0.00, 12000.00, 'Aplicado desde WorkShop', '2026-09-12 14:24:35');
 
 -- --------------------------------------------------------
 
@@ -1338,7 +1157,8 @@ INSERT INTO `partes` (`id`, `codigo`, `categoria_id`, `tipo`, `nombre`, `marca`,
 (56, 'GuiaCadRep002', 4, 'repuesto', 'GuíasCadena Repartición', 'Bajaj', 14, '36DS1004', 6, 'Unidad', 0.00, 0.00, 1.00, 15000.00, 15800.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 10:36:46', '2026-09-10 10:38:10'),
 (57, 'Manguera001', 20, 'repuesto', 'Manguera Gasolina', 'Sin marca', 3, 'NA', 6, 'Unidad', 70.00, 0.00, 10.00, 60.00, 200.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 10:48:03', '2026-09-10 10:49:23'),
 (58, 'EmpCul002', 25, 'repuesto', 'Empaque Culata.', 'Bajaj', 14, 'DH101680', 6, 'Unidad', 0.00, 0.00, 1.00, 15000.00, 15300.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 11:16:13', '2026-09-10 11:17:23'),
-(59, 'GuiaValv002', 4, 'repuesto', 'Guías de válvulas.', 'Guivaim', 32, 'G-0301-SA1', 6, 'Unidad', 0.00, 0.00, 1.00, 21000.00, 45000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 11:21:48', '2026-09-10 11:25:15');
+(59, 'GuiaValv002', 4, 'repuesto', 'Guías de válvulas.', 'Guivaim', 32, 'G-0301-SA1', 6, 'Unidad', 0.00, 0.00, 1.00, 21000.00, 45000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 11:21:48', '2026-09-10 11:25:15'),
+(60, 'PastFren001', 7, 'repuesto', 'Pastillas de freno.', 'Evol', 26, 'BAN2553', 7, 'Unidad', 0.00, 0.00, 1.00, 12000.00, 18000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-12 14:18:56', '2026-09-12 14:24:35');
 
 -- --------------------------------------------------------
 
@@ -1431,96 +1251,7 @@ INSERT INTO `sesiones_trabajo` (`id`, `caso_id`, `mecanico_id`, `fecha_inicio`, 
 (50, 12, 3, '2025-10-30', '10:43:44', '2025-10-30', '14:48:55', 605),
 (51, 16, 3, '2025-10-30', '12:54:33', '2025-10-30', '12:55:29', 361),
 (52, 12, 3, '2025-10-30', '17:48:42', '2025-10-30', '20:16:54', 508),
-(53, 12, 4, '2025-10-31', '12:58:00', '2025-10-31', '20:02:37', 785),
-(54, 13, 4, '2025-11-01', '11:22:17', '2025-11-01', '19:41:33', 859),
-(55, 12, 4, '2025-11-01', '19:41:50', '2025-11-01', '21:32:18', 470),
-(56, 17, 4, '2025-11-04', '16:33:38', '2025-11-04', '18:01:43', 448),
-(57, 18, 4, '2025-11-04', '18:06:03', '2025-11-04', '18:09:45', 364),
-(58, 19, 4, '2025-11-05', '09:28:45', '2025-11-05', '10:06:34', 398),
-(59, 20, 4, '2025-11-05', '10:20:10', '2025-11-05', '10:46:09', 386),
-(60, 21, 4, '2025-11-05', '10:47:14', '2025-11-05', '10:55:38', 368),
-(61, 20, 4, '2025-11-05', '10:56:04', '2025-11-05', '14:55:16', 599),
-(62, 22, 4, '2025-11-05', '14:56:49', '2025-11-06', '14:03:17', 1746),
-(63, 22, 4, '2025-11-05', '14:56:49', '2025-11-06', '14:03:13', 1746),
-(64, 22, 4, '2025-11-06', '14:03:21', '2025-11-06', '15:14:15', 431),
-(65, 21, 4, '2025-11-06', '15:15:27', '2025-11-06', '16:28:46', 433),
-(66, 23, 4, '2025-11-07', '09:20:10', '2025-11-07', '10:53:08', 453),
-(67, 22, 4, '2025-11-07', '17:07:06', '2025-11-08', '17:08:43', 1802),
-(68, 22, 4, '2025-11-10', '14:35:24', '2025-11-10', '14:35:50', 360),
-(69, 23, 4, '2025-11-10', '14:36:22', '2025-11-14', '17:20:00', 6284),
-(70, 24, 4, '2025-11-11', '11:13:37', '2025-11-11', '11:31:07', 378),
-(71, 21, 4, '2025-11-11', '11:31:43', '2025-11-11', '12:10:12', 398),
-(72, 21, 4, '2025-11-12', '09:53:43', '2025-11-12', '09:54:06', 360),
-(73, 22, 4, '2025-11-12', '09:54:37', '2025-11-12', '11:09:05', 434),
-(74, 25, 4, '2025-11-12', '11:10:49', '2025-11-12', '19:05:41', 835),
-(75, 25, 4, '2025-11-13', '09:50:56', '2025-11-13', '11:05:32', 435),
-(76, 26, 4, '2025-11-13', '11:46:55', '2025-11-13', '15:13:10', 566),
-(77, 26, 4, '2025-11-13', '15:39:02', '2025-11-13', '15:39:44', 361),
-(78, 25, 4, '2025-11-13', '15:40:05', '2025-11-13', '16:18:24', 398),
-(79, 27, 4, '2025-11-14', '10:46:19', '2025-11-14', '12:26:08', 460),
-(80, 27, 4, '2025-11-14', '15:49:30', '2025-11-14', '16:45:13', 416),
-(81, 28, 4, '2025-11-14', '16:15:45', '2025-11-14', '16:44:10', 388),
-(82, 23, 4, '2025-11-14', '17:20:04', '2025-11-14', '17:20:11', 360),
-(83, 27, 4, '2025-11-15', '08:35:43', '2025-11-15', '09:09:22', 394),
-(84, 29, 4, '2025-11-15', '09:10:49', '2025-11-15', '10:04:43', 414),
-(85, 27, 4, '2025-11-15', '14:13:54', '2025-11-15', '18:14:06', 600),
-(86, 30, 4, '2025-11-15', '18:30:00', '2025-11-17', '14:09:06', 2979),
-(87, 27, 4, '2025-11-17', '14:55:50', '2025-11-18', '13:56:14', 1740),
-(88, 27, 4, '2025-11-18', '13:56:20', '2025-11-18', '19:09:20', 673),
-(89, 27, 4, '2025-11-27', '10:00:15', '2025-11-28', '14:05:53', 2046),
-(90, 27, 4, '2025-11-28', '16:40:18', NULL, NULL, 0),
-(91, 31, 4, '2026-02-06', '10:20:43', '2026-02-20', '16:17:55', 20877),
-(92, 29, 4, '2026-02-09', '09:28:29', '2026-02-10', '17:22:12', 2274),
-(94, 33, 4, '2026-02-20', '16:16:43', '2026-03-07', '16:45:10', 21988),
-(95, 34, 4, '2026-02-24', '13:57:30', NULL, NULL, 0),
-(96, 35, 4, '2026-03-12', '09:56:33', NULL, NULL, 0),
-(97, 37, 4, '2026-03-12', '10:00:40', NULL, NULL, 0),
-(98, 39, 4, '2026-04-01', '09:26:43', NULL, NULL, 0),
-(99, 40, 4, '2026-04-01', '09:36:50', NULL, NULL, 0),
-(101, 42, 4, '2026-04-11', '16:45:58', '2026-04-20', '09:30:36', 12945),
-(103, 43, 4, '2026-04-16', '11:38:28', NULL, NULL, 0),
-(104, 44, 4, '2026-04-18', '16:58:13', NULL, NULL, 0),
-(105, 45, 4, '2026-04-18', '17:03:29', NULL, NULL, 0),
-(106, 46, 4, '2026-04-20', '09:24:31', '2026-04-20', '09:25:48', 421),
-(107, 47, 4, '2026-04-20', '09:39:58', NULL, NULL, 0),
-(108, 33, 4, '2026-04-25', '15:03:34', NULL, NULL, 0),
-(109, 6, 4, '2026-04-28', '09:18:28', NULL, NULL, 0),
-(110, 7, 4, '2026-05-02', '11:42:55', NULL, NULL, 0),
-(111, 49, 4, '2026-05-05', '13:25:17', NULL, NULL, 0),
-(112, 50, 4, '2026-05-08', '14:35:45', NULL, NULL, 0),
-(113, 51, 4, '2026-05-08', '14:39:37', NULL, NULL, 0),
-(114, 52, 4, '2026-05-25', '13:11:52', NULL, NULL, 0),
-(115, 53, 4, '2026-05-25', '14:52:22', '2026-05-25', '14:53:33', 421),
-(116, 55, 4, '2026-06-06', '15:54:38', '2026-06-17', '09:32:27', 15878),
-(117, 58, 4, '2026-06-22', '11:28:29', '2026-07-08', '09:26:09', 23338),
-(119, 60, 4, '2026-06-22', '16:15:32', NULL, NULL, 0),
-(121, 61, 4, '2026-07-03', '19:26:51', '2026-07-04', '19:00:07', 1833),
-(122, 62, 4, '2026-07-04', '10:37:59', '2026-07-09', '09:14:23', 7536),
-(123, 4, 4, '2026-07-04', '10:40:37', NULL, NULL, 0),
-(124, 63, 4, '2026-07-04', '18:26:17', '2026-07-09', '09:14:09', 7068),
-(125, 64, 4, '2026-07-04', '18:44:41', '2026-07-07', '14:43:38', 4499),
-(126, 66, 4, '2026-07-06', '12:40:35', '2026-07-06', '14:21:49', 521),
-(127, 67, 4, '2026-07-06', '14:42:28', '2026-07-06', '19:35:29', 713),
-(128, 68, 4, '2026-07-06', '16:20:33', '2026-07-06', '16:21:11', 421),
-(129, 69, 4, '2026-07-06', '18:11:59', '2026-07-06', '18:12:25', 420),
-(130, 73, 4, '2026-07-07', '10:26:46', '2026-07-07', '10:28:47', 422),
-(131, 74, 4, '2026-07-07', '10:31:49', '2026-07-07', '10:33:34', 422),
-(132, 74, 4, '2026-07-07', '10:35:40', '2026-07-07', '10:35:52', 420),
-(133, 76, 4, '2026-07-07', '10:46:59', '2026-07-07', '15:54:31', 728),
-(134, 75, 4, '2026-07-07', '13:47:19', '2026-07-07', '15:05:38', 498),
-(135, 77, 4, '2026-07-07', '15:53:47', '2026-07-07', '17:27:01', 513),
-(136, 74, 4, '2026-07-07', '17:28:37', '2026-07-07', '17:28:54', 420),
 (137, 72, 3, '2026-07-08', '00:19:01', '2026-07-08', '00:19:36', 421),
-(138, 78, 4, '2026-07-08', '09:41:47', '2026-07-08', '17:06:42', 865),
-(139, 58, 4, '2026-07-08', '17:07:10', '2026-07-09', '10:50:08', 1483),
-(140, 79, 4, '2026-07-09', '10:15:51', '2026-07-09', '10:47:01', 451),
-(141, 80, 4, '2026-07-09', '11:35:47', '2026-07-09', '13:21:21', 526),
-(142, 81, 4, '2026-07-09', '13:25:29', '2026-07-09', '14:57:39', 512),
-(143, 58, 4, '2026-07-09', '17:03:20', NULL, NULL, 0),
-(144, 83, 4, '2026-07-10', '10:21:25', '2026-07-11', '09:01:12', 1780),
-(145, 84, 4, '2026-07-10', '10:22:21', '2026-07-11', '09:05:58', 1784),
-(146, 85, 4, '2026-07-10', '12:45:22', '2026-07-11', '09:04:26', 1639),
-(147, 77, 4, '2026-07-10', '12:46:23', '2026-07-11', '10:02:48', 1696),
 (148, 86, 3, '2026-07-11', '15:18:17', '2026-07-11', '20:51:02', 753),
 (149, 33, 3, '2026-07-13', '15:03:00', '2026-07-26', '19:58:26', 19435),
 (150, 87, 3, '2026-07-13', '16:27:58', '2026-07-18', '11:55:22', 7347),
@@ -1584,7 +1315,8 @@ INSERT INTO `sesiones_trabajo` (`id`, `caso_id`, `mecanico_id`, `fecha_inicio`, 
 (210, 147, 6, '2026-09-05', '18:00:33', '2026-09-05', '18:01:45', 421),
 (211, 148, 6, '2026-09-07', '10:58:50', '2026-09-10', '19:02:46', 5224),
 (212, 151, 6, '2026-09-08', '08:25:49', NULL, NULL, 0),
-(213, 150, 6, '2026-09-08', '14:05:29', NULL, NULL, 0);
+(213, 150, 6, '2026-09-08', '14:05:29', NULL, NULL, 0),
+(214, 153, 7, '2026-09-12', '14:24:16', NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -1635,8 +1367,8 @@ CREATE TABLE `usuarios` (
 
 INSERT INTO `usuarios` (`id`, `nombre`, `usuario`, `contraseña_hash`, `rol`, `fecha_creacion`) VALUES
 (3, 'Max Power', 'Max Power', '$2y$10$nt/Txex/5Cn289LMX27vbesaVUgdk.jE1kDCl6KMnyYbIkiX.efB6', 'admin', '2025-10-24 08:49:25'),
-(4, 'Yotas', 'Mech1', '$2y$10$.rXtHAHRQI/q5q73FsLlAucx4sPPb6GqanSXo/oSgV7cgMTQwaGpi', 'mecanico', '2025-10-24 08:50:10'),
-(6, 'Oscar Molano', 'Oscar', '$2y$10$oNZ9rGRXqQpfJF74QmA9BewInx9SFeVlYFhisZUqsNL8gqz1UUzXG', 'mecanico', '2026-08-28 14:26:30');
+(6, 'Oscar Molano', 'Oscar', '$2y$10$oNZ9rGRXqQpfJF74QmA9BewInx9SFeVlYFhisZUqsNL8gqz1UUzXG', 'mecanico', '2026-08-28 14:26:30'),
+(7, 'Jose Cuellar', 'Jose', '$2y$10$BpIvITK1l36loRkgz9BQtuhMJhwcGURhKGkSp6DUeu9Y0dLsaeoi2', 'admin', '2026-09-12 07:39:40');
 
 -- --------------------------------------------------------
 
@@ -1770,7 +1502,8 @@ INSERT INTO `vehiculos` (`id`, `placa`, `marca`, `modelo`, `modelo_moto_id`, `co
 (121, 'KNB77C', 'Suzuki', 'Gn 125', 48, 'Negro', 'Luís Hijo', '0'),
 (122, 'Ns Vale', 'Bajaj', 'Ns 200', 49, 'Negro', 'Prino Valentina', '0'),
 (123, 'KNL39B', 'Bajaj', 'Discover 125', 50, 'Negro', 'Luís Casas Jr', '0'),
-(125, 'IVQ45D', 'Yamaha', 'Bws 125', 51, 'Blanco', 'Fernando motos', '0');
+(125, 'IVQ45D', 'Yamaha', 'Bws 125', 51, 'Blanco', 'Fernando motos', '0'),
+(126, 'HOB21H', 'Suzuki', 'Gn 125', 48, 'Negro', 'Valentina la mejor', '3219284744');
 
 --
 -- Indexes for dumped tables
@@ -1914,25 +1647,25 @@ ALTER TABLE `vehiculos`
 -- AUTO_INCREMENT for table `aplicacion_parte`
 --
 ALTER TABLE `aplicacion_parte`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=159;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
 
 --
 -- AUTO_INCREMENT for table `avances`
 --
 ALTER TABLE `avances`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=515;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=516;
 
 --
 -- AUTO_INCREMENT for table `casos`
 --
 ALTER TABLE `casos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
 
 --
 -- AUTO_INCREMENT for table `caso_repuestos`
 --
 ALTER TABLE `caso_repuestos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
 
 --
 -- AUTO_INCREMENT for table `categorias_partes`
@@ -1950,25 +1683,25 @@ ALTER TABLE `fabricante_repuesto`
 -- AUTO_INCREMENT for table `marcas_moto`
 --
 ALTER TABLE `marcas_moto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT for table `modelos_moto`
 --
 ALTER TABLE `modelos_moto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=58;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
 
 --
 -- AUTO_INCREMENT for table `movimientos_inventario`
 --
 ALTER TABLE `movimientos_inventario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=113;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
 
 --
 -- AUTO_INCREMENT for table `partes`
 --
 ALTER TABLE `partes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=60;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
 
 --
 -- AUTO_INCREMENT for table `pendientes`
@@ -1980,7 +1713,7 @@ ALTER TABLE `pendientes`
 -- AUTO_INCREMENT for table `sesiones_trabajo`
 --
 ALTER TABLE `sesiones_trabajo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=214;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=215;
 
 --
 -- AUTO_INCREMENT for table `tipos_moto`
@@ -1992,13 +1725,13 @@ ALTER TABLE `tipos_moto`
 -- AUTO_INCREMENT for table `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT for table `vehiculos`
 --
 ALTER TABLE `vehiculos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=126;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
 
 --
 -- Constraints for dumped tables
