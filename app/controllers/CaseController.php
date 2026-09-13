@@ -211,18 +211,24 @@ class CaseController
 
         $avanceModel = new Avance($this->pdo);
 
-        $caso = $this->caseModel->findById($caseId);
-        $avances = $avanceModel->getByCase($caseId);
-        $totales = $avanceModel->getTotalesPorCaso($caseId);
+require_once __DIR__ . '/../models/CasePart.php';
 
-        $pdf = new CasePdf();
+$casePartModel = new CasePart($this->pdo);
+
+$caso = $this->caseModel->findById($caseId);
+$avances = $avanceModel->getByCase($caseId);
+$totales = $avanceModel->getTotalesPorCaso($caseId);
+$caseParts = $casePartModel->findByCase($caseId);
+
+$pdf = new CasePdf();
 
         $pdf->AliasNbPages();
 
         $pdf->generate(
-            $caso,
-            $avances,
-            $totales
-        );
+    $caso,
+    $avances,
+    $totales,
+    $caseParts
+);
     }
 }

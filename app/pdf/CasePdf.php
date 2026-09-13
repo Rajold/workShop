@@ -27,13 +27,12 @@ class CasePdf extends FPDF
    Taller de motocicletas.
         '), 0, 1, 'C');
 
-        // Eslogan
         $this->SetFont('Arial', '', 10);
         $this->Cell(0, 6, utf8_decode('Reporte de procedimientos realizados'), 0, 1, 'C');
 
         $this->Ln(4);
 
-        // Línea divisoria
+        // división
         $this->SetDrawColor(180,180,180);
         $this->Line(10,30,200,30);
 
@@ -124,30 +123,25 @@ public function tablaDosColumnas(array $filas)
 public function generate(
     array $caso,
     array $avances,
-    array $totales
+    array $totales,
+    array $caseParts = []
 )
 {
     $this->AddPage();
 
-    //==============================
     // DATOS DEL VEHÍCULO
-    //==============================
 
   $this->titulo("DATOS DEL VEHÍCULO");
 
 $this->tablaDosColumnas([
     'Placa'  => $caso['placa'],
     'Marca'  => $caso['marca'],
-    'Modelo' => $caso['modelo'],
-    'Color'  => $caso['color']
+    'Modelo' => $caso['modelo']
 ]);
 
     $this->Ln(4);
 
-    //==============================
     // CLIENTE
-    //==============================
-
     $this->titulo("CLIENTE");
 
 $this->tablaDosColumnas([
@@ -156,9 +150,7 @@ $this->tablaDosColumnas([
 
     $this->Ln(4);
 
-    //==============================
     // CASO
-    //==============================
 
    $this->titulo("INFORMACIÓN DEL CASO");
 
@@ -170,20 +162,18 @@ $this->tablaDosColumnas([
 
     $this->Ln(4);
 
-    //==============================
-    // CAUSA
-    //==============================
+    // // CAUSA
 
-    $this->titulo("CAUSA REPORTADA");
-    $this->SetFont('Arial','',10);
+    // $this->titulo("CAUSA REPORTADA");
+    // $this->SetFont('Arial','',10);
 
-    $this->MultiCell(
-        0,
-        6,
-        $caso['causa']
-    );
+    // $this->MultiCell(
+    //     0,
+    //     6,
+    //     $caso['causa']
+    // );
 
-    $this->Ln(4);
+    // $this->Ln(4);
 
 $this->titulo("TRABAJOS REALIZADOS");
 
@@ -198,7 +188,7 @@ foreach ($avances as $avance) {
         $avance['descripcion']
     );
 
-    $this->MultiCell(0, 6, $texto);
+    $this->MultiCell(0, 6, $this->txt($texto));
 
     if ($avance['valor'] > 0) {
 
@@ -219,23 +209,124 @@ foreach ($avances as $avance) {
     $this->Ln(2);
 }
 
+$this->titulo("REPUESTOS UTILIZADOS");
+
+if (empty($caseParts)) {
+
+    $this->SetFont('Arial', 'I', 10);
+
+    $this->Cell(
+        0,
+        7,
+        $this->txt('No se utilizaron repuestos registrados.'),
+        0,
+        1
+    );
+
+} else {
+
+    // Encabezados de la tabla
+    $this->SetFont('Arial', 'B', 9);
+
+    $this->Cell(
+        75,
+        8,
+        $this->txt('Repuesto'),
+        1,
+        0,
+        'L'
+    );
+
+    $this->Cell(
+        20,
+        8,
+        $this->txt('Cant.'),
+        1,
+        0,
+        'C'
+    );
+
+    $this->Cell(
+        40,
+        8,
+        $this->txt('Precio unit.'),
+        1,
+        0,
+        'R'
+    );
+
+    $this->Cell(
+        45,
+        8,
+        $this->txt('Subtotal'),
+        1,
+        1,
+        'R'
+    );
+
+    // Filas de repuestos
+    $this->SetFont('Arial', '', 9);
+
+    foreach ($caseParts as $repuesto) {
+
+        $nombre = $repuesto['nombre'];
+
+        if (!empty($repuesto['marca'])) {
+            $nombre .= ' - ' . $repuesto['marca'];
+        }
+
+        $this->Cell(
+            75,
+            8,
+            $this->txt($nombre),
+            1,
+            0,
+            'L'
+        );
+
+        $this->Cell(
+            20,
+            8,
+            number_format(
+                (float)$repuesto['cantidad'],
+                0,
+                ',',
+                '.'
+            ),
+            1,
+            0,
+            'C'
+        );
+
+        $this->Cell(
+            40,
+            8,
+            $this->dinero($repuesto['precio_unitario']),
+            1,
+            0,
+            'R'
+        );
+
+        $this->Cell(
+            45,
+            8,
+            $this->dinero($repuesto['subtotal']),
+            1,
+            1,
+            'R'
+        );
+    }
+
+    $this->Ln(3);
+}
+
 $this->titulo("RESUMEN ECONÓMICO");
 
 $this->tablaDosColumnas([
-    'Mano de obra'    => $this->dinero($totales['mano_obra']),
-    'Repuestos'       => $this->dinero($totales['repuestos']),
-    'Total registrado'=> $this->dinero($totales['total']),
-    'Precio cobrado'  => $this->dinero($caso['precio_cobrado']),
-    'Descuento'       => $this->dinero($caso['descuento']),
-    'Total facturado' => $this->dinero(
-        $caso['precio_cobrado'] - $caso['descuento']
-    )
+    'Mano de obra'     => $this->dinero($totales['mano_obra']),
+    'Repuestos'        => $this->dinero($totales['repuestos']),
+    'Total registrado' => $this->dinero($totales['total']),
 ]);
-
-
-
-
-    
 
     $this->Ln(4);
 
