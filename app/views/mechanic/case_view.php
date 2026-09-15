@@ -236,12 +236,122 @@
                                         </button>
                                     <?php else: ?>
                                         <form method="POST" action="index.php?controller=case&action=nuevoDesdeExistente">
-                                            <input type="hidden" name="vehiculo_id" value="<?= htmlspecialchars($caso['vehiculo_id']) ?>">
-                                            <input type="hidden" name="referencia_anterior" value="<?= htmlspecialchars($caso['id']) ?>">
-                                            <button type="submit" class="btn btn-success mt-3 w-100">
-                                                🆕 Iniciar nuevo caso
-                                            </button>
-                                        </form>
+
+    <input
+        type="hidden"
+        name="vehiculo_id"
+        value="<?= htmlspecialchars($caso['vehiculo_id']) ?>"
+    >
+
+    <input
+        type="hidden"
+        name="referencia_anterior"
+        value="<?= htmlspecialchars($caso['id']) ?>"
+    >
+
+    <!-- Tipo de ingreso -->
+    <div class="mt-3 text-start">
+
+        <label class="form-label fw-bold">
+            Tipo de nuevo ingreso
+        </label>
+
+        <div class="form-check">
+            <input
+                class="form-check-input"
+                type="radio"
+                name="tipo_ingreso"
+                id="ingresoRelacionado"
+                value="relacionado"
+                checked
+            >
+
+            <label
+                class="form-check-label"
+                for="ingresoRelacionado"
+            >
+                🔄 Continuación del caso anterior
+            </label>
+        </div>
+
+        <div class="form-check">
+            <input
+                class="form-check-input"
+                type="radio"
+                name="tipo_ingreso"
+                id="ingresoNuevo"
+                value="nuevo"
+            >
+
+            <label
+                class="form-check-label"
+                for="ingresoNuevo"
+            >
+                🆕 Falla o servicio diferente
+            </label>
+        </div>
+
+    </div>
+
+    <!-- Motivo -->
+    <div class="mt-3 text-start">
+
+        <label
+            for="motivo_ingreso"
+            class="form-label fw-bold"
+        >
+            Motivo del ingreso
+        </label>
+
+        <textarea
+            class="form-control"
+            name="motivo_ingreso"
+            id="motivo_ingreso"
+            rows="3"
+            placeholder="Describa por qué el vehículo ingresa nuevamente al taller..."
+            required
+        ></textarea>
+
+        <small class="text-muted">
+            Ejemplo: La falla persiste, apareció una nueva falla,
+            el cliente solicita una revisión adicional, etc.
+        </small>
+
+    </div>
+
+        <!-- Observaciones -->
+    <div class="mt-3 text-start">
+
+        <label
+            for="observaciones"
+            class="form-label fw-bold"
+        >
+            Observaciones
+        </label>
+
+        <textarea
+            class="form-control"
+            name="observaciones"
+            id="observaciones"
+            rows="3"
+            placeholder="Información adicional proporcionada por el cliente o relevante para el ingreso..."
+        ></textarea>
+
+        <small class="text-muted">
+            Ejemplo: El cliente indica que la falla aparece principalmente
+            cuando el motor está caliente.
+        </small>
+
+    </div>
+
+    <button
+        type="submit"
+        class="btn btn-success mt-3 w-100"
+    >
+        🆕 Crear nuevo caso
+    </button>
+
+</form>
                                     <?php endif; ?>
                                 <?php endif; ?>
 

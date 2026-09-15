@@ -138,63 +138,169 @@ class CaseController
 
     // 🆕 Crear un nuevo caso desde uno cerrado
     public function nuevoDesdeExistente(): void
-    {
-        $this->ensureLogged();
+{
+    $this->ensureLogged();
 
-        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-            $vehiculo_id = (int)$_POST['vehiculo_id'];
-            $referencia_anterior = (int)$_POST['referencia_anterior'];
-            $mecanico_id = (int)$_SESSION['user_id'];
+    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-            // 1️⃣ Verificar si el vehículo ya tiene un caso abierto
-            $stmt = $this->pdo->prepare("SELECT COUNT(*) FROM casos WHERE vehiculo_id = :vehiculo_id AND estado = 'abierto'");
-            $stmt->execute(['vehiculo_id' => $vehiculo_id]);
-            $abiertos = (int)$stmt->fetchColumn();
+        $vehiculo_id = (int)($_POST['vehiculo_id'] ?? 0);
+        $referencia_anterior = (int)($_POST['referencia_anterior'] ?? 0);
+        $tipo_ingreso = $_POST['tipo_ingreso'] ?? '';
+        $motivo_ingreso = trim($_POST['motivo_ingreso'] ?? '');
+        $observaciones = trim($_POST['observaciones'] ?? '');
 
-            if ($abiertos > 0) {
-                // 🚫 No permitir crear otro caso abierto
-                $_SESSION['error_message'] = "El vehículo ya tiene un caso abierto. Debe cerrarse antes de crear uno nuevo.";
-                header("Location: index.php?controller=mechanic&action=viewCase&veh_id={$vehiculo_id}&case_id={$referencia_anterior}");
-                exit;
-            }
+        $mecanico_id = (int)$_SESSION['user_id'];
 
-            // 2️⃣ Obtener información del caso anterior para referencia
-            $stmt = $this->pdo->prepare("SELECT causa, diagnostico, observaciones FROM casos WHERE id = :id");
-            $stmt->execute(['id' => $referencia_anterior]);
-            $anterior = $stmt->fetch(PDO::FETCH_ASSOC);
+        // Validaciones básicas
+        if (!$vehiculo_id || !$referencia_anterior || !$motivo_ingreso) {
 
-            // 3️⃣ Crear el nuevo caso
-            $stmt = $this->pdo->prepare("
-            INSERT INTO casos (vehiculo_id, mecanico_id, causa, diagnostico, observaciones, estado, fecha_ingreso)
-            VALUES (:vehiculo_id, :mecanico_id, :causa, :diagnostico, :observaciones, 'abierto', NOW())
-        ");
+            $_SESSION['error_message'] = "Debe indicar el motivo del nuevo ingreso.";
 
-            $stmt->execute([
-                'vehiculo_id' => $vehiculo_id,
-                'mecanico_id' => $mecanico_id,
-                'causa' => 'Nuevo ingreso del vehículo',
-                'diagnostico' => $anterior['diagnostico'] ?? '',
-                'observaciones' => 'Relacionado con caso #' . $referencia_anterior,
-            ]);
-
-            $nuevoCasoId = (int)$this->pdo->lastInsertId();
-
-            // 4️⃣ Registrar avance automático
-            $this->avanceModel->add(
-                $nuevoCasoId,
-                $mecanico_id,
-                "🆕 Caso creado a partir del caso anterior #{$referencia_anterior}",
-                'Mano de obra',
-                0
+            header(
+                "Location: index.php?controller=mechanic&action=viewCase" .
+                "&veh_id={$vehiculo_id}&case_id={$referencia_anterior}"
             );
 
-            // 5️⃣ Redirigir a la nueva vista del caso
-            header("Location: index.php?controller=mechanic&action=viewCase&veh_id={$vehiculo_id}&case_id={$nuevoCasoId}");
             exit;
         }
 
-        echo "Solicitud inválida.";
+        // 1️⃣ Verificar si el vehículo ya tiene un caso abierto
+        $stmt = $this->pdo->prepare("
+            SELECT COUNT(*)
+            FROM casos
+            WHERE vehiculo_id = :vehiculo_id
+            AND estado = 'abierto'
+        ");
+
+        $stmt->execute([
+            'vehiculo_id' => $vehiculo_id
+        ]);
+
+        $abiertos = (int)$stmt->fetchColumn();
+
+        if ($abiertos > 0) {
+
+            $_SESSION['error_message'] =
+                "El vehículo ya tiene un caso abierto. Debe cerrarse antes de crear uno nuevo.";
+
+            header(
+                "Location: index.php?controller=mechanic&action=viewCase" .
+                "&veh_id={$vehiculo_id}&case_id={$referencia_anterior}"
+            );
+
+            exit;
+        }
+
+        // 2️⃣ Obtener información del caso anterior
+        $stmt = $this->pdo->prepare("
+            SELECT causa, diagnostico, observaciones
+            FROM casos
+            WHERE id = :id
+        ");
+
+        $stmt->execute([
+            'id' => $referencia_anterior
+        ]);
+
+        $anterior = $stmt->fetch(PDO::FETCH_ASSOC);
+
+        if (!$anterior) {
+
+            $_SESSION['error_message'] = "El caso anterior no existe.";
+
+            header(
+                "Location: index.php?controller=mechanic&action=viewCase" .
+                "&veh_id={$vehiculo_id}&case_id={$referencia_anterior}"
+            );
+
+            exit;
+        }
+
+        /*
+         * 3️⃣ Determinar si el nuevo caso continúa el anterior
+         *
+         * Si es una falla diferente, el nuevo caso es independiente.
+         * Si es una continuación, conservamos la referencia mediante
+         * las observaciones del nuevo caso.
+         */
+
+        if ($tipo_ingreso === 'relacionado') {
+
+            $observacionesCaso = "Continuación del caso #{$referencia_anterior}";
+
+            if ($observaciones !== '') {
+                $observacionesCaso .= ". " . $observaciones;
+            }
+
+        } else {
+
+            $observacionesCaso = $observaciones;
+        }
+
+        // 4️⃣ Crear el nuevo caso
+        $stmt = $this->pdo->prepare("
+            INSERT INTO casos
+            (
+                vehiculo_id,
+                mecanico_id,
+                causa,
+                diagnostico,
+                observaciones,
+                estado,
+                fecha_ingreso
+            )
+            VALUES
+            (
+                :vehiculo_id,
+                :mecanico_id,
+                :causa,
+                :diagnostico,
+                :observaciones,
+                'abierto',
+                NOW()
+            )
+        ");
+
+        $stmt->execute([
+            'vehiculo_id' => $vehiculo_id,
+            'mecanico_id' => $mecanico_id,
+            'causa' => $motivo_ingreso,
+            'diagnostico' => '',
+            'observaciones' => $observacionesCaso
+        ]);
+
+        $nuevoCasoId = (int)$this->pdo->lastInsertId();
+
+        // 5️⃣ Registrar avance automático
+        $descripcionAvance = "🆕 Caso creado";
+
+        if ($tipo_ingreso === 'relacionado') {
+            $descripcionAvance .=
+                " como continuación del caso anterior #{$referencia_anterior}";
+        } else {
+            $descripcionAvance .=
+                " por falla o servicio diferente";
+        }
+
+        $this->avanceModel->add(
+            $nuevoCasoId,
+            $mecanico_id,
+            $descripcionAvance,
+            'Mano de obra',
+            0
+        );
+
+        // 6️⃣ Redirigir al nuevo caso
+        header(
+            "Location: index.php?controller=mechanic&action=viewCase" .
+            "&veh_id={$vehiculo_id}&case_id={$nuevoCasoId}"
+        );
+
+        exit;
     }
+
+    echo "Solicitud inválida.";
+}
 
     public function imprimir(): void
     {
