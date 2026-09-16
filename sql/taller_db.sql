@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 16, 2026 at 01:48 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Sep 16, 2026 at 04:17 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -164,7 +164,8 @@ INSERT INTO `aplicacion_parte` (`id`, `parte_id`, `modelo_moto_id`, `created_at`
 (157, 23, 57, '2026-09-10 16:24:50', '2026-09-10 16:24:50'),
 (158, 23, 56, '2026-09-10 16:24:50', '2026-09-10 16:24:50'),
 (160, 60, 48, '2026-09-12 19:23:23', '2026-09-12 19:23:23'),
-(161, 60, 58, '2026-09-12 19:23:23', '2026-09-12 19:23:23');
+(161, 60, 58, '2026-09-12 19:23:23', '2026-09-12 19:23:23'),
+(162, 61, 7, '2026-09-16 02:08:09', '2026-09-16 02:08:09');
 
 -- --------------------------------------------------------
 
@@ -724,7 +725,8 @@ INSERT INTO `caso_repuestos` (`id`, `caso_id`, `parte_id`, `usuario_id`, `cantid
 (49, 148, 58, 6, 1.00, 15000.00, 15300.00, 15300.00, '2026-09-10 16:17:23'),
 (50, 148, 59, 6, 1.00, 21000.00, 45000.00, 45000.00, '2026-09-10 16:25:15'),
 (51, 151, 50, 6, 1.00, 15500.00, 25000.00, 25000.00, '2026-09-12 00:00:27'),
-(52, 153, 60, 7, 1.00, 12000.00, 18000.00, 18000.00, '2026-09-12 19:24:35');
+(52, 153, 60, 7, 1.00, 12000.00, 18000.00, 18000.00, '2026-09-12 19:24:35'),
+(53, 115, 61, 3, 1.00, 10000.00, 15000.00, 15000.00, '2026-09-16 02:09:33');
 
 -- --------------------------------------------------------
 
@@ -771,6 +773,33 @@ INSERT INTO `categorias_partes` (`id`, `nombre`, `descripcion`, `activo`, `creat
 (23, 'Accesorios', 'Accesorios para vehículos', 1, '2026-07-10 09:01:58', '2026-07-10 09:01:58'),
 (24, 'Eléctrico', 'Terminales, cables, sockets, bobinasEtc.', 1, '2026-07-10 09:01:58', '2026-07-22 11:47:41'),
 (25, 'Empaquetaduras', 'Empaques de motor.', 1, '2026-07-10 09:01:58', '2026-07-22 11:47:41');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `compras_caso`
+--
+
+CREATE TABLE `compras_caso` (
+  `id` int(11) NOT NULL,
+  `caso_id` int(11) NOT NULL,
+  `usuario_id` int(11) NOT NULL,
+  `descripcion` varchar(255) NOT NULL,
+  `proveedor` varchar(255) DEFAULT NULL,
+  `cantidad` decimal(10,2) NOT NULL DEFAULT 1.00,
+  `costo_unitario` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `precio_unitario` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `subtotal` decimal(10,2) NOT NULL DEFAULT 0.00,
+  `fecha` datetime NOT NULL DEFAULT current_timestamp(),
+  `observacion` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `compras_caso`
+--
+
+INSERT INTO `compras_caso` (`id`, `caso_id`, `usuario_id`, `descripcion`, `proveedor`, `cantidad`, `costo_unitario`, `precio_unitario`, `subtotal`, `fecha`, `observacion`) VALUES
+(1, 115, 3, 'Caja rodamientos', 'chiquimotos1', 1.00, 10000.00, 15000.00, 15000.00, '2026-09-15 21:03:38', 'Tranquilo, solo es una prueba.');
 
 -- --------------------------------------------------------
 
@@ -1073,7 +1102,9 @@ INSERT INTO `movimientos_inventario` (`id`, `parte_id`, `usuario_id`, `caso_id`,
 (111, 50, 6, NULL, 'compra', 'Compra inicial', 1.00, 1.00, 15500.00, '', '2026-09-11 18:59:41'),
 (112, 50, 6, 151, 'consumo', 'Consumo durante reparación', 1.00, 0.00, 15500.00, 'Aplicado desde WorkShop', '2026-09-11 19:00:27'),
 (113, 60, 7, NULL, 'compra', 'Compra inicial', 1.00, 1.00, 12000.00, '', '2026-09-12 14:24:01'),
-(114, 60, 7, 153, 'consumo', 'Consumo durante reparación', 1.00, 0.00, 12000.00, 'Aplicado desde WorkShop', '2026-09-12 14:24:35');
+(114, 60, 7, 153, 'consumo', 'Consumo durante reparación', 1.00, 0.00, 12000.00, 'Aplicado desde WorkShop', '2026-09-12 14:24:35'),
+(115, 61, 3, NULL, 'compra', 'Compra inicial', 250.00, 250.00, 10000.00, '', '2026-09-15 21:07:46'),
+(116, 61, 3, 115, 'consumo', 'Consumo durante reparación', 1.00, 249.00, 10000.00, 'Aplicado desde WorkShop', '2026-09-15 21:09:33');
 
 -- --------------------------------------------------------
 
@@ -1165,7 +1196,8 @@ INSERT INTO `partes` (`id`, `codigo`, `categoria_id`, `tipo`, `nombre`, `marca`,
 (57, 'Manguera001', 20, 'repuesto', 'Manguera Gasolina', 'Sin marca', 3, 'NA', 6, 'Unidad', 70.00, 0.00, 10.00, 60.00, 200.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 10:48:03', '2026-09-10 10:49:23'),
 (58, 'EmpCul002', 25, 'repuesto', 'Empaque Culata.', 'Bajaj', 14, 'DH101680', 6, 'Unidad', 0.00, 0.00, 1.00, 15000.00, 15300.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 11:16:13', '2026-09-10 11:17:23'),
 (59, 'GuiaValv002', 4, 'repuesto', 'Guías de válvulas.', 'Guivaim', 32, 'G-0301-SA1', 6, 'Unidad', 0.00, 0.00, 1.00, 21000.00, 45000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 11:21:48', '2026-09-10 11:25:15'),
-(60, 'PastFren001', 7, 'repuesto', 'Pastillas de freno.', 'Evol', 26, 'BAN2553', 7, 'Unidad', 0.00, 0.00, 1.00, 12000.00, 18000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-12 14:18:56', '2026-09-12 14:24:35');
+(60, 'PastFren001', 7, 'repuesto', 'Pastillas de freno.', 'Evol', 26, 'BAN2553', 7, 'Unidad', 0.00, 0.00, 1.00, 12000.00, 18000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-12 14:18:56', '2026-09-12 14:24:35'),
+(61, 'test001', 4, 'repuesto', 'Artículo de pruebas.', 'Honda', 8, '123probando', 3, 'Unidad', 249.00, 0.00, 1.00, 10000.00, 15000.00, 'No recuerdo', 'N/A', NULL, 1, '2026-09-15 21:07:26', '2026-09-15 21:09:33');
 
 -- --------------------------------------------------------
 
@@ -1562,6 +1594,15 @@ ALTER TABLE `categorias_partes`
   ADD UNIQUE KEY `uk_categoria_nombre` (`nombre`);
 
 --
+-- Indexes for table `compras_caso`
+--
+ALTER TABLE `compras_caso`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `idx_compras_caso` (`caso_id`),
+  ADD KEY `idx_compras_usuario` (`usuario_id`),
+  ADD KEY `idx_compras_fecha` (`fecha`);
+
+--
 -- Indexes for table `fabricante_repuesto`
 --
 ALTER TABLE `fabricante_repuesto`
@@ -1658,7 +1699,7 @@ ALTER TABLE `vehiculos`
 -- AUTO_INCREMENT for table `aplicacion_parte`
 --
 ALTER TABLE `aplicacion_parte`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=162;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
 
 --
 -- AUTO_INCREMENT for table `avances`
@@ -1676,13 +1717,19 @@ ALTER TABLE `casos`
 -- AUTO_INCREMENT for table `caso_repuestos`
 --
 ALTER TABLE `caso_repuestos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=53;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=54;
 
 --
 -- AUTO_INCREMENT for table `categorias_partes`
 --
 ALTER TABLE `categorias_partes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
+
+--
+-- AUTO_INCREMENT for table `compras_caso`
+--
+ALTER TABLE `compras_caso`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `fabricante_repuesto`
@@ -1706,13 +1753,13 @@ ALTER TABLE `modelos_moto`
 -- AUTO_INCREMENT for table `movimientos_inventario`
 --
 ALTER TABLE `movimientos_inventario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=115;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=117;
 
 --
 -- AUTO_INCREMENT for table `partes`
 --
 ALTER TABLE `partes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=61;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=62;
 
 --
 -- AUTO_INCREMENT for table `pendientes`
@@ -1776,6 +1823,13 @@ ALTER TABLE `caso_repuestos`
   ADD CONSTRAINT `fk_caso_repuestos_caso` FOREIGN KEY (`caso_id`) REFERENCES `casos` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_caso_repuestos_parte` FOREIGN KEY (`parte_id`) REFERENCES `partes` (`id`),
   ADD CONSTRAINT `fk_caso_repuestos_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`);
+
+--
+-- Constraints for table `compras_caso`
+--
+ALTER TABLE `compras_caso`
+  ADD CONSTRAINT `fk_compras_caso` FOREIGN KEY (`caso_id`) REFERENCES `casos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_compras_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`);
 
 --
 -- Constraints for table `modelos_moto`
