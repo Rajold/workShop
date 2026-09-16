@@ -2,12 +2,14 @@
 require_once __DIR__ . '/../models/RepairCase.php';
 require_once __DIR__ . '/../models/Avance.php';
 require_once __DIR__ . '/../models/WorkSession.php';
+require_once __DIR__ . '/../models/CasePurchase.php';
 
 class CaseController
 {
     private PDO $pdo;
     private RepairCase $caseModel;
     private Avance $avanceModel;
+    private CasePurchase $casePurchaseModel;
 
     public function __construct(PDO $pdo)
     {
@@ -18,6 +20,7 @@ class CaseController
         $this->pdo = $pdo;
         $this->caseModel = new RepairCase($pdo);
         $this->avanceModel = new Avance($pdo);
+        $this->casePurchaseModel = new CasePurchase($pdo);
     }
 
     private function ensureLogged(): void
@@ -300,6 +303,92 @@ class CaseController
     }
 
     echo "Solicitud inválida.";
+}
+
+public function registrarCompraDirecta(): void
+{
+    $this->ensureLogged();
+
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        $_SESSION['error_message'] = 'Solicitud inválida.';
+        header('Location: index.php');
+        exit;
+    }
+
+    $caseId = (int)($_POST['caso_id'] ?? 0);
+
+    $descripcion = trim($_POST['descripcion'] ?? '');
+    $proveedor = trim($_POST['proveedor'] ?? '');
+    $observacion = trim($_POST['observacion'] ?? '');
+
+    $cantidad = (float)($_POST['cantidad'] ?? 0);
+    $costoUnitario = (float)($_POST['costo_unitario'] ?? 0);
+    $precioUnitario = (float)($_POST['precio_unitario'] ?? 0);
+
+    if (
+        $caseId <= 0 ||
+        $descripcion === '' ||
+        $cantidad <= 0 ||
+        $costoUnitario < 0 ||
+        $precioUnitario < 0
+    ) {
+        $_SESSION['error_message'] =
+            'Debe completar correctamente los datos de la compra directa.';
+
+        header(
+            'Location: index.php?controller=mechanic&action=viewCase' .
+            '&case_id=' . $caseId
+        );
+        exit;
+    }
+
+    // Verificar que el caso exista y esté abierto
+    $caso = $this->caseModel->findById($caseId);
+
+    if (!$caso) {
+        $_SESSION['error_message'] = 'El caso no existe.';
+        header('Location: index.php');
+        exit;
+    }
+
+    if ($caso['estado'] !== 'abierto') {
+        $_SESSION['error_message'] =
+            'No se pueden registrar compras directas en un caso cerrado.';
+
+        header(
+            'Location: index.php?controller=mechanic&action=viewCase' .
+            '&case_id=' . $caseId
+        );
+        exit;
+    }
+
+    try {
+
+        $this->casePurchaseModel->add([
+            'caso_id' => $caseId,
+            'usuario_id' => (int)$_SESSION['user_id'],
+            'descripcion' => $descripcion,
+            'proveedor' => $proveedor,
+            'cantidad' => $cantidad,
+            'costo_unitario' => $costoUnitario,
+            'precio_unitario' => $precioUnitario,
+            'observacion' => $observacion
+        ]);
+
+        $_SESSION['success_message'] =
+            'Compra directa registrada correctamente.';
+
+    } catch (Throwable $e) {
+
+        $_SESSION['error_message'] =
+            'No fue posible registrar la compra directa.';
+    }
+
+    header(
+        'Location: index.php?controller=mechanic&action=viewCase' .
+        '&case_id=' . $caseId
+    );
+    exit;
 }
 
     public function imprimir(): void

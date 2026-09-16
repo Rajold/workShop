@@ -583,6 +583,17 @@
                         Agregar repuesto
 
                     </a>
+
+<button
+    type="button"
+    class="btn btn-outline-primary ms-2"
+    data-bs-toggle="modal"
+    data-bs-target="#modalCompraDirecta">
+
+    🛒 Registrar compra directa
+
+</button>
+                    
                     <form method="post">
                         <div class="mb-3">
                             <textarea name="nuevo_avance" rows="4" class="form-control" placeholder="Describa el avance..." required></textarea>
@@ -1069,6 +1080,190 @@
                         type="submit">
 
                         Guardar
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Modal registrar compra directa -->
+<div
+    class="modal fade"
+    id="modalCompraDirecta"
+    tabindex="-1"
+    aria-labelledby="modalCompraDirectaLabel"
+    aria-hidden="true">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form
+                method="post"
+                action="index.php?controller=case&action=registrarCompraDirecta">
+
+                <div class="modal-header bg-primary text-white">
+
+                    <h5
+                        class="modal-title"
+                        id="modalCompraDirectaLabel">
+
+                        🛒 Registrar compra directa
+
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <input
+                        type="hidden"
+                        name="caso_id"
+                        value="<?= $caso['id'] ?>">
+
+                    <div class="alert alert-info">
+
+                        Este artículo se comprará específicamente
+                        para este caso y no se agregará al inventario general.
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label fw-bold">
+                            Descripción
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="descripcion"
+                            placeholder=""
+                            required>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Proveedor
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            name="proveedor"
+                            placeholder="">
+
+                    </div>
+
+                    <div class="row">
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label">
+                                Cantidad
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                name="cantidad"
+                                min="0.01"
+                                step="0.01"
+                                value="1"
+                                required>
+
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label">
+                                Costo unitario
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                name="costo_unitario"
+                                min="0"
+                                step="1"
+                                placeholder="$">
+
+                            <small class="text-muted">
+                                Lo que pagó el taller
+                            </small>
+
+                        </div>
+
+                        <div class="col-md-4 mb-3">
+
+                            <label class="form-label">
+                                Precio unitario
+                            </label>
+
+                            <input
+                                type="number"
+                                class="form-control"
+                                name="precio_unitario"
+                                min="0"
+                                step="1"
+                                placeholder="$"
+                                required>
+
+                            <small class="text-muted">
+                                Lo que se cobra al cliente
+                            </small>
+
+                        </div>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label class="form-label">
+                            Observación
+                        </label>
+
+                        <textarea
+                            class="form-control"
+                            name="observacion"
+                            rows="3"
+                            placeholder="Información adicional sobre la compra..."></textarea>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cancelar
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        🛒 Registrar compra
 
                     </button>
 

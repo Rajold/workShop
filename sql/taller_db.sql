@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Sep 13, 2026 at 01:38 AM
+-- Generation Time: Sep 16, 2026 at 01:48 AM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -471,7 +471,12 @@ INSERT INTO `avances` (`id`, `caso_id`, `mecanico_id`, `descripcion`, `tipo`, `v
 (512, 151, 6, 'Soldadura Escape.', 'Mano de obra', 30000, '2026-09-11 23:55:38'),
 (513, 151, 6, 'Reparación de rosca culata-escape.', 'Mano de obra', 20000, '2026-09-11 23:56:06'),
 (514, 151, 6, 'Cambio de bendix.', 'Mano de obra', 35000, '2026-09-12 00:01:23'),
-(515, 153, 7, 'Cambio Filtro Aire.', 'Mano de obra', 22000, '2026-09-12 19:25:42');
+(515, 153, 7, 'Cambio Filtro Aire.', 'Mano de obra', 22000, '2026-09-12 19:25:42'),
+(516, 58, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-09-14 14:31:47'),
+(517, 152, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-09-14 14:32:39'),
+(518, 151, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-09-14 18:36:07'),
+(519, 154, 3, 'Tensionar cadena.', 'Mano de obra', 5000, '2026-09-14 19:17:41'),
+(520, 154, 3, '✅ Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-09-14 21:30:32');
 
 -- --------------------------------------------------------
 
@@ -554,7 +559,7 @@ INSERT INTO `casos` (`id`, `vehiculo_id`, `mecanico_id`, `fecha_ingreso`, `hora_
 (55, 57, NULL, '2026-06-06', '15:54:32', 'No se sostiene, suena mal, ramal dañado, sin tablero.', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
 (56, 58, NULL, '2026-06-07', '11:44:21', 'No enciende en las mañanas.', NULL, NULL, 'cerrado', '2026-07-05 22:52:10', NULL, 0, 0, 0.00),
 (57, 59, NULL, '2026-06-14', '10:47:27', 'Enciende con dols luces rojas destellando rápidamente', NULL, NULL, 'cerrado', '2026-07-05 22:51:54', NULL, 0, 0, 0.00),
-(58, 60, NULL, '2026-06-22', '11:28:23', 'Motor suena mal. \r\nHacer Mantenimiento general.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
+(58, 60, NULL, '2026-06-22', '11:28:23', 'Motor suena mal. \r\nHacer Mantenimiento general.', NULL, NULL, 'cerrado', '2026-09-14 09:31:47', NULL, 88600, 0, 0.00),
 (60, 62, NULL, '2026-06-22', '16:15:29', 'Vibra cuando rápido.\r\nRueda trasera Pinchada.\r\nCambio tren de arrastre.\r\nAjustar Manillar.\r\nCambiar aceite.\r\nRevisar fuga de aceite.\r\nCambiar refrigerante.', NULL, NULL, 'cerrado', '2026-07-05 22:51:29', NULL, 120000, 0, 0.00),
 (61, 63, NULL, '2026-07-03', '19:26:45', 'Avandonada. \r\nRevisar.', NULL, NULL, 'cerrado', NULL, NULL, NULL, 0, 0.00),
 (62, 64, NULL, '2026-07-04', '10:37:54', 'Resurección.', NULL, NULL, 'cerrado', '2026-07-09 09:14:23', NULL, 55000, 0, 0.00),
@@ -640,9 +645,11 @@ INSERT INTO `casos` (`id`, `vehiculo_id`, `mecanico_id`, `fecha_ingreso`, `hora_
 (147, 122, 6, '2026-09-05', '18:00:24', 'Cambiar tren de arrastre y cùpula delantera.', NULL, NULL, 'cerrado', '2026-09-05 18:01:46', NULL, 50000, 0, 0.00),
 (148, 123, 6, '2026-09-07', '10:58:44', 'Alto consumo de aceite.', NULL, NULL, 'cerrado', '2026-09-10 19:02:57', NULL, 560300, 0, 0.00),
 (150, 125, 6, '2026-09-08', '08:13:46', 'Se ahoga, no desvoca.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
-(151, 35, 6, '2026-09-08', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #33', '', 'abierto', NULL, NULL, NULL, 0, 0.00),
-(152, 16, 6, '2026-09-11', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #131', '', 'abierto', NULL, NULL, NULL, 0, 0.00),
-(153, 126, 7, '2026-09-12', '14:22:50', 'Perdió velocidad final.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00);
+(151, 35, 6, '2026-09-08', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #33', '', 'cerrado', '2026-09-14 13:36:07', NULL, 135000, 0, 0.00),
+(152, 16, 6, '2026-09-11', NULL, 'Nuevo ingreso del vehículo', 'Relacionado con caso #131', '', 'cerrado', '2026-09-14 09:32:39', NULL, 30000, 0, 0.00),
+(153, 126, 7, '2026-09-12', '14:22:50', 'Perdió velocidad final.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
+(154, 127, 3, '2026-09-14', '14:17:18', 'Tensionar cadena', NULL, NULL, 'cerrado', '2026-09-14 16:30:31', NULL, 5000, 0, 0.00),
+(155, 128, 3, '2026-09-15', '11:18:25', 'Instalar direccionales, pito y tren de arrastre.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00);
 
 -- --------------------------------------------------------
 
@@ -1283,7 +1290,7 @@ INSERT INTO `sesiones_trabajo` (`id`, `caso_id`, `mecanico_id`, `fecha_inicio`, 
 (178, 116, 3, '2026-07-26', '22:31:12', '2026-07-26', '22:31:37', 420),
 (179, 117, 3, '2026-07-28', '11:40:52', '2026-08-01', '09:24:23', 6044),
 (180, 118, 3, '2026-07-29', '14:42:32', '2026-07-29', '20:23:10', 761),
-(181, 58, 3, '2026-07-30', '16:41:48', NULL, NULL, 0),
+(181, 58, 3, '2026-07-30', '16:41:48', '2026-09-14', '09:31:47', 66230),
 (182, 120, 3, '2026-08-01', '13:39:46', '2026-08-01', '13:40:26', 421),
 (183, 121, 3, '2026-08-01', '13:41:47', '2026-08-01', '13:43:08', 421),
 (184, 119, 3, '2026-08-01', '19:44:46', '2026-08-01', '19:45:27', 421),
@@ -1316,7 +1323,9 @@ INSERT INTO `sesiones_trabajo` (`id`, `caso_id`, `mecanico_id`, `fecha_inicio`, 
 (211, 148, 6, '2026-09-07', '10:58:50', '2026-09-10', '19:02:46', 5224),
 (212, 151, 6, '2026-09-08', '08:25:49', NULL, NULL, 0),
 (213, 150, 6, '2026-09-08', '14:05:29', NULL, NULL, 0),
-(214, 153, 7, '2026-09-12', '14:24:16', NULL, NULL, 0);
+(214, 153, 7, '2026-09-12', '14:24:16', NULL, NULL, 0),
+(215, 154, 3, '2026-09-14', '14:17:26', '2026-09-14', '16:30:31', 553),
+(216, 155, 3, '2026-09-15', '11:18:45', NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -1503,7 +1512,9 @@ INSERT INTO `vehiculos` (`id`, `placa`, `marca`, `modelo`, `modelo_moto_id`, `co
 (122, 'Ns Vale', 'Bajaj', 'Ns 200', 49, 'Negro', 'Prino Valentina', '0'),
 (123, 'KNL39B', 'Bajaj', 'Discover 125', 50, 'Negro', 'Luís Casas Jr', '0'),
 (125, 'IVQ45D', 'Yamaha', 'Bws 125', 51, 'Blanco', 'Fernando motos', '0'),
-(126, 'HOB21H', 'Suzuki', 'Gn 125', 48, 'Negro', 'Valentina la mejor', '3219284744');
+(126, 'HOB21H', 'Suzuki', 'Gn 125', 48, 'Negro', 'Valentina la mejor', '3219284744'),
+(127, 'QYX29G', 'Honda', 'Eco 100', 19, 'Negro', 'Agua Fina', '3208711560'),
+(128, 'BIL76C', 'Honda', 'Eco 100', 19, 'Negro', 'Yuri Alexandra Mazabel', '3113375077');
 
 --
 -- Indexes for dumped tables
@@ -1653,13 +1664,13 @@ ALTER TABLE `aplicacion_parte`
 -- AUTO_INCREMENT for table `avances`
 --
 ALTER TABLE `avances`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=516;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=521;
 
 --
 -- AUTO_INCREMENT for table `casos`
 --
 ALTER TABLE `casos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=154;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=156;
 
 --
 -- AUTO_INCREMENT for table `caso_repuestos`
@@ -1713,7 +1724,7 @@ ALTER TABLE `pendientes`
 -- AUTO_INCREMENT for table `sesiones_trabajo`
 --
 ALTER TABLE `sesiones_trabajo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=215;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=217;
 
 --
 -- AUTO_INCREMENT for table `tipos_moto`
@@ -1731,7 +1742,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `vehiculos`
 --
 ALTER TABLE `vehiculos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=127;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=129;
 
 --
 -- Constraints for dumped tables
