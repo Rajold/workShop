@@ -20,6 +20,8 @@ class MechanicController extends BaseController
         require_once __DIR__ . '/../models/WorkSession.php';
         require_once __DIR__ . '/../models/User.php';
         require_once __DIR__ . '/../models/Avance.php';
+        require_once __DIR__ . '/../models/CasePart.php';
+        require_once __DIR__ . '/../models/CasePurchase.php';
 
         $this->vehicleModel = new Vehicle($pdo);
         $this->caseModel = new RepairCase($pdo);
@@ -138,6 +140,9 @@ class MechanicController extends BaseController
             'repuestos' => 0,
             'total' => 0
         ];
+
+        $casePurchases = [];
+        $casePurchaseModel = new CasePurchase($this->pdo);
         $compatibleParts = [];
         $caseParts = [];
         $advanceModel = new Avance($this->pdo);
@@ -196,6 +201,9 @@ class MechanicController extends BaseController
                 $caseParts = $casePartModel->findByCase(
                     (int)$caso['id']
                 );
+                $casePurchases = $casePurchaseModel->findByCase(
+    (int)$caso['id']
+);
             }
         }
 
@@ -259,6 +267,7 @@ class MechanicController extends BaseController
             'totales'        => $totales,
             'compatibleParts' => $compatibleParts,
             'caseParts' => $caseParts,
+            'casePurchases' => $casePurchases,
             'pendingItems' => $pendingItems
         ]);
     }
