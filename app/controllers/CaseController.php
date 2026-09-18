@@ -325,6 +325,25 @@ public function registrarCompraDirecta(): void
     $costoUnitario = (float)($_POST['costo_unitario'] ?? 0);
     $precioUnitario = (float)($_POST['precio_unitario'] ?? 0);
 
+    /*
+     * Primero verificamos que el caso exista.
+     * De esta forma obtenemos también el vehículo asociado
+     * y podemos conservar correctamente la ficha seleccionada
+     * al regresar a la vista.
+     */
+    $caso = $this->caseModel->findById($caseId);
+
+    if (!$caso) {
+        $_SESSION['error_message'] = 'El caso no existe.';
+        header('Location: index.php');
+        exit;
+    }
+
+    $vehiculoId = (int)$caso['vehiculo_id'];
+
+    /*
+     * Validar datos recibidos
+     */
     if (
         $caseId <= 0 ||
         $descripcion === '' ||
@@ -337,26 +356,22 @@ public function registrarCompraDirecta(): void
 
         header(
             'Location: index.php?controller=mechanic&action=viewCase' .
+            '&veh_id=' . $vehiculoId .
             '&case_id=' . $caseId
         );
         exit;
     }
 
-    // Verificar que el caso exista y esté abierto
-    $caso = $this->caseModel->findById($caseId);
-
-    if (!$caso) {
-        $_SESSION['error_message'] = 'El caso no existe.';
-        header('Location: index.php');
-        exit;
-    }
-
+    /*
+     * El caso debe estar abierto para registrar una compra directa.
+     */
     if ($caso['estado'] !== 'abierto') {
         $_SESSION['error_message'] =
             'No se pueden registrar compras directas en un caso cerrado.';
 
         header(
             'Location: index.php?controller=mechanic&action=viewCase' .
+            '&veh_id=' . $vehiculoId .
             '&case_id=' . $caseId
         );
         exit;
@@ -384,8 +399,12 @@ public function registrarCompraDirecta(): void
             'No fue posible registrar la compra directa.';
     }
 
+    /*
+     * Regresar conservando tanto el vehículo como el caso.
+     */
     header(
         'Location: index.php?controller=mechanic&action=viewCase' .
+        '&veh_id=' . $vehiculoId .
         '&case_id=' . $caseId
     );
     exit;
