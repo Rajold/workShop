@@ -149,6 +149,28 @@ class MechanicController extends BaseController
         $casePartModel = new CasePart($this->pdo);
         $pendingModel = new Pending($this->pdo);
         $pendingItems = [];
+        $financial = [
+    'mano_obra' => 0,
+    'repuestos_venta' => 0,
+    'repuestos_costo' => 0,
+    'compras_directas_venta' => 0,
+    'compras_directas_costo' => 0,
+    'total_repuestos_venta' => 0,
+    'total_repuestos_costo' => 0,
+    'total_venta_teorica' => 0,
+    'utilidad_repuestos' => 0
+];
+        $financial = [
+            'mano_obra' => 0,
+            'repuestos_venta' => 0,
+            'repuestos_costo' => 0,
+            'compras_directas_venta' => 0,
+            'compras_directas_costo' => 0,
+            'total_repuestos_venta' => 0,
+            'total_repuestos_costo' => 0,
+            'total_venta_teorica' => 0,
+            'utilidad_repuestos' => 0
+        ];
 
         if ($veh_id) {
             // 🚗 Obtener datos del vehículo y sus casos
@@ -202,8 +224,40 @@ class MechanicController extends BaseController
                     (int)$caso['id']
                 );
                 $casePurchases = $casePurchaseModel->findByCase(
-    (int)$caso['id']
-);
+                    (int)$caso['id']
+                );
+                                $caseId = (int)$caso['id'];
+
+                $financial['mano_obra'] =
+                    (float)$totales['mano_obra'];
+
+                $financial['repuestos_venta'] =
+                    $casePartModel->getTotalVentaByCase($caseId);
+
+                $financial['repuestos_costo'] =
+                    $casePartModel->getTotalCostoByCase($caseId);
+
+                $financial['compras_directas_venta'] =
+                    $casePurchaseModel->getTotalVentaByCase($caseId);
+
+                $financial['compras_directas_costo'] =
+                    $casePurchaseModel->getTotalCostoByCase($caseId);
+
+                $financial['total_repuestos_venta'] =
+                    $financial['repuestos_venta'] +
+                    $financial['compras_directas_venta'];
+
+                $financial['total_repuestos_costo'] =
+                    $financial['repuestos_costo'] +
+                    $financial['compras_directas_costo'];
+
+                $financial['total_venta_teorica'] =
+                    $financial['mano_obra'] +
+                    $financial['total_repuestos_venta'];
+
+                $financial['utilidad_repuestos'] =
+                    $financial['total_repuestos_venta'] -
+                    $financial['total_repuestos_costo'];
             }
         }
 
@@ -212,12 +266,8 @@ class MechanicController extends BaseController
 
             $descripcion = trim($_POST['nuevo_avance']);
             $tipo = trim($_POST['tipo'] ?? '');
-            $descripcion = trim($_POST['nuevo_avance']);
-
-            $tipo = trim($_POST['tipo'] ?? '');
-
             $valor = (int)($_POST['valor'] ?? 0);
-            $valor = (int)($_POST['valor'] ?? 0);
+            
 
             if ($descripcion !== '' && $tipo !== '' && $activeSession) {
 
@@ -268,6 +318,7 @@ class MechanicController extends BaseController
             'compatibleParts' => $compatibleParts,
             'caseParts' => $caseParts,
             'casePurchases' => $casePurchases,
+            'financial' => $financial,
             'pendingItems' => $pendingItems
         ]);
     }
@@ -493,7 +544,7 @@ class MechanicController extends BaseController
         $_SESSION['success_message'] =
             'Pendiente convertido en mano de obra.';
 
-        
+
 
         header(
             "Location: index.php?controller=mechanic&action=viewCase&case_id={$caseId}&veh_id={$vehId}"
@@ -516,33 +567,30 @@ class MechanicController extends BaseController
     }
 
     public function discardPending(): void
-{
-    $this->ensureLogged();
+    {
+        $this->ensureLogged();
 
-    $pendingId = (int)($_GET['pending_id'] ?? 0);
-    $caseId    = (int)($_GET['case_id'] ?? 0);
-    $vehId     = (int)($_GET['veh_id'] ?? 0);
+        $pendingId = (int)($_GET['pending_id'] ?? 0);
+        $caseId    = (int)($_GET['case_id'] ?? 0);
+        $vehId     = (int)($_GET['veh_id'] ?? 0);
 
-    $pendingModel = new Pending($this->pdo);
+        $pendingModel = new Pending($this->pdo);
 
-    if (!$pendingModel->findById($pendingId)) {
+        if (!$pendingModel->findById($pendingId)) {
 
-        $this->error('Pendiente no encontrado.');
+            $this->error('Pendiente no encontrado.');
+        } elseif ($pendingModel->discard($pendingId)) {
 
-    } elseif ($pendingModel->discard($pendingId)) {
+            $this->success('Pendiente descartado correctamente.');
+        } else {
 
-        $this->success('Pendiente descartado correctamente.');
+            $this->error('No fue posible descartar el pendiente.');
+        }
 
-    } else {
+        header(
+            "Location: index.php?controller=mechanic&action=viewCase&case_id={$caseId}&veh_id={$vehId}"
+        );
 
-        $this->error('No fue posible descartar el pendiente.');
-
+        exit;
     }
-
-    header(
-        "Location: index.php?controller=mechanic&action=viewCase&case_id={$caseId}&veh_id={$vehId}"
-    );
-
-    exit;
-}
 }

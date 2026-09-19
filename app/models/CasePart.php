@@ -130,4 +130,60 @@ class CasePart extends BaseModel
 
     return $stmt->fetchAll(PDO::FETCH_ASSOC);
 }
+
+public function getTotalVentaByCase(int $caseId): float
+{
+    $stmt = $this->db->prepare("
+        SELECT COALESCE(SUM(subtotal), 0)
+        FROM caso_repuestos
+        WHERE caso_id = :caso_id
+    ");
+
+    $stmt->execute([
+        ':caso_id' => $caseId
+    ]);
+
+    return (float)$stmt->fetchColumn();
+}
+
+
+public function getTotalCostoByCase(int $caseId): float
+{
+    $stmt = $this->db->prepare("
+        SELECT COALESCE(
+            SUM(cantidad * costo_unitario),
+            0
+        )
+        FROM caso_repuestos
+        WHERE caso_id = :caso_id
+    ");
+
+    $stmt->execute([
+        ':caso_id' => $caseId
+    ]);
+
+    return (float)$stmt->fetchColumn();
+}
+
+
+public function getUtilidadByCase(int $caseId): float
+{
+    $stmt = $this->db->prepare("
+        SELECT COALESCE(
+            SUM(
+                subtotal -
+                (cantidad * costo_unitario)
+            ),
+            0
+        )
+        FROM caso_repuestos
+        WHERE caso_id = :caso_id
+    ");
+
+    $stmt->execute([
+        ':caso_id' => $caseId
+    ]);
+
+    return (float)$stmt->fetchColumn();
+}
 }

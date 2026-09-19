@@ -237,121 +237,110 @@
                                     <?php else: ?>
                                         <form method="POST" action="index.php?controller=case&action=nuevoDesdeExistente">
 
-    <input
-        type="hidden"
-        name="vehiculo_id"
-        value="<?= htmlspecialchars($caso['vehiculo_id']) ?>"
-    >
+                                            <input
+                                                type="hidden"
+                                                name="vehiculo_id"
+                                                value="<?= htmlspecialchars($caso['vehiculo_id']) ?>">
 
-    <input
-        type="hidden"
-        name="referencia_anterior"
-        value="<?= htmlspecialchars($caso['id']) ?>"
-    >
+                                            <input
+                                                type="hidden"
+                                                name="referencia_anterior"
+                                                value="<?= htmlspecialchars($caso['id']) ?>">
 
-    <!-- Tipo de ingreso -->
-    <div class="mt-3 text-start">
+                                            <!-- Tipo de ingreso -->
+                                            <div class="mt-3 text-start">
 
-        <label class="form-label fw-bold">
-            Tipo de nuevo ingreso
-        </label>
+                                                <label class="form-label fw-bold">
+                                                    Tipo de nuevo ingreso
+                                                </label>
 
-        <div class="form-check">
-            <input
-                class="form-check-input"
-                type="radio"
-                name="tipo_ingreso"
-                id="ingresoRelacionado"
-                value="relacionado"
-                checked
-            >
+                                                <div class="form-check">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="radio"
+                                                        name="tipo_ingreso"
+                                                        id="ingresoRelacionado"
+                                                        value="relacionado"
+                                                        checked>
 
-            <label
-                class="form-check-label"
-                for="ingresoRelacionado"
-            >
-                🔄 Continuación del caso anterior
-            </label>
-        </div>
+                                                    <label
+                                                        class="form-check-label"
+                                                        for="ingresoRelacionado">
+                                                        🔄 Continuación del caso anterior
+                                                    </label>
+                                                </div>
 
-        <div class="form-check">
-            <input
-                class="form-check-input"
-                type="radio"
-                name="tipo_ingreso"
-                id="ingresoNuevo"
-                value="nuevo"
-            >
+                                                <div class="form-check">
+                                                    <input
+                                                        class="form-check-input"
+                                                        type="radio"
+                                                        name="tipo_ingreso"
+                                                        id="ingresoNuevo"
+                                                        value="nuevo">
 
-            <label
-                class="form-check-label"
-                for="ingresoNuevo"
-            >
-                🆕 Falla o servicio diferente
-            </label>
-        </div>
+                                                    <label
+                                                        class="form-check-label"
+                                                        for="ingresoNuevo">
+                                                        🆕 Falla o servicio diferente
+                                                    </label>
+                                                </div>
 
-    </div>
+                                            </div>
 
-    <!-- Motivo -->
-    <div class="mt-3 text-start">
+                                            <!-- Motivo -->
+                                            <div class="mt-3 text-start">
 
-        <label
-            for="motivo_ingreso"
-            class="form-label fw-bold"
-        >
-            Motivo del ingreso
-        </label>
+                                                <label
+                                                    for="motivo_ingreso"
+                                                    class="form-label fw-bold">
+                                                    Motivo del ingreso
+                                                </label>
 
-        <textarea
-            class="form-control"
-            name="motivo_ingreso"
-            id="motivo_ingreso"
-            rows="3"
-            placeholder="Describa por qué el vehículo ingresa nuevamente al taller..."
-            required
-        ></textarea>
+                                                <textarea
+                                                    class="form-control"
+                                                    name="motivo_ingreso"
+                                                    id="motivo_ingreso"
+                                                    rows="3"
+                                                    placeholder="Describa por qué el vehículo ingresa nuevamente al taller..."
+                                                    required></textarea>
 
-        <small class="text-muted">
-            Ejemplo: La falla persiste, apareció una nueva falla,
-            el cliente solicita una revisión adicional, etc.
-        </small>
+                                                <small class="text-muted">
+                                                    Ejemplo: La falla persiste, apareció una nueva falla,
+                                                    el cliente solicita una revisión adicional, etc.
+                                                </small>
 
-    </div>
+                                            </div>
 
-        <!-- Observaciones -->
-    <div class="mt-3 text-start">
+                                            <!-- Observaciones -->
+                                            <div class="mt-3 text-start">
 
-        <label
-            for="observaciones"
-            class="form-label fw-bold"
-        >
-            Observaciones
-        </label>
+                                                <label
+                                                    for="observaciones"
+                                                    class="form-label fw-bold">
+                                                    Observaciones
+                                                </label>
 
-        <textarea
-            class="form-control"
-            name="observaciones"
-            id="observaciones"
-            rows="3"
-            placeholder="Información adicional proporcionada por el cliente o relevante para el ingreso..."
-        ></textarea>
+                                                <textarea
+                                                    class="form-control"
+                                                    name="observaciones"
+                                                    id="observaciones"
+                                                    rows="3"
+                                                    placeholder="Información adicional proporcionada por el cliente o relevante para el ingreso..."></textarea>
 
-        <small class="text-muted">
-            Ejemplo: El cliente indica que la falla aparece principalmente
-            cuando el motor está caliente.
-        </small>
+                                                <small class="text-muted">
+                                                    Ejemplo: El cliente indica que la falla aparece principalmente
+                                                    cuando el motor está caliente.
+                                                </small>
 
-    </div>
+                                            </div>
 
-    <button
-        type="submit"
-        class="btn btn-success mt-3 w-100"
-    >
-        🆕 Crear nuevo caso
-    </button>
+                                            <button
+                                                type="submit"
+                                                class="btn btn-success mt-3 w-100">
+                                                🆕 Crear nuevo caso
+                                            </button>
 
-</form>
+                                        </form>
                                     <?php endif; ?>
                                 <?php endif; ?>
 
@@ -584,16 +573,16 @@
 
                     </a>
 
-<button
-    type="button"
-    class="btn btn-outline-primary ms-2"
-    data-bs-toggle="modal"
-    data-bs-target="#modalCompraDirecta">
+                    <button
+                        type="button"
+                        class="btn btn-outline-primary ms-2"
+                        data-bs-toggle="modal"
+                        data-bs-target="#modalCompraDirecta">
 
-    🛒 Registrar compra directa
+                        🛒 Registrar compra directa
 
-</button>
-                    
+                    </button>
+
                     <form method="post">
                         <div class="mb-3">
                             <textarea name="nuevo_avance" rows="4" class="form-control" placeholder="Describa el avance..." required></textarea>
@@ -731,6 +720,101 @@
 
             </div>
 
+            <div class="row mt-4">
+
+                <div class="col-12">
+
+                    <div class="card border-info shadow-sm">
+
+                        <div class="card-header bg-info text-white">
+                            <strong>📊 Resumen financiero del caso</strong>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="row">
+
+                                <div class="col-md-4">
+                                    <p class="mb-2">
+                                        Mano de obra:
+                                        <strong>
+                                            $<?= number_format($financial['mano_obra'], 0, ',', '.') ?>
+                                        </strong>
+                                    </p>
+
+                                    <p class="mb-2">
+                                        Venta repuestos inventario:
+                                        <strong>
+                                            $<?= number_format($financial['repuestos_venta'], 0, ',', '.') ?>
+                                        </strong>
+                                    </p>
+
+                                    <p class="mb-2">
+                                        Costo repuestos inventario:
+                                        <strong>
+                                            $<?= number_format($financial['repuestos_costo'], 0, ',', '.') ?>
+                                        </strong>
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <p class="mb-2">
+                                        Venta compras directas:
+                                        <strong>
+                                            $<?= number_format($financial['compras_directas_venta'], 0, ',', '.') ?>
+                                        </strong>
+                                    </p>
+
+                                    <p class="mb-2">
+                                        Costo compras directas:
+                                        <strong>
+                                            $<?= number_format($financial['compras_directas_costo'], 0, ',', '.') ?>
+                                        </strong>
+                                    </p>
+
+                                    <p class="mb-2">
+                                        Utilidad repuestos:
+                                        <strong>
+                                            $<?= number_format($financial['utilidad_repuestos'], 0, ',', '.') ?>
+                                        </strong>
+                                    </p>
+                                </div>
+
+                                <div class="col-md-4">
+
+                                    <p class="mb-2">
+                                        Venta total de repuestos:
+                                        <strong>
+                                            $<?= number_format($financial['total_repuestos_venta'], 0, ',', '.') ?>
+                                        </strong>
+                                    </p>
+
+                                    <p class="mb-2">
+                                        Costo total de repuestos:
+                                        <strong>
+                                            $<?= number_format($financial['total_repuestos_costo'], 0, ',', '.') ?>
+                                        </strong>
+                                    </p>
+
+                                    <p class="mb-0 fs-5">
+                                        Venta teórica total:
+                                        <strong>
+                                            $<?= number_format($financial['total_venta_teorica'], 0, ',', '.') ?>
+                                        </strong>
+                                    </p>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </div>
+
+            </div>
+
         <?php endif; ?>
 
         <?php if (!empty($_SESSION['success_message'])): ?>
@@ -748,6 +832,103 @@
             <?php unset($_SESSION['error_message']); ?>
         <?php endif; ?>
 
+        <?php if (!empty($casePurchases)): ?>
+
+            <div class="card shadow-sm mt-4">
+
+                <div class="card-header bg-primary text-white">
+                    <strong>🛒 Compras directas del caso</strong>
+                </div>
+
+                <div class="card-body p-0">
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover table-sm mb-0">
+
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Descripción</th>
+                                    <th>Proveedor</th>
+                                    <th class="text-end">Cantidad</th>
+                                    <th class="text-end">Costo unitario</th>
+                                    <th class="text-end">Precio unitario</th>
+                                    <th class="text-end">Subtotal</th>
+                                    <th>Registrado por</th>
+                                </tr>
+                            </thead>
+
+                            <tbody>
+
+                                <?php foreach ($casePurchases as $purchase): ?>
+
+                                    <tr>
+
+                                        <td>
+                                            <?= htmlspecialchars($purchase['descripcion']) ?>
+                                        </td>
+
+                                        <td>
+                                            <?= htmlspecialchars($purchase['proveedor'] ?? '') ?>
+                                        </td>
+
+                                        <td class="text-end">
+                                            <?= number_format(
+                                                (float)$purchase['cantidad'],
+                                                2,
+                                                ',',
+                                                '.'
+                                            ) ?>
+                                        </td>
+
+                                        <td class="text-end">
+                                            $<?= number_format(
+                                                    (float)$purchase['costo_unitario'],
+                                                    0,
+                                                    ',',
+                                                    '.'
+                                                ) ?>
+                                        </td>
+
+                                        <td class="text-end">
+                                            $<?= number_format(
+                                                    (float)$purchase['precio_unitario'],
+                                                    0,
+                                                    ',',
+                                                    '.'
+                                                ) ?>
+                                        </td>
+
+                                        <td class="text-end fw-bold">
+                                            $<?= number_format(
+                                                    (float)$purchase['subtotal'],
+                                                    0,
+                                                    ',',
+                                                    '.'
+                                                ) ?>
+                                        </td>
+
+                                        <td>
+                                            <?= htmlspecialchars(
+                                                $purchase['usuario_nombre'] ?? ''
+                                            ) ?>
+                                        </td>
+
+                                    </tr>
+
+                                <?php endforeach; ?>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        <?php endif; ?>
 
         <?php require __DIR__ . '/partials/_financial_summary.php'; ?>
 
@@ -1278,27 +1459,25 @@
 </div>
 
 <script>
+    document.querySelectorAll('.btn-resolve-pending').forEach(function(button) {
 
-document.querySelectorAll('.btn-resolve-pending').forEach(function(button){
+        button.addEventListener('click', function() {
 
-    button.addEventListener('click', function(){
+            document.getElementById('pending_id').value =
+                this.dataset.pendingId;
 
-        document.getElementById('pending_id').value =
-            this.dataset.pendingId;
+            document.getElementById('case_id').value =
+                this.dataset.caseId;
 
-        document.getElementById('case_id').value =
-            this.dataset.caseId;
+            document.getElementById('veh_id').value =
+                this.dataset.vehId;
 
-        document.getElementById('veh_id').value =
-            this.dataset.vehId;
+            document.getElementById('descripcion').value =
+                this.dataset.description;
 
-        document.getElementById('descripcion').value =
-            this.dataset.description;
+        });
 
     });
-
-});
-
 </script>
 
 <script>
