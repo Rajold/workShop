@@ -1502,34 +1502,34 @@
 </script>
 
 <script>
-    const costoTotal = <?= (int)$totales['total'] ?>;
+    const costoRepuestos = <?= (float)$financial['total_repuestos_costo'] ?>;
 
-    const precio = document.getElementById('precio_cobrado');
-    const descuento = document.getElementById('descuento');
+const precio = document.getElementById('precio_cobrado');
+const descuento = document.getElementById('descuento');
 
-    const lblTotal = document.getElementById('totalCobrado');
-    const lblUtilidad = document.getElementById('utilidad');
+const lblTotal = document.getElementById('totalCobrado');
+const lblUtilidad = document.getElementById('utilidad');
 
-    function actualizarResumen() {
+function actualizarResumen() {
 
-        const p = parseInt(precio.value) || 0;
-        const d = parseInt(descuento.value) || 0;
+    const p = parseFloat(precio.value) || 0;
+    const d = parseFloat(descuento.value) || 0;
 
-        const total = p - d;
-        const utilidad = total - costoTotal;
+    const total = Math.max(0, p - d);
 
-        lblTotal.textContent =
-            '$' + total.toLocaleString('es-CO');
+    const utilidad = total - costoRepuestos;
 
-        lblUtilidad.textContent =
-            '$' + utilidad.toLocaleString('es-CO');
+    lblTotal.textContent =
+        '$' + total.toLocaleString('es-CO');
 
-    }
+    lblUtilidad.textContent =
+        '$' + utilidad.toLocaleString('es-CO');
+}
 
-    precio.addEventListener('input', actualizarResumen);
-    descuento.addEventListener('input', actualizarResumen);
+precio.addEventListener('input', actualizarResumen);
+descuento.addEventListener('input', actualizarResumen);
 
-    actualizarResumen();
+actualizarResumen();
 </script>
 
 <!-- Cargar Bootstrap JS y Popper.js desde CDN -->
