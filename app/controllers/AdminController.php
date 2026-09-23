@@ -42,6 +42,11 @@ class AdminController
 
         $stats = $this->dashboardModel->getStats();
 
+        echo '<pre>';
+        print_r($stats);
+        echo '</pre>';
+        exit;
+
         require __DIR__ . '/../views/layouts/header.php';
         require __DIR__ . '/../views/admin/dashboard.php';
         require __DIR__ . '/../views/layouts/footer.php';
