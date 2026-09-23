@@ -120,19 +120,243 @@
 
 </div>
 
-<!-- =========================================================
-     RESUMEN FINANCIERO
-========================================================== -->
-
 <h4 class="mt-5 mb-3">💰 Resumen financiero</h4>
+<!-- RESUMEN FINANCIERO
+     INGRESOS -->
 
 <div class="row g-4">
 
-    <!-- Facturación acumulada -->
+    <!-- Mano de obra -->
     <div class="col-md-4">
-        <div class="card shadow-sm border-success">
+        <div class="card shadow-sm border-primary h-100">
+            <div class="card-body">
+
+                <h6 class="text-muted">
+                    🔧 Mano de obra
+                </h6>
+
+                <h2>
+                    $<?= number_format(
+                        $stats['manoObraTotal'],
+                        0,
+                        ',',
+                        '.'
+                    ) ?>
+                </h2>
+
+                <small class="text-muted">
+                    Venta de servicios de reparación
+                </small>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Venta inventario -->
+    <div class="col-md-4">
+        <div class="card shadow-sm border-success h-100">
+            <div class="card-body">
+
+                <h6 class="text-muted">
+                    📦 Venta de inventario
+                </h6>
+
+                <h2>
+                    $<?= number_format(
+                        $stats['ventaInventarioTotal'],
+                        0,
+                        ',',
+                        '.'
+                    ) ?>
+                </h2>
+
+                <small class="text-muted">
+                    Venta de repuestos existentes en inventario
+                </small>
+
+            </div>
+        </div>
+    </div>
+
+
+    <!-- Venta compras directas -->
+    <div class="col-md-4">
+        <div class="card shadow-sm border-success h-100">
+            <div class="card-body">
+
+                <h6 class="text-muted">
+                    🛒 Venta compras directas
+                </h6>
+
+                <h2>
+                    $<?= number_format(
+                        $stats['ventaComprasDirectasTotal'],
+                        0,
+                        ',',
+                        '.'
+                    ) ?>
+                </h2>
+
+                <small class="text-muted">
+                    Repuestos comprados específicamente para casos
+                </small>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     MÁRGENES / GANANCIAS
+========================================================== -->
+
+<h5 class="mt-5 mb-3">📈 Ganancia por origen</h5>
+
+<div class="row g-4">
+
+    <!-- Ganancia inventario -->
+    <div class="col-md-6">
+
+        <div class="card shadow-sm border-info h-100">
+
+            <div class="card-body">
+
+                <h5>📦 Inventario</h5>
+
+                <hr>
+
+                <div class="d-flex justify-content-between">
+                    <span>Venta</span>
+
+                    <strong>
+                        $<?= number_format(
+                            $stats['ventaInventarioTotal'],
+                            0,
+                            ',',
+                            '.'
+                        ) ?>
+                    </strong>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <span>Costo</span>
+
+                    <strong>
+                        $<?= number_format(
+                            $stats['costoInventarioTotal'],
+                            0,
+                            ',',
+                            '.'
+                        ) ?>
+                    </strong>
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between">
+
+                    <strong>Ganancia</strong>
+
+                    <strong>
+                        $<?= number_format(
+                            $stats['gananciaInventarioTotal'],
+                            0,
+                            ',',
+                            '.'
+                        ) ?>
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+    <!-- Ganancia compras directas -->
+    <div class="col-md-6">
+
+        <div class="card shadow-sm border-info h-100">
+
+            <div class="card-body">
+
+                <h5>🛒 Compras directas</h5>
+
+                <hr>
+
+                <div class="d-flex justify-content-between">
+                    <span>Venta</span>
+
+                    <strong>
+                        $<?= number_format(
+                            $stats['ventaComprasDirectasTotal'],
+                            0,
+                            ',',
+                            '.'
+                        ) ?>
+                    </strong>
+                </div>
+
+                <div class="d-flex justify-content-between">
+                    <span>Costo</span>
+
+                    <strong>
+                        $<?= number_format(
+                            $stats['costoComprasDirectasTotal'],
+                            0,
+                            ',',
+                            '.'
+                        ) ?>
+                    </strong>
+                </div>
+
+                <hr>
+
+                <div class="d-flex justify-content-between">
+
+                    <strong>Ganancia</strong>
+
+                    <strong>
+                        $<?= number_format(
+                            $stats['gananciaComprasDirectasTotal'],
+                            0,
+                            ',',
+                            '.'
+                        ) ?>
+                    </strong>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- =========================================================
+     TOTALES
+========================================================== -->
+
+<h5 class="mt-5 mb-3">📊 Totales generales</h5>
+
+<div class="row g-4">
+
+    <!-- Facturación -->
+    <div class="col-md-4">
+
+        <div class="card shadow-sm border-success h-100">
+
             <div class="card-body text-center">
-                <h6>💵 Facturación acumulada</h6>
+
+                <h6>💵 Facturación total</h6>
 
                 <h2>
                     $<?= number_format(
@@ -142,16 +366,22 @@
                         '.'
                     ) ?>
                 </h2>
+
             </div>
+
         </div>
+
     </div>
 
 
-    <!-- Costos acumulados -->
+    <!-- Costo repuestos -->
     <div class="col-md-4">
-        <div class="card shadow-sm border-danger">
+
+        <div class="card shadow-sm border-danger h-100">
+
             <div class="card-body text-center">
-                <h6>📦 Costo de repuestos</h6>
+
+                <h6>📦 Costo total de repuestos</h6>
 
                 <h2>
                     $<?= number_format(
@@ -161,16 +391,22 @@
                         '.'
                     ) ?>
                 </h2>
+
             </div>
+
         </div>
+
     </div>
 
 
-    <!-- Utilidad acumulada -->
+    <!-- Utilidad -->
     <div class="col-md-4">
-        <div class="card shadow-sm border-primary">
+
+        <div class="card shadow-sm border-primary h-100">
+
             <div class="card-body text-center">
-                <h6>📈 Utilidad acumulada</h6>
+
+                <h6>📈 Utilidad calculada</h6>
 
                 <h2>
                     $<?= number_format(
@@ -180,65 +416,11 @@
                         '.'
                     ) ?>
                 </h2>
+
             </div>
+
         </div>
-    </div>
 
-
-    <!-- Facturación del mes -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-success">
-            <div class="card-body text-center">
-                <h6>📅 Facturación este mes</h6>
-
-                <h2>
-                    $<?= number_format(
-                        $stats['facturacionMes'],
-                        0,
-                        ',',
-                        '.'
-                    ) ?>
-                </h2>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Costos del mes -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-danger">
-            <div class="card-body text-center">
-                <h6>📦 Costos este mes</h6>
-
-                <h2>
-                    $<?= number_format(
-                        $stats['costoRepuestosMes'],
-                        0,
-                        ',',
-                        '.'
-                    ) ?>
-                </h2>
-            </div>
-        </div>
-    </div>
-
-
-    <!-- Utilidad del mes -->
-    <div class="col-md-4">
-        <div class="card shadow-sm border-primary">
-            <div class="card-body text-center">
-                <h6>📈 Utilidad este mes</h6>
-
-                <h2>
-                    $<?= number_format(
-                        $stats['utilidadMes'],
-                        0,
-                        ',',
-                        '.'
-                    ) ?>
-                </h2>
-            </div>
-        </div>
     </div>
 
 </div>

@@ -54,9 +54,9 @@ class Dashboard
     }
 
     public function getFacturacionMes(): float
-{
-    return (float)$this->db
-        ->query("
+    {
+        return (float)$this->db
+            ->query("
             SELECT COALESCE(
                 SUM(precio_cobrado - descuento),
                 0
@@ -66,25 +66,25 @@ class Dashboard
             AND YEAR(fecha_cierre) = YEAR(CURDATE())
             AND MONTH(fecha_cierre) = MONTH(CURDATE())
         ")
-        ->fetchColumn();
-}
+            ->fetchColumn();
+    }
 
     public function getCasosMes(): int
-{
-    return (int)$this->db
-        ->query("
+    {
+        return (int)$this->db
+            ->query("
             SELECT COUNT(*)
             FROM casos
             WHERE estado = 'cerrado'
             AND YEAR(fecha_cierre) = YEAR(CURDATE())
             AND MONTH(fecha_cierre) = MONTH(CURDATE())
         ")
-        ->fetchColumn();
-}
+            ->fetchColumn();
+    }
 
-public function getCostoRepuestosTotal(): float
-{
-    $stmt = $this->db->query("
+    public function getCostoRepuestosTotal(): float
+    {
+        $stmt = $this->db->query("
         SELECT COALESCE(SUM(costo), 0)
         FROM (
             SELECT
@@ -107,13 +107,13 @@ public function getCostoRepuestosTotal(): float
         ) AS costos
     ");
 
-    return (float)$stmt->fetchColumn();
-}
+        return (float)$stmt->fetchColumn();
+    }
 
 
-public function getCostoRepuestosMes(): float
-{
-    $stmt = $this->db->query("
+    public function getCostoRepuestosMes(): float
+    {
+        $stmt = $this->db->query("
         SELECT COALESCE(SUM(costo), 0)
         FROM (
             SELECT
@@ -140,14 +140,14 @@ public function getCostoRepuestosMes(): float
         ) AS costos
     ");
 
-    return (float)$stmt->fetchColumn();
-}
+        return (float)$stmt->fetchColumn();
+    }
 
 
-public function getUtilidadTotal(): float
-{
-    return (float)$this->db
-        ->query("
+    public function getUtilidadTotal(): float
+    {
+        return (float)$this->db
+            ->query("
             SELECT COALESCE(
                 SUM(utilidad),
                 0
@@ -155,14 +155,14 @@ public function getUtilidadTotal(): float
             FROM casos
             WHERE estado = 'cerrado'
         ")
-        ->fetchColumn();
-}
+            ->fetchColumn();
+    }
 
 
-public function getUtilidadMes(): float
-{
-    return (float)$this->db
-        ->query("
+    public function getUtilidadMes(): float
+    {
+        return (float)$this->db
+            ->query("
             SELECT COALESCE(
                 SUM(utilidad),
                 0
@@ -172,8 +172,8 @@ public function getUtilidadMes(): float
               AND YEAR(fecha_cierre) = YEAR(CURDATE())
               AND MONTH(fecha_cierre) = MONTH(CURDATE())
         ")
-        ->fetchColumn();
-}
+            ->fetchColumn();
+    }
 
     /*
     |--------------------------------------------------------------------------
@@ -389,7 +389,7 @@ public function getUtilidadMes(): float
             $this->getManoObraTotal()
             +
             $this->getGananciaRepuestosTotal();
-    } 
+    }
 
     public function getStats(): array
     {
@@ -404,66 +404,79 @@ public function getUtilidadMes(): float
             // =====================================================
 
             'totalFacturado' =>
-                $this->getFacturacionTotal(),
+            $this->getFacturacionTotal(),
 
             'facturacionMes' =>
-                $this->getFacturacionMes(),
+            $this->getFacturacionMes(),
 
             'manoObraTotal' =>
-                $this->getManoObraTotal(),
+            $this->getManoObraTotal(),
 
             'manoObraMes' =>
-                $this->getManoObraMes(),
+            $this->getManoObraMes(),
 
             // =====================================================
             // REPUESTOS DE INVENTARIO
             // =====================================================
 
             'ventaInventarioTotal' =>
-                $this->getVentaInventarioTotal(),
+            $this->getVentaInventarioTotal(),
 
             'costoInventarioTotal' =>
-                $this->getCostoInventarioTotal(),
+            $this->getCostoInventarioTotal(),
 
             'gananciaInventarioTotal' =>
-                $this->getGananciaInventarioTotal(),
+            $this->getGananciaInventarioTotal(),
 
             // =====================================================
             // COMPRAS DIRECTAS
             // =====================================================
 
             'ventaComprasDirectasTotal' =>
-                $this->getVentaComprasDirectasTotal(),
+            $this->getVentaComprasDirectasTotal(),
 
             'costoComprasDirectasTotal' =>
-                $this->getCostoComprasDirectasTotal(),
+            $this->getCostoComprasDirectasTotal(),
 
             'gananciaComprasDirectasTotal' =>
-                $this->getGananciaComprasDirectasTotal(),
+            $this->getGananciaComprasDirectasTotal(),
 
             // =====================================================
             // REPUESTOS EN GENERAL
             // =====================================================
 
             'ventaRepuestosTotal' =>
-                $this->getVentaRepuestosTotal(),
+            $this->getVentaRepuestosTotal(),
 
             'costoRepuestosTotalCalculado' =>
-                $this->getCostoRepuestosTotalCalculado(),
+            $this->getCostoRepuestosTotalCalculado(),
 
             'gananciaRepuestosTotal' =>
-                $this->getGananciaRepuestosTotal(),
+            $this->getGananciaRepuestosTotal(),
 
-            // =====================================================
             // UTILIDAD
-            // =====================================================
+
 
             'utilidadCalculadaTotal' =>
-                $this->getUtilidadCalculadaTotal(),
+            $this->getUtilidadCalculadaTotal(),
+
+            // Compatibilidad con la vista actual
+            'costoRepuestosTotal' =>
+            $this->getCostoRepuestosTotalCalculado(),
+
+            'utilidadTotal' =>
+            $this->getUtilidadCalculadaTotal(),
+
+            'costoRepuestosMes' =>
+            $this->getCostoRepuestosMes(),
+
+            'utilidadMes' =>
+            $this->getUtilidadMes(),
 
             // Actividad
             'casosMes' =>
-                $this->getCasosMes(),
+            $this->getCasosMes(),
+
         ];
     }
 
