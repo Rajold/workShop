@@ -1,5 +1,49 @@
 <h2 class="mb-4">📊 Panel de administración</h2>
 
+<div class="card mb-4">
+    <div class="card-body">
+        <form method="GET" action="index.php" class="row g-3 align-items-end">
+
+            <input type="hidden" name="controller" value="admin">
+            <input type="hidden" name="action" value="dashboard">
+
+            <div class="col-md-4">
+                <label for="periodo" class="form-label">
+                    Período
+                </label>
+
+                <select
+                    name="periodo"
+                    id="periodo"
+                    class="form-select"
+                    onchange="this.form.submit()"
+                >
+                    <option value="semana"
+                        <?= ($_GET['periodo'] ?? 'mes') === 'semana' ? 'selected' : '' ?>>
+                        Esta semana
+                    </option>
+
+                    <option value="mes"
+                        <?= ($_GET['periodo'] ?? 'mes') === 'mes' ? 'selected' : '' ?>>
+                        Este mes
+                    </option>
+
+                    <option value="anio"
+                        <?= ($_GET['periodo'] ?? 'mes') === 'anio' ? 'selected' : '' ?>>
+                        Este año
+                    </option>
+
+                    <option value="rango"
+                        <?= ($_GET['periodo'] ?? 'mes') === 'rango' ? 'selected' : '' ?>>
+                        Rango personalizado
+                    </option>
+                </select>
+            </div>
+
+        </form>
+    </div>
+</div>
+
 <div class="row g-4">
 
     <div class="col-md-3">

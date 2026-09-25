@@ -27,25 +27,20 @@ class AdminController
         }
     }
 
-    public function dashboard()
-    {
-        $this->ensureAdmin();
-        $users = $this->userModel->findAll();
+public function dashboard()
+{
+    $this->ensureAdmin();
 
-        /*
-|--------------------------------------------------------------------------
-| Estadísticas
-|--------------------------------------------------------------------------
-*/
+    $users = $this->userModel->findAll();
 
-        $users = $this->userModel->findAll();
+    $periodo = $_GET['periodo'] ?? 'mes';
 
-        $stats = $this->dashboardModel->getStats();
+    $stats = $this->dashboardModel->getStats($periodo);
 
-        require __DIR__ . '/../views/layouts/header.php';
-        require __DIR__ . '/../views/admin/dashboard.php';
-        require __DIR__ . '/../views/layouts/footer.php';
-    }
+    require __DIR__ . '/../views/layouts/header.php';
+    require __DIR__ . '/../views/admin/dashboard.php';
+    require __DIR__ . '/../views/layouts/footer.php';
+}
 
     public function users()
     {

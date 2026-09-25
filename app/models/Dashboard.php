@@ -198,6 +198,27 @@ class Dashboard
         return (float)$stmt->fetchColumn();
     }
 
+    public function getManoObraPeriodo(string $inicio, string $fin): float
+{
+    $stmt = $this->db->prepare("
+        SELECT COALESCE(SUM(a.valor), 0)
+        FROM avances a
+        INNER JOIN casos c
+            ON c.id = a.caso_id
+        WHERE c.estado = 'cerrado'
+          AND a.tipo = 'Mano de obra'
+          AND c.fecha_cierre >= :inicio
+          AND c.fecha_cierre < DATE_ADD(:fin, INTERVAL 1 DAY)
+    ");
+
+    $stmt->execute([
+        ':inicio' => $inicio,
+        ':fin'    => $fin
+    ]);
+
+    return (float)$stmt->fetchColumn();
+}
+
 
     /**
      * Venta de mano de obra del mes actual.
@@ -391,8 +412,55 @@ class Dashboard
             $this->getGananciaRepuestosTotal();
     }
 
-    public function getStats(): array
+    private function getPeriodoFechas(string $periodo): array
     {
+        switch ($periodo) {
+
+            case 'semana':
+                return [
+                    'inicio' => date('Y-m-d', strtotime('monday this week')),
+                    'fin'    => date('Y-m-d', strtotime('sunday this week'))
+                ];
+
+            case 'anio':
+                return [
+                    'inicio' => date('Y-01-01'),
+                    'fin'    => date('Y-12-31')
+                ];
+
+            case 'mes':
+            default:
+                return [
+                    'inicio' => date('Y-m-01'),
+                    'fin'    => date('Y-m-t')
+                ];
+        }
+    }
+
+private function getFacturacionPeriodo(string $inicio, string $fin): float
+{
+    $stmt = $this->db->prepare("
+        SELECT COALESCE(SUM(precio_cobrado - descuento), 0)
+        FROM casos
+        WHERE estado = 'cerrado'
+          AND fecha_cierre >= :inicio
+          AND fecha_cierre < DATE_ADD(:fin, INTERVAL 1 DAY)
+    ");
+
+    $stmt->execute([
+        ':inicio' => $inicio,
+        ':fin'    => $fin
+    ]);
+
+    return (float)$stmt->fetchColumn();
+}
+
+    public function getStats(string $periodo = 'mes'): array
+    {
+        $fechas = $this->getPeriodoFechas($periodo);
+
+$inicio = $fechas['inicio'];
+$fin = $fechas['fin'];
         return [
             'totalVehiculos' => $this->getTotalVehiculos(),
             'casosAbiertos' => $this->getCasosAbiertos(),
@@ -403,14 +471,15 @@ class Dashboard
             // INGRESOS
             // =====================================================
 
-            'totalFacturado' =>
-            $this->getFacturacionTotal(),
+            'totalFacturado' => 
+            $this->getFacturacionPeriodo($inicio, $fin),
 
             'facturacionMes' =>
             $this->getFacturacionMes(),
 
-            'manoObraTotal' =>
-            $this->getManoObraTotal(),
+            
+            'manoObraTotal' => 
+            $this->getManoObraPeriodo($inicio, $fin),
 
             'manoObraMes' =>
             $this->getManoObraMes(),
