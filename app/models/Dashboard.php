@@ -199,8 +199,8 @@ class Dashboard
     }
 
     public function getManoObraPeriodo(string $inicio, string $fin): float
-{
-    $stmt = $this->db->prepare("
+    {
+        $stmt = $this->db->prepare("
         SELECT COALESCE(SUM(a.valor), 0)
         FROM avances a
         INNER JOIN casos c
@@ -211,13 +211,13 @@ class Dashboard
           AND c.fecha_cierre < DATE_ADD(:fin, INTERVAL 1 DAY)
     ");
 
-    $stmt->execute([
-        ':inicio' => $inicio,
-        ':fin'    => $fin
-    ]);
+        $stmt->execute([
+            ':inicio' => $inicio,
+            ':fin'    => $fin
+        ]);
 
-    return (float)$stmt->fetchColumn();
-}
+        return (float)$stmt->fetchColumn();
+    }
 
 
     /**
@@ -288,6 +288,55 @@ class Dashboard
             $this->getCostoInventarioTotal();
     }
 
+    public function getVentaInventarioPeriodo(string $inicio, string $fin): float
+    {
+        $stmt = $this->db->prepare("
+        SELECT COALESCE(SUM(cr.subtotal), 0)
+        FROM caso_repuestos cr
+        INNER JOIN casos c
+            ON c.id = cr.caso_id
+        WHERE c.estado = 'cerrado'
+          AND c.fecha_cierre >= :inicio
+          AND c.fecha_cierre < DATE_ADD(:fin, INTERVAL 1 DAY)
+    ");
+
+        $stmt->execute([
+            ':inicio' => $inicio,
+            ':fin'    => $fin
+        ]);
+
+        return (float)$stmt->fetchColumn();
+    }
+
+    public function getCostoInventarioPeriodo(string $inicio, string $fin): float
+    {
+        $stmt = $this->db->prepare("
+        SELECT COALESCE(
+            SUM(cr.cantidad * cr.costo_unitario),
+            0
+        )
+        FROM caso_repuestos cr
+        INNER JOIN casos c
+            ON c.id = cr.caso_id
+        WHERE c.estado = 'cerrado'
+          AND c.fecha_cierre >= :inicio
+          AND c.fecha_cierre < DATE_ADD(:fin, INTERVAL 1 DAY)
+    ");
+
+        $stmt->execute([
+            ':inicio' => $inicio,
+            ':fin'    => $fin
+        ]);
+
+        return (float)$stmt->fetchColumn();
+    }
+
+    public function getGananciaInventarioPeriodo(string $inicio, string $fin): float
+    {
+        return $this->getVentaInventarioPeriodo($inicio, $fin)
+            - $this->getCostoInventarioPeriodo($inicio, $fin);
+    }
+
 
     /**
      * Venta de compras directas realizadas para casos.
@@ -335,6 +384,57 @@ class Dashboard
             $this->getVentaComprasDirectasTotal()
             -
             $this->getCostoComprasDirectasTotal();
+    }
+
+    public function getVentaComprasDirectasPeriodo(string $inicio, string $fin): float
+    {
+        $stmt = $this->db->prepare("
+        SELECT COALESCE(SUM(cc.subtotal), 0)
+        FROM compras_caso cc
+        INNER JOIN casos c
+            ON c.id = cc.caso_id
+        WHERE c.estado = 'cerrado'
+          AND c.fecha_cierre >= :inicio
+          AND c.fecha_cierre < DATE_ADD(:fin, INTERVAL 1 DAY)
+    ");
+
+        $stmt->execute([
+            ':inicio' => $inicio,
+            ':fin'    => $fin
+        ]);
+
+        return (float)$stmt->fetchColumn();
+    }
+
+    public function getCostoComprasDirectasPeriodo(string $inicio, string $fin): float
+    {
+        $stmt = $this->db->prepare("
+        SELECT COALESCE(
+            SUM(cc.cantidad * cc.costo_unitario),
+            0
+        )
+        FROM compras_caso cc
+        INNER JOIN casos c
+            ON c.id = cc.caso_id
+        WHERE c.estado = 'cerrado'
+          AND c.fecha_cierre >= :inicio
+          AND c.fecha_cierre < DATE_ADD(:fin, INTERVAL 1 DAY)
+    ");
+
+        $stmt->execute([
+            ':inicio' => $inicio,
+            ':fin'    => $fin
+        ]);
+
+        return (float)$stmt->fetchColumn();
+    }
+
+    public function getGananciaComprasDirectasPeriodo(
+        string $inicio,
+        string $fin
+    ): float {
+        return $this->getVentaComprasDirectasPeriodo($inicio, $fin)
+            - $this->getCostoComprasDirectasPeriodo($inicio, $fin);
     }
 
 
@@ -437,9 +537,9 @@ class Dashboard
         }
     }
 
-private function getFacturacionPeriodo(string $inicio, string $fin): float
-{
-    $stmt = $this->db->prepare("
+    private function getFacturacionPeriodo(string $inicio, string $fin): float
+    {
+        $stmt = $this->db->prepare("
         SELECT COALESCE(SUM(precio_cobrado - descuento), 0)
         FROM casos
         WHERE estado = 'cerrado'
@@ -447,72 +547,64 @@ private function getFacturacionPeriodo(string $inicio, string $fin): float
           AND fecha_cierre < DATE_ADD(:fin, INTERVAL 1 DAY)
     ");
 
-    $stmt->execute([
-        ':inicio' => $inicio,
-        ':fin'    => $fin
-    ]);
+        $stmt->execute([
+            ':inicio' => $inicio,
+            ':fin'    => $fin
+        ]);
 
-    return (float)$stmt->fetchColumn();
-}
+        return (float)$stmt->fetchColumn();
+    }
 
     public function getStats(string $periodo = 'mes'): array
     {
         $fechas = $this->getPeriodoFechas($periodo);
 
-$inicio = $fechas['inicio'];
-$fin = $fechas['fin'];
+        $inicio = $fechas['inicio'];
+        $fin = $fechas['fin'];
         return [
             'totalVehiculos' => $this->getTotalVehiculos(),
             'casosAbiertos' => $this->getCasosAbiertos(),
             'casosCerrados' => $this->getCasosCerrados(),
             'totalMecanicos' => $this->getTotalMecanicos(),
 
-            // =====================================================
             // INGRESOS
-            // =====================================================
 
-            'totalFacturado' => 
+            'totalFacturado' =>
             $this->getFacturacionPeriodo($inicio, $fin),
 
             'facturacionMes' =>
             $this->getFacturacionMes(),
 
-            
-            'manoObraTotal' => 
+
+            'manoObraTotal' =>
             $this->getManoObraPeriodo($inicio, $fin),
 
             'manoObraMes' =>
             $this->getManoObraMes(),
 
-            // =====================================================
             // REPUESTOS DE INVENTARIO
-            // =====================================================
 
             'ventaInventarioTotal' =>
-            $this->getVentaInventarioTotal(),
+            $this->getVentaInventarioPeriodo($inicio, $fin),
 
             'costoInventarioTotal' =>
-            $this->getCostoInventarioTotal(),
+            $this->getCostoInventarioPeriodo($inicio, $fin),
 
             'gananciaInventarioTotal' =>
-            $this->getGananciaInventarioTotal(),
+            $this->getGananciaInventarioPeriodo($inicio, $fin),
 
-            // =====================================================
             // COMPRAS DIRECTAS
-            // =====================================================
 
             'ventaComprasDirectasTotal' =>
-            $this->getVentaComprasDirectasTotal(),
+            $this->getVentaComprasDirectasPeriodo($inicio, $fin),
 
             'costoComprasDirectasTotal' =>
-            $this->getCostoComprasDirectasTotal(),
+            $this->getCostoComprasDirectasPeriodo($inicio, $fin),
 
             'gananciaComprasDirectasTotal' =>
-            $this->getGananciaComprasDirectasTotal(),
+            $this->getGananciaComprasDirectasPeriodo($inicio, $fin),
 
-            // =====================================================
             // REPUESTOS EN GENERAL
-            // =====================================================
 
             'ventaRepuestosTotal' =>
             $this->getVentaRepuestosTotal(),

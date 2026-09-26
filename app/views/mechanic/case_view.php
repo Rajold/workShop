@@ -834,7 +834,11 @@
             <?php unset($_SESSION['error_message']); ?>
         <?php endif; ?>
 
-        <?php if (!empty($casePurchases)): ?>
+       
+
+        <?php require __DIR__ . '/partials/_financial_summary.php'; ?>
+
+         <?php if (!empty($casePurchases)): ?>
 
             <div class="card shadow-sm mt-4">
 
@@ -932,9 +936,9 @@
 
         <?php endif; ?>
 
-        <?php require __DIR__ . '/partials/_financial_summary.php'; ?>
-
         <?php require __DIR__ . '/partials/_advance_history.php'; ?>
+
+        
 
         <div class="modal fade" id="modalEditarAvance" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
