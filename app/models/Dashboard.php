@@ -555,6 +555,57 @@ class Dashboard
         return (float)$stmt->fetchColumn();
     }
 
+    public function getCasosPeriodo(string $inicio, string $fin): int
+{
+    $stmt = $this->db->prepare("
+        SELECT COUNT(*)
+        FROM casos
+        WHERE estado = 'cerrado'
+          AND fecha_cierre >= :inicio
+          AND fecha_cierre < DATE_ADD(:fin, INTERVAL 1 DAY)
+    ");
+
+    $stmt->execute([
+        ':inicio' => $inicio,
+        ':fin'    => $fin
+    ]);
+
+    return (int)$stmt->fetchColumn();
+}
+
+    public function getDescuentosPeriodo(string $inicio, string $fin): float
+    {
+        $stmt = $this->db->prepare("
+        SELECT COALESCE(SUM(descuento), 0)
+        FROM casos
+        WHERE estado = 'cerrado'
+          AND fecha_cierre >= :inicio
+          AND fecha_cierre < DATE_ADD(:fin, INTERVAL 1 DAY)
+    ");
+
+        $stmt->execute([
+            ':inicio' => $inicio,
+            ':fin'    => $fin
+        ]);
+
+        return (float)$stmt->fetchColumn();
+    }
+
+    public function getUtilidadBrutaPeriodo(string $inicio, string $fin): float
+    {
+        $facturacion = $this->getFacturacionPeriodo($inicio, $fin);
+
+        $costoInventario =
+            $this->getCostoInventarioPeriodo($inicio, $fin);
+
+        $costoComprasDirectas =
+            $this->getCostoComprasDirectasPeriodo($inicio, $fin);
+
+        return $facturacion
+            - $costoInventario
+            - $costoComprasDirectas;
+    }
+
     public function getStats(string $periodo = 'mes'): array
     {
         $fechas = $this->getPeriodoFechas($periodo);
@@ -566,14 +617,16 @@ class Dashboard
             'casosAbiertos' => $this->getCasosAbiertos(),
             'casosCerrados' => $this->getCasosCerrados(),
             'totalMecanicos' => $this->getTotalMecanicos(),
+            'descuentos' => $this->getDescuentosPeriodo($inicio, $fin),
+            'utilidadBruta' => $this->getUtilidadBrutaPeriodo($inicio, $fin),
 
             // INGRESOS
 
             'totalFacturado' =>
             $this->getFacturacionPeriodo($inicio, $fin),
 
-            'facturacionMes' =>
-            $this->getFacturacionMes(),
+            'facturacionMes' => 
+            $this->getFacturacionPeriodo($inicio, $fin),
 
 
             'manoObraTotal' =>
@@ -623,10 +676,11 @@ class Dashboard
 
             // Compatibilidad con la vista actual
             'costoRepuestosTotal' =>
-            $this->getCostoRepuestosTotalCalculado(),
+            $this->getCostoInventarioPeriodo($inicio, $fin)
+                + $this->getCostoComprasDirectasPeriodo($inicio, $fin),
 
             'utilidadTotal' =>
-            $this->getUtilidadCalculadaTotal(),
+            $this->getUtilidadBrutaPeriodo($inicio, $fin),
 
             'costoRepuestosMes' =>
             $this->getCostoRepuestosMes(),
@@ -634,9 +688,8 @@ class Dashboard
             'utilidadMes' =>
             $this->getUtilidadMes(),
 
-            // Actividad
-            'casosMes' =>
-            $this->getCasosMes(),
+            'casosMes' => 
+            $this->getCasosPeriodo($inicio, $fin),
 
         ];
     }
