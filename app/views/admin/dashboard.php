@@ -1,12 +1,15 @@
 <h2 class="mb-4">📊 Panel de administración</h2>
 
+
 <div class="card mb-4">
     <div class="card-body">
+
         <form method="GET" action="index.php" class="row g-3 align-items-end">
 
             <input type="hidden" name="controller" value="admin">
             <input type="hidden" name="action" value="dashboard">
 
+            <!-- Período -->
             <div class="col-md-4">
                 <label for="periodo" class="form-label">
                     Período
@@ -16,7 +19,6 @@
                     name="periodo"
                     id="periodo"
                     class="form-select"
-                    onchange="this.form.submit()"
                 >
                     <option value="semana"
                         <?= ($_GET['periodo'] ?? 'mes') === 'semana' ? 'selected' : '' ?>>
@@ -40,9 +42,105 @@
                 </select>
             </div>
 
+            <!-- Fecha inicial -->
+            <div
+                class="col-md-3"
+                id="contenedorFechaDesde"
+                style="display: none;"
+            >
+                <label for="fecha_desde" class="form-label">
+                    Desde
+                </label>
+
+                <input
+                    type="date"
+                    name="fecha_desde"
+                    id="fecha_desde"
+                    class="form-control"
+                    value="<?= htmlspecialchars($_GET['fecha_desde'] ?? '') ?>"
+                >
+            </div>
+
+            <!-- Fecha final -->
+            <div
+                class="col-md-3"
+                id="contenedorFechaHasta"
+                style="display: none;"
+            >
+                <label for="fecha_hasta" class="form-label">
+                    Hasta
+                </label>
+
+                <input
+                    type="date"
+                    name="fecha_hasta"
+                    id="fecha_hasta"
+                    class="form-control"
+                    value="<?= htmlspecialchars($_GET['fecha_hasta'] ?? '') ?>"
+                >
+            </div>
+
+            <!-- Aplicar -->
+            <div
+                class="col-md-2"
+                id="contenedorAplicar"
+                style="display: none;"
+            >
+                <button
+                    type="submit"
+                    class="btn btn-primary"
+                >
+                    Aplicar
+                </button>
+            </div>
+
         </form>
+
     </div>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+
+    const periodo = document.getElementById('periodo');
+
+    const fechaDesde =
+        document.getElementById('contenedorFechaDesde');
+
+    const fechaHasta =
+        document.getElementById('contenedorFechaHasta');
+
+    const aplicar =
+        document.getElementById('contenedorAplicar');
+
+    function actualizarPeriodo() {
+
+        if (periodo.value === 'rango') {
+
+            fechaDesde.style.display = '';
+            fechaHasta.style.display = '';
+            aplicar.style.display = '';
+
+        } else {
+
+            fechaDesde.style.display = 'none';
+            fechaHasta.style.display = 'none';
+            aplicar.style.display = '';
+
+            periodo.form.submit();
+        }
+    }
+
+    periodo.addEventListener('change', actualizarPeriodo);
+
+    if (periodo.value === 'rango') {
+        fechaDesde.style.display = '';
+        fechaHasta.style.display = '';
+        aplicar.style.display = '';
+    }
+
+});
+</script>
 
 <div class="row g-4">
 
@@ -181,11 +279,11 @@
 
                 <h2>
                     $<?= number_format(
-                        $stats['manoObraTotal'],
-                        0,
-                        ',',
-                        '.'
-                    ) ?>
+                            $stats['manoObraTotal'],
+                            0,
+                            ',',
+                            '.'
+                        ) ?>
                 </h2>
 
                 <small class="text-muted">
@@ -208,11 +306,11 @@
 
                 <h2>
                     $<?= number_format(
-                        $stats['ventaInventarioTotal'],
-                        0,
-                        ',',
-                        '.'
-                    ) ?>
+                            $stats['ventaInventarioTotal'],
+                            0,
+                            ',',
+                            '.'
+                        ) ?>
                 </h2>
 
                 <small class="text-muted">
@@ -235,11 +333,11 @@
 
                 <h2>
                     $<?= number_format(
-                        $stats['ventaComprasDirectasTotal'],
-                        0,
-                        ',',
-                        '.'
-                    ) ?>
+                            $stats['ventaComprasDirectasTotal'],
+                            0,
+                            ',',
+                            '.'
+                        ) ?>
                 </h2>
 
                 <small class="text-muted">
@@ -277,11 +375,11 @@
 
                     <strong>
                         $<?= number_format(
-                            $stats['ventaInventarioTotal'],
-                            0,
-                            ',',
-                            '.'
-                        ) ?>
+                                $stats['ventaInventarioTotal'],
+                                0,
+                                ',',
+                                '.'
+                            ) ?>
                     </strong>
                 </div>
 
@@ -290,11 +388,11 @@
 
                     <strong>
                         $<?= number_format(
-                            $stats['costoInventarioTotal'],
-                            0,
-                            ',',
-                            '.'
-                        ) ?>
+                                $stats['costoInventarioTotal'],
+                                0,
+                                ',',
+                                '.'
+                            ) ?>
                     </strong>
                 </div>
 
@@ -306,11 +404,11 @@
 
                     <strong>
                         $<?= number_format(
-                            $stats['gananciaInventarioTotal'],
-                            0,
-                            ',',
-                            '.'
-                        ) ?>
+                                $stats['gananciaInventarioTotal'],
+                                0,
+                                ',',
+                                '.'
+                            ) ?>
                     </strong>
 
                 </div>
@@ -338,11 +436,11 @@
 
                     <strong>
                         $<?= number_format(
-                            $stats['ventaComprasDirectasTotal'],
-                            0,
-                            ',',
-                            '.'
-                        ) ?>
+                                $stats['ventaComprasDirectasTotal'],
+                                0,
+                                ',',
+                                '.'
+                            ) ?>
                     </strong>
                 </div>
 
@@ -351,11 +449,11 @@
 
                     <strong>
                         $<?= number_format(
-                            $stats['costoComprasDirectasTotal'],
-                            0,
-                            ',',
-                            '.'
-                        ) ?>
+                                $stats['costoComprasDirectasTotal'],
+                                0,
+                                ',',
+                                '.'
+                            ) ?>
                     </strong>
                 </div>
 
@@ -367,11 +465,11 @@
 
                     <strong>
                         $<?= number_format(
-                            $stats['gananciaComprasDirectasTotal'],
-                            0,
-                            ',',
-                            '.'
-                        ) ?>
+                                $stats['gananciaComprasDirectasTotal'],
+                                0,
+                                ',',
+                                '.'
+                            ) ?>
                     </strong>
 
                 </div>
@@ -404,11 +502,11 @@
 
                 <h2>
                     $<?= number_format(
-                        $stats['totalFacturado'],
-                        0,
-                        ',',
-                        '.'
-                    ) ?>
+                            $stats['totalFacturado'],
+                            0,
+                            ',',
+                            '.'
+                        ) ?>
                 </h2>
 
             </div>
@@ -429,11 +527,11 @@
 
                 <h2>
                     $<?= number_format(
-                        $stats['costoRepuestosTotal'],
-                        0,
-                        ',',
-                        '.'
-                    ) ?>
+                            $stats['costoRepuestosTotal'],
+                            0,
+                            ',',
+                            '.'
+                        ) ?>
                 </h2>
 
             </div>
@@ -454,11 +552,11 @@
 
                 <h2>
                     $<?= number_format(
-                        $stats['utilidadTotal'],
-                        0,
-                        ',',
-                        '.'
-                    ) ?>
+                            $stats['utilidadTotal'],
+                            0,
+                            ',',
+                            '.'
+                        ) ?>
                 </h2>
 
             </div>

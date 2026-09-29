@@ -35,7 +35,14 @@ public function dashboard()
 
     $periodo = $_GET['periodo'] ?? 'mes';
 
-    $stats = $this->dashboardModel->getStats($periodo);
+    $fechaDesde = $_GET['fecha_desde'] ?? null;
+    $fechaHasta = $_GET['fecha_hasta'] ?? null;
+
+    $stats = $this->dashboardModel->getStats(
+        $periodo,
+        $fechaDesde,
+        $fechaHasta
+    );
 
     require __DIR__ . '/../views/layouts/header.php';
     require __DIR__ . '/../views/admin/dashboard.php';

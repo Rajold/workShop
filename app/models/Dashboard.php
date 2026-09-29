@@ -512,27 +512,55 @@ class Dashboard
             $this->getGananciaRepuestosTotal();
     }
 
-    private function getPeriodoFechas(string $periodo): array
-    {
+    private function getPeriodoFechas(
+        string $periodo,
+        ?string $fechaDesde = null,
+        ?string $fechaHasta = null
+    ): array {
         switch ($periodo) {
 
             case 'semana':
                 return [
-                    'inicio' => date('Y-m-d', strtotime('monday this week')),
-                    'fin'    => date('Y-m-d', strtotime('sunday this week'))
+                    'inicio' => date(
+                        'Y-m-d',
+                        strtotime('monday this week')
+                    ),
+                    'fin' => date(
+                        'Y-m-d',
+                        strtotime('sunday this week')
+                    )
                 ];
 
             case 'anio':
                 return [
                     'inicio' => date('Y-01-01'),
-                    'fin'    => date('Y-12-31')
+                    'fin' => date('Y-12-31')
+                ];
+
+            case 'rango':
+
+                if (
+                    !empty($fechaDesde) &&
+                    !empty($fechaHasta)
+                ) {
+                    return [
+                        'inicio' => $fechaDesde,
+                        'fin' => $fechaHasta
+                    ];
+                }
+
+                // Si el rango está incompleto,
+                // usamos el mes actual como respaldo.
+                return [
+                    'inicio' => date('Y-m-01'),
+                    'fin' => date('Y-m-t')
                 ];
 
             case 'mes':
             default:
                 return [
                     'inicio' => date('Y-m-01'),
-                    'fin'    => date('Y-m-t')
+                    'fin' => date('Y-m-t')
                 ];
         }
     }
@@ -556,8 +584,8 @@ class Dashboard
     }
 
     public function getCasosPeriodo(string $inicio, string $fin): int
-{
-    $stmt = $this->db->prepare("
+    {
+        $stmt = $this->db->prepare("
         SELECT COUNT(*)
         FROM casos
         WHERE estado = 'cerrado'
@@ -565,13 +593,13 @@ class Dashboard
           AND fecha_cierre < DATE_ADD(:fin, INTERVAL 1 DAY)
     ");
 
-    $stmt->execute([
-        ':inicio' => $inicio,
-        ':fin'    => $fin
-    ]);
+        $stmt->execute([
+            ':inicio' => $inicio,
+            ':fin'    => $fin
+        ]);
 
-    return (int)$stmt->fetchColumn();
-}
+        return (int)$stmt->fetchColumn();
+    }
 
     public function getDescuentosPeriodo(string $inicio, string $fin): float
     {
@@ -606,12 +634,19 @@ class Dashboard
             - $costoComprasDirectas;
     }
 
-    public function getStats(string $periodo = 'mes'): array
-    {
-        $fechas = $this->getPeriodoFechas($periodo);
+    public function getStats(
+        string $periodo = 'mes',
+        ?string $fechaDesde = null,
+        ?string $fechaHasta = null
+    ): array {
+       $fechas = $this->getPeriodoFechas(
+    $periodo,
+    $fechaDesde,
+    $fechaHasta
+);
 
-        $inicio = $fechas['inicio'];
-        $fin = $fechas['fin'];
+$inicio = $fechas['inicio'];
+$fin = $fechas['fin'];
         return [
             'totalVehiculos' => $this->getTotalVehiculos(),
             'casosAbiertos' => $this->getCasosAbiertos(),
@@ -625,7 +660,7 @@ class Dashboard
             'totalFacturado' =>
             $this->getFacturacionPeriodo($inicio, $fin),
 
-            'facturacionMes' => 
+            'facturacionMes' =>
             $this->getFacturacionPeriodo($inicio, $fin),
 
 
@@ -688,7 +723,7 @@ class Dashboard
             'utilidadMes' =>
             $this->getUtilidadMes(),
 
-            'casosMes' => 
+            'casosMes' =>
             $this->getCasosPeriodo($inicio, $fin),
 
         ];
