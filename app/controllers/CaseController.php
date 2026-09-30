@@ -545,10 +545,15 @@ require_once __DIR__ . '/../models/CasePart.php';
 
 $casePartModel = new CasePart($this->pdo);
 
+require_once __DIR__ . '/../models/CasePurchase.php';
+
+$casePurchaseModel = new CasePurchase($this->pdo);
+
 $caso = $this->caseModel->findById($caseId);
 $avances = $avanceModel->getByCase($caseId);
 $totales = $avanceModel->getTotalesPorCaso($caseId);
 $caseParts = $casePartModel->findByCase($caseId);
+$casePurchases = $casePurchaseModel->findByCase($caseId);
 
 $pdf = new CasePdf();
 
