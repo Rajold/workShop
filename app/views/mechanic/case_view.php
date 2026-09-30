@@ -625,7 +625,61 @@
                     </form>
                 <?php endif; ?>
             </div>
+<!-- Total comercial del caso abierto -->
+<div class="card border-primary shadow-sm mt-4 mb-3">
 
+    <div class="card-body">
+
+        <div class="d-flex justify-content-between mb-2">
+            <span>
+                👨‍🔧 Mano de obra
+            </span>
+
+            <strong>
+                $<?= number_format(
+                    (float)$financial['mano_obra'],
+                    0,
+                    ',',
+                    '.'
+                ) ?>
+            </strong>
+        </div>
+
+        <div class="d-flex justify-content-between mb-3">
+            <span>
+                🔩 Repuestos
+            </span>
+
+            <strong>
+                $<?= number_format(
+                    (float)$financial['total_repuestos_venta'],
+                    0,
+                    ',',
+                    '.'
+                ) ?>
+            </strong>
+        </div>
+
+        <hr>
+
+        <div class="d-flex justify-content-between align-items-center">
+            <strong>
+                💰 Total del servicio
+            </strong>
+
+            <strong class="fs-4 text-primary">
+                $<?= number_format(
+                    (float)$financial['total_venta_teorica'],
+                    0,
+                    ',',
+                    '.'
+                ) ?>
+            </strong>
+        </div>
+
+    </div>
+
+</div>
             <!-- Botón para cerrar caso -->
             <button
                 type="button"
@@ -654,58 +708,24 @@
 
                     <div class="row mb-4">
 
-                        <div class="col-md-4">
-
-                            <div class="card border-primary shadow-sm h-100">
-
-                                <div class="card-body text-center">
-
-                                    <h6 class="text-muted mb-2">
-                                        👨‍🔧 Mano de obra
-                                    </h6>
-
-                                    <h2 class="text-primary mb-0">
-                                        $<?= number_format($totales['mano_obra'], 0, ',', '.') ?>
-                                    </h2>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="col-md-4">
-
-                            <div class="card border-warning shadow-sm h-100">
-
-                                <div class="card-body text-center">
-
-                                    <h6 class="text-muted mb-2">
-                                        🔩 Repuestos
-                                    </h6>
-
-                                    <h2 class="text-warning mb-0">
-                                        $<?= number_format($totales['repuestos'], 0, ',', '.') ?>
-                                    </h2>
-
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        <div class="col-md-4">
+                        <div class="col-md-6 mx-auto">
 
                             <div class="card border-success shadow-sm h-100">
 
                                 <div class="card-body text-center">
 
                                     <h6 class="text-muted mb-2">
-                                        💰 Total
+                                        💰 Total cobrado
                                     </h6>
 
                                     <h2 class="text-success mb-0">
-                                        $<?= number_format($totales['total'], 0, ',', '.') ?>
+                                        $<?= number_format(
+                                                (float)$caso['precio_cobrado'] -
+                                                    (float)($caso['descuento'] ?? 0),
+                                                0,
+                                                ',',
+                                                '.'
+                                            ) ?>
                                     </h2>
 
                                 </div>
@@ -722,98 +742,13 @@
 
 
 
-                <?php endif; ?>
+        <?php endif; ?>
 
         <div class="row mt-4">
 
             <div class="col-12">
 
-                <div class="card border-info shadow-sm">
 
-                    <div class="card-header bg-info text-white">
-                        <strong>📊 Resumen financiero del caso</strong>
-                    </div>
-
-                    <div class="card-body">
-
-                        <div class="row">
-
-                            <div class="col-md-4">
-                                <p class="mb-2">
-                                    Mano de obra:
-                                    <strong>
-                                        $<?= number_format($financial['mano_obra'], 0, ',', '.') ?>
-                                    </strong>
-                                </p>
-
-                                <p class="mb-2">
-                                    Venta repuestos inventario:
-                                    <strong>
-                                        $<?= number_format($financial['repuestos_venta'], 0, ',', '.') ?>
-                                    </strong>
-                                </p>
-
-                                <p class="mb-2">
-                                    Costo repuestos inventario:
-                                    <strong>
-                                        $<?= number_format($financial['repuestos_costo'], 0, ',', '.') ?>
-                                    </strong>
-                                </p>
-                            </div>
-
-                            <div class="col-md-4">
-                                <p class="mb-2">
-                                    Venta compras directas:
-                                    <strong>
-                                        $<?= number_format($financial['compras_directas_venta'], 0, ',', '.') ?>
-                                    </strong>
-                                </p>
-
-                                <p class="mb-2">
-                                    Costo compras directas:
-                                    <strong>
-                                        $<?= number_format($financial['compras_directas_costo'], 0, ',', '.') ?>
-                                    </strong>
-                                </p>
-
-                                <p class="mb-2">
-                                    Utilidad repuestos:
-                                    <strong>
-                                        $<?= number_format($financial['utilidad_repuestos'], 0, ',', '.') ?>
-                                    </strong>
-                                </p>
-                            </div>
-
-                            <div class="col-md-4">
-
-                                <p class="mb-2">
-                                    Venta total de repuestos:
-                                    <strong>
-                                        $<?= number_format($financial['total_repuestos_venta'], 0, ',', '.') ?>
-                                    </strong>
-                                </p>
-
-                                <p class="mb-2">
-                                    Costo total de repuestos:
-                                    <strong>
-                                        $<?= number_format($financial['total_repuestos_costo'], 0, ',', '.') ?>
-                                    </strong>
-                                </p>
-
-                                <p class="mb-0 fs-5">
-                                    Venta teórica total:
-                                    <strong>
-                                        $<?= number_format($financial['total_venta_teorica'], 0, ',', '.') ?>
-                                    </strong>
-                                </p>
-
-                            </div>
-
-                        </div>
-
-                    </div>
-
-                </div>
 
             </div>
 
@@ -834,16 +769,15 @@
             <?php unset($_SESSION['error_message']); ?>
         <?php endif; ?>
 
-       
 
-        <?php require __DIR__ . '/partials/_financial_summary.php'; ?>
 
-         <?php if (!empty($casePurchases)): ?>
+
+        <?php if (!empty($casePurchases)): ?>
 
             <div class="card shadow-sm mt-4">
 
                 <div class="card-header bg-primary text-white">
-                    <strong>🛒 Compras directas del caso</strong>
+                    <strong>🛒 Compras directas</strong>
                 </div>
 
                 <div class="card-body p-0">
@@ -854,13 +788,14 @@
 
                             <thead class="table-light">
                                 <tr>
-                                    <th>Descripción</th>
-                                    <th>Proveedor</th>
-                                    <th class="text-end">Cantidad</th>
-                                    <th class="text-end">Costo unitario</th>
-                                    <th class="text-end">Precio unitario</th>
-                                    <th class="text-end">Subtotal</th>
-                                    <th>Registrado por</th>
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Descripción</th>
+                                            <th class="text-end">Cantidad</th>
+                                            <th class="text-end">Precio unitario</th>
+                                            <th class="text-end">Subtotal</th>
+                                        </tr>
+                                    </thead>
                                 </tr>
                             </thead>
 
@@ -874,10 +809,6 @@
                                             <?= htmlspecialchars($purchase['descripcion']) ?>
                                         </td>
 
-                                        <td>
-                                            <?= htmlspecialchars($purchase['proveedor'] ?? '') ?>
-                                        </td>
-
                                         <td class="text-end">
                                             <?= number_format(
                                                 (float)$purchase['cantidad'],
@@ -885,15 +816,6 @@
                                                 ',',
                                                 '.'
                                             ) ?>
-                                        </td>
-
-                                        <td class="text-end">
-                                            $<?= number_format(
-                                                    (float)$purchase['costo_unitario'],
-                                                    0,
-                                                    ',',
-                                                    '.'
-                                                ) ?>
                                         </td>
 
                                         <td class="text-end">
@@ -914,12 +836,6 @@
                                                 ) ?>
                                         </td>
 
-                                        <td>
-                                            <?= htmlspecialchars(
-                                                $purchase['usuario_nombre'] ?? ''
-                                            ) ?>
-                                        </td>
-
                                     </tr>
 
                                 <?php endforeach; ?>
@@ -938,7 +854,7 @@
 
         <?php require __DIR__ . '/partials/_advance_history.php'; ?>
 
-        
+
 
         <div class="modal fade" id="modalEditarAvance" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog">
@@ -1060,98 +976,64 @@
                         name="caso_id"
                         value="<?= $caso['id'] ?>">
 
-                 <div class="alert alert-info">
 
-    <strong>📊 Resumen económico</strong>
 
-    <hr>
+                    <hr>
 
-    <p>
-        Mano de obra:
-        <strong>
-            $<?= number_format($financial['mano_obra'], 0, ',', '.') ?>
-        </strong>
-    </p>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Precio cobrado al cliente
+                        </label>
 
-    <p>
-        Venta de repuestos:
-        <strong>
-            $<?= number_format($financial['total_repuestos_venta'], 0, ',', '.') ?>
-        </strong>
-    </p>
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="precio_cobrado"
+                            name="precio_cobrado"
+                            min="0"
+                            value="<?= (int)$financial['total_venta_teorica'] ?>"
+                            required>
+                    </div>
 
-    <p>
-        Costo real de repuestos:
-        <strong>
-            $<?= number_format($financial['total_repuestos_costo'], 0, ',', '.') ?>
-        </strong>
-    </p>
+                    <div class="mb-3">
+                        <label class="form-label">
+                            Descuento
+                        </label>
 
-    <p class="fs-5">
-        Venta teórica total:
-        <strong>
-            $<?= number_format($financial['total_venta_teorica'], 0, ',', '.') ?>
-        </strong>
-    </p>
+                        <input
+                            type="number"
+                            class="form-control"
+                            id="descuento"
+                            name="descuento"
+                            min="0"
+                            value="0">
+                    </div>
 
-</div>
+                    <div class="alert alert-success">
 
-<hr>
+                        <h5>Resultado</h5>
 
-<div class="mb-3">
-    <label class="form-label">
-        Precio cobrado al cliente
-    </label>
+                        <p>
+                            Total facturado:
+                            <strong id="totalCobrado">
+                                $<?= number_format($financial['total_venta_teorica'], 0, ',', '.') ?>
+                            </strong>
+                        </p>
 
-    <input
-        type="number"
-        class="form-control"
-        id="precio_cobrado"
-        name="precio_cobrado"
-        min="0"
-        value="<?= (int)$financial['total_venta_teorica'] ?>"
-        required>
-</div>
+                        <p class="mb-0">
+                            Utilidad:
+                            <strong id="utilidad">
+                                $<?= number_format(
+                                        $financial['total_venta_teorica']
+                                            - $financial['total_repuestos_costo'],
+                                        0,
+                                        ',',
+                                        '.'
+                                    ) ?>
+                            </strong>
+                        </p>
 
-<div class="mb-3">
-    <label class="form-label">
-        Descuento
-    </label>
-
-    <input
-        type="number"
-        class="form-control"
-        id="descuento"
-        name="descuento"
-        min="0"
-        value="0">
-</div>
-
-<div class="alert alert-success">
-
-    <h5>Resultado</h5>
-
-    <p>
-        Total facturado:
-        <strong id="totalCobrado">
-            $<?= number_format($financial['total_venta_teorica'], 0, ',', '.') ?>
-        </strong>
-    </p>
-
-    <p class="mb-0">
-        Utilidad:
-        <strong id="utilidad">
-            $<?= number_format(
-                $financial['total_venta_teorica']
-                - $financial['total_repuestos_costo'],
-                0,
-                ',',
-                '.'
-            ) ?>
-        </strong>
-    </p>
-
-</div>
+                    </div>
 
                     <p class="text-danger mb-0">
                         ¿Está seguro de cerrar este caso?
@@ -1508,32 +1390,32 @@
 <script>
     const costoRepuestos = <?= (float)$financial['total_repuestos_costo'] ?>;
 
-const precio = document.getElementById('precio_cobrado');
-const descuento = document.getElementById('descuento');
+    const precio = document.getElementById('precio_cobrado');
+    const descuento = document.getElementById('descuento');
 
-const lblTotal = document.getElementById('totalCobrado');
-const lblUtilidad = document.getElementById('utilidad');
+    const lblTotal = document.getElementById('totalCobrado');
+    const lblUtilidad = document.getElementById('utilidad');
 
-function actualizarResumen() {
+    function actualizarResumen() {
 
-    const p = parseFloat(precio.value) || 0;
-    const d = parseFloat(descuento.value) || 0;
+        const p = parseFloat(precio.value) || 0;
+        const d = parseFloat(descuento.value) || 0;
 
-    const total = Math.max(0, p - d);
+        const total = Math.max(0, p - d);
 
-    const utilidad = total - costoRepuestos;
+        const utilidad = total - costoRepuestos;
 
-    lblTotal.textContent =
-        '$' + total.toLocaleString('es-CO');
+        lblTotal.textContent =
+            '$' + total.toLocaleString('es-CO');
 
-    lblUtilidad.textContent =
-        '$' + utilidad.toLocaleString('es-CO');
-}
+        lblUtilidad.textContent =
+            '$' + utilidad.toLocaleString('es-CO');
+    }
 
-precio.addEventListener('input', actualizarResumen);
-descuento.addEventListener('input', actualizarResumen);
+    precio.addEventListener('input', actualizarResumen);
+    descuento.addEventListener('input', actualizarResumen);
 
-actualizarResumen();
+    actualizarResumen();
 </script>
 
 <!-- Cargar Bootstrap JS y Popper.js desde CDN -->

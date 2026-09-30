@@ -601,6 +601,38 @@ class Dashboard
         return (int)$stmt->fetchColumn();
     }
 
+    public function getTicketPromedioPeriodo(
+        string $inicio,
+        string $fin
+    ): float {
+        $casos = $this->getCasosPeriodo($inicio, $fin);
+
+        if ($casos === 0) {
+            return 0;
+        }
+
+        $facturacion =
+            $this->getFacturacionPeriodo($inicio, $fin);
+
+        return $facturacion / $casos;
+    }
+
+    public function getUtilidadPromedioPeriodo(
+        string $inicio,
+        string $fin
+    ): float {
+        $casos = $this->getCasosPeriodo($inicio, $fin);
+
+        if ($casos === 0) {
+            return 0;
+        }
+
+        $utilidad =
+            $this->getUtilidadBrutaPeriodo($inicio, $fin);
+
+        return $utilidad / $casos;
+    }
+
     public function getDescuentosPeriodo(string $inicio, string $fin): float
     {
         $stmt = $this->db->prepare("
@@ -639,14 +671,14 @@ class Dashboard
         ?string $fechaDesde = null,
         ?string $fechaHasta = null
     ): array {
-       $fechas = $this->getPeriodoFechas(
-    $periodo,
-    $fechaDesde,
-    $fechaHasta
-);
+        $fechas = $this->getPeriodoFechas(
+            $periodo,
+            $fechaDesde,
+            $fechaHasta
+        );
 
-$inicio = $fechas['inicio'];
-$fin = $fechas['fin'];
+        $inicio = $fechas['inicio'];
+        $fin = $fechas['fin'];
         return [
             'totalVehiculos' => $this->getTotalVehiculos(),
             'casosAbiertos' => $this->getCasosAbiertos(),
@@ -725,6 +757,12 @@ $fin = $fechas['fin'];
 
             'casosMes' =>
             $this->getCasosPeriodo($inicio, $fin),
+
+            'ticketPromedio' =>
+            $this->getTicketPromedioPeriodo($inicio, $fin),
+
+            'utilidadPromedio' =>
+            $this->getUtilidadPromedioPeriodo($inicio, $fin),
 
         ];
     }

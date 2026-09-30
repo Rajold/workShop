@@ -232,7 +232,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             <div class="card-body text-center">
 
-                <h6>📅 Facturado este mes</h6>
+                <h6>📅 Facturación del período</h6>
 
                 <h2><?= $stats['facturacionMes'] ?></h2>
 
@@ -249,7 +249,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             <div class="card-body text-center">
 
-                <h6>👨‍🔧 Casos este mes</h6>
+                <h6>👨‍🔧 Casos cerrados del período</h6>
 
                 <h2><?= $stats['casosMes'] ?></h2>
 
@@ -258,6 +258,58 @@ document.addEventListener('DOMContentLoaded', function () {
 
         </div>
 
+    </div>
+
+</div>
+
+<div class="row g-3 mb-4">
+
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h6 class="card-title text-muted">
+                    Ticket promedio
+                </h6>
+
+                <h3 class="mb-0">
+                    $
+                    <?= number_format(
+                        $stats['ticketPromedio'],
+                        0,
+                        ',',
+                        '.'
+                    ) ?>
+                </h3>
+
+                <small class="text-muted">
+                    Facturación promedio por caso cerrado
+                </small>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-6">
+        <div class="card h-100">
+            <div class="card-body">
+                <h6 class="card-title text-muted">
+                    Utilidad bruta promedio
+                </h6>
+
+                <h3 class="mb-0">
+                    $
+                    <?= number_format(
+                        $stats['utilidadPromedio'],
+                        0,
+                        ',',
+                        '.'
+                    ) ?>
+                </h3>
+
+                <small class="text-muted">
+                    Utilidad bruta promedio por caso cerrado
+                </small>
+            </div>
+        </div>
     </div>
 
 </div>
