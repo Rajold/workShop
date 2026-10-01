@@ -236,12 +236,12 @@ public function cerrar(): void
 
     // 📝 Registrar avance automático
     $this->avanceModel->add(
-        $caseId,
-        $mechanicId,
-        '✅ Caso cerrado por el mecánico.',
-        'Mano de obra',
-        0
-    );
+    $caseId,
+    $mechanicId,
+    'Caso cerrado por el mecánico.',
+    'Mano de obra',
+    0
+);
 
 
     // 🔁 Redirigir correctamente
