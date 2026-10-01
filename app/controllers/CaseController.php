@@ -563,7 +563,8 @@ $pdf = new CasePdf();
     $caso,
     $avances,
     $totales,
-    $caseParts
+    $caseParts,
+    $casePurchases
 );
     }
 }

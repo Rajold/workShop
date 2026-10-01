@@ -124,7 +124,8 @@ public function generate(
     array $caso,
     array $avances,
     array $totales,
-    array $caseParts = []
+    array $caseParts = [],
+    array $casePurchases = []
 )
 {
     $this->AddPage();
@@ -320,15 +321,144 @@ if (empty($caseParts)) {
     $this->Ln(3);
 }
 
-$this->titulo("RESUMEN ECONÓMICO");
+// COMPRAS DIRECTAS
 
-$this->tablaDosColumnas([
-    'Mano de obra'     => $this->dinero($totales['mano_obra']),
-    'Repuestos'        => $this->dinero($totales['repuestos']),
-    'Total registrado' => $this->dinero($totales['total']),
-]);
+if (!empty($casePurchases)) {
 
-    $this->Ln(4);
+    $this->titulo("COMPRAS DIRECTAS");
+
+    $this->SetFont('Arial', 'B', 9);
+
+    $this->Cell(
+        75,
+        8,
+        $this->txt('Descripción'),
+        1,
+        0,
+        'L'
+    );
+
+    $this->Cell(
+        20,
+        8,
+        $this->txt('Cant.'),
+        1,
+        0,
+        'C'
+    );
+
+    $this->Cell(
+        40,
+        8,
+        $this->txt('Precio unit.'),
+        1,
+        0,
+        'R'
+    );
+
+    $this->Cell(
+        45,
+        8,
+        $this->txt('Subtotal'),
+        1,
+        1,
+        'R'
+    );
+
+    $this->SetFont('Arial', '', 9);
+
+    foreach ($casePurchases as $purchase) {
+
+        $this->Cell(
+            75,
+            8,
+            $this->txt($purchase['descripcion']),
+            1,
+            0,
+            'L'
+        );
+
+        $this->Cell(
+            20,
+            8,
+            number_format(
+                (float)$purchase['cantidad'],
+                0,
+                ',',
+                '.'
+            ),
+            1,
+            0,
+            'C'
+        );
+
+        $this->Cell(
+            40,
+            8,
+            $this->dinero($purchase['precio_unitario']),
+            1,
+            0,
+            'R'
+        );
+
+        $this->Cell(
+            45,
+            8,
+            $this->dinero($purchase['subtotal']),
+            1,
+            1,
+            'R'
+        );
+    }
+
+    $this->Ln(3);
+}
+
+// RESUMEN DEL SERVICIO
+
+$this->titulo("RESUMEN DEL SERVICIO");
+
+if (($caso['estado'] ?? '') === 'cerrado') {
+
+    $precioCobrado = (float)($caso['precio_cobrado'] ?? 0);
+    $descuento = (float)($caso['descuento'] ?? 0);
+
+    $totalCobrado = max(
+        0,
+        $precioCobrado - $descuento
+    );
+
+    $this->tablaDosColumnas([
+        'Total cobrado' => $this->dinero($totalCobrado)
+    ]);
+
+} else {
+
+    $ventaRepuestos = (float)$totales['repuestos'];
+
+    $ventaComprasDirectas = 0;
+
+    foreach ($casePurchases as $purchase) {
+        $ventaComprasDirectas += (float)$purchase['subtotal'];
+    }
+
+    $totalServicio =
+        (float)$totales['mano_obra'] +
+        $ventaRepuestos +
+        $ventaComprasDirectas;
+
+    $this->tablaDosColumnas([
+        'Mano de obra' => $this->dinero($totales['mano_obra']),
+
+        'Repuestos' => $this->dinero(
+            $ventaRepuestos + $ventaComprasDirectas
+        ),
+
+        'Total del servicio' => $this->dinero($totalServicio)
+    ]);
+}
+
+$this->Ln(4);
 
     $this->Output(
         'I',
