@@ -377,3 +377,343 @@
 .case-history-item:has(.case-status-open)::before {
     background: #198754;
 }
+
+/* =========================================================
+   HISTORIAL DE TRABAJOS / AVANCES
+   ========================================================= */
+
+.case-advance-history {
+    position: relative;
+    padding-left: 24px;
+}
+
+.case-advance-history::before {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.case-advance-item {
+    position: relative;
+    margin-bottom: 14px;
+}
+
+.case-advance-item::before {
+    content: "";
+    position: absolute;
+    left: -24px;
+    top: 22px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #6c757d;
+    border: 3px solid #f5f7fa;
+    z-index: 1;
+}
+
+.case-advance-card {
+    background: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 12px;
+    padding: 18px;
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease;
+}
+
+.case-advance-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 .35rem .9rem rgba(0, 0, 0, .08);
+}
+
+.case-advance-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 15px;
+}
+
+.case-advance-mechanic {
+    font-weight: 700;
+    color: #212529;
+}
+
+.case-advance-date {
+    margin-top: 3px;
+    color: #6c757d;
+    font-size: .82rem;
+}
+
+.case-advance-type {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    padding: 6px 11px;
+    border-radius: 999px;
+    font-size: .78rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.case-advance-labor {
+    background: rgba(13, 110, 253, .10);
+    color: #0a58ca;
+}
+
+.case-advance-part {
+    background: rgba(255, 193, 7, .16);
+    color: #8a6500;
+}
+
+.case-advance-description {
+    margin-top: 14px;
+    color: #343a40;
+    line-height: 1.55;
+}
+
+.case-advance-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #f0f1f2;
+}
+
+.case-advance-value {
+    color: #198754;
+    font-size: 1.05rem;
+    white-space: nowrap;
+}
+
+.case-advance-footer .case-actions {
+    justify-content: flex-end;
+}
+
+@media (max-width: 767.98px) {
+
+    .case-advance-header {
+        flex-direction: column;
+    }
+
+    .case-advance-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .case-advance-footer .case-actions {
+        flex-direction: column;
+    }
+
+    .case-advance-footer .case-actions .btn {
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   REPUESTOS: TARJETA COMERCIAL
+   ========================================================= */
+
+.case-parts-section {
+    background: #fff;
+    border: 1px solid #e1e7ef;
+    border-radius: 16px;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(25, 42, 70, .05);
+}
+
+.case-parts-heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    padding: 22px 24px;
+    background: linear-gradient(120deg, #f7faff, #fff);
+    border-bottom: 1px solid #e8edf3;
+}
+
+.case-parts-eyebrow {
+    color: #64748b;
+    font-size: .7rem;
+    font-weight: 800;
+    letter-spacing: .12em;
+    margin-bottom: 7px;
+}
+
+.case-parts-title {
+    margin: 0;
+    color: #172b4d;
+    font-size: 1.15rem;
+    font-weight: 750;
+}
+
+.case-parts-subtitle {
+    margin: 6px 0 0;
+    color: #64748b;
+    font-size: .88rem;
+}
+
+.case-parts-count {
+    flex-shrink: 0;
+    padding: 8px 12px;
+    border-radius: 10px;
+    background: #e8f0ff;
+    color: #2459a9;
+    font-size: .8rem;
+    font-weight: 700;
+}
+
+.case-parts-table {
+    margin: 0;
+}
+
+.case-parts-table thead th {
+    padding: 14px 20px !important;
+    background: #f8fafc;
+    color: #64748b !important;
+    font-size: .72rem !important;
+    font-weight: 800 !important;
+    letter-spacing: .06em !important;
+    border-bottom: 1px solid #e8edf3;
+}
+
+.case-parts-table tbody td {
+    padding: 17px 20px !important;
+    border-bottom: 1px solid #eef1f5;
+}
+
+.case-parts-table tbody tr:hover {
+    background: #f8fbff;
+}
+
+.case-part-name {
+    color: #1e293b;
+    font-weight: 700;
+}
+
+.case-part-brand {
+    margin-top: 4px;
+    color: #64748b;
+    font-size: .8rem;
+}
+
+.case-part-quantity {
+    display: inline-block;
+    min-width: 32px;
+    padding: 5px 8px;
+    border-radius: 7px;
+    background: #f1f5f9;
+    color: #334155;
+    font-weight: 700;
+}
+
+.case-part-subtotal {
+    color: #166534;
+}
+
+@media (max-width: 600px) {
+    .case-parts-heading {
+        padding: 18px;
+        align-items: flex-start;
+    }
+
+    .case-parts-table thead th,
+    .case-parts-table tbody td {
+        padding: 12px !important;
+    }
+
+    .case-parts-subtitle {
+        max-width: 230px;
+    }
+}
+
+/* =========================================================
+   CABECERA PRINCIPAL DEL VEHÍCULO
+   ========================================================= */
+
+.case-vehicle-header {
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #dfe3e8;
+    border-radius: 16px;
+    background: #ffffff;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, .06);
+}
+
+.case-vehicle-header::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 6px;
+    background: #0d6efd;
+}
+
+.case-vehicle-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 30px;
+}
+
+.case-vehicle-title {
+    font-size: 1.65rem;
+    font-weight: 750;
+    letter-spacing: -.4px;
+    color: #1f2937;
+}
+
+.case-vehicle-subtitle {
+    color: #6b7280;
+    font-size: .95rem;
+}
+
+.case-vehicle-info-item {
+    margin-top: 8px;
+    color: #374151;
+}
+
+.case-vehicle-info-item strong {
+    color: #111827;
+}
+
+.case-vehicle-header .license-plate {
+    margin-top: 12px;
+    margin-bottom: 12px;
+    transform: scale(1.05);
+    transform-origin: left center;
+}
+
+.case-vehicle-header .btn-success {
+    border-radius: 9px;
+    font-weight: 600;
+    padding: 8px 15px;
+}
+
+.case-vehicle-header>.card-body {
+    position: relative;
+    z-index: 1;
+}
+
+@media (max-width: 767.98px) {
+
+    .case-vehicle-top {
+        flex-direction: column;
+        gap: 18px;
+    }
+
+    .case-vehicle-title {
+        font-size: 1.35rem;
+    }
+
+    .case-vehicle-header {
+        border-radius: 12px;
+    }
+
+}

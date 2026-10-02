@@ -77,57 +77,57 @@ class CaseController
 
     // ✅ Cerrar caso
     // ✅ Cerrar caso
-public function cerrar(): void
-{
-    $this->ensureLogged();
+    public function cerrar(): void
+    {
+        $this->ensureLogged();
 
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['caso_id'])) {
-        echo "<div class='alert alert-danger'>Solicitud inválida.</div>";
-        return;
-    }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['caso_id'])) {
+            echo "<div class='alert alert-danger'>Solicitud inválida.</div>";
+            return;
+        }
 
-    $caseId = (int)$_POST['caso_id'];
-    $mechanicId = (int)$_SESSION['user_id'];
+        $caseId = (int)$_POST['caso_id'];
+        $mechanicId = (int)$_SESSION['user_id'];
 
-    $precioCobrado = (int)($_POST['precio_cobrado'] ?? 0);
-    $descuento = (int)($_POST['descuento'] ?? 0);
+        $precioCobrado = (int)($_POST['precio_cobrado'] ?? 0);
+        $descuento = (int)($_POST['descuento'] ?? 0);
 
-    // Validaciones económicas
-    if ($precioCobrado < 0) {
-        echo "<div class='alert alert-danger'>El precio cobrado no puede ser negativo.</div>";
-        return;
-    }
+        // Validaciones económicas
+        if ($precioCobrado < 0) {
+            echo "<div class='alert alert-danger'>El precio cobrado no puede ser negativo.</div>";
+            return;
+        }
 
-    if ($descuento < 0) {
-        echo "<div class='alert alert-danger'>El descuento no puede ser negativo.</div>";
-        return;
-    }
+        if ($descuento < 0) {
+            echo "<div class='alert alert-danger'>El descuento no puede ser negativo.</div>";
+            return;
+        }
 
-    if ($descuento > $precioCobrado) {
-        echo "<div class='alert alert-danger'>El descuento no puede ser mayor que el precio cobrado.</div>";
-        return;
-    }
+        if ($descuento > $precioCobrado) {
+            echo "<div class='alert alert-danger'>El descuento no puede ser mayor que el precio cobrado.</div>";
+            return;
+        }
 
-    // 🔍 Obtener el caso y el vehículo asociado
-    $stmt = $this->pdo->prepare("
+        // 🔍 Obtener el caso y el vehículo asociado
+        $stmt = $this->pdo->prepare("
         SELECT vehiculo_id
         FROM casos
         WHERE id = :id
         LIMIT 1
     ");
 
-    $stmt->execute([
-        ':id' => $caseId
-    ]);
+        $stmt->execute([
+            ':id' => $caseId
+        ]);
 
-    $vehiculoId = $stmt->fetchColumn();
+        $vehiculoId = $stmt->fetchColumn();
 
-    if (!$vehiculoId) {
-        echo "<div class='alert alert-danger'>No se encontró el vehículo asociado al caso.</div>";
-        return;
-    }
+        if (!$vehiculoId) {
+            echo "<div class='alert alert-danger'>No se encontró el vehículo asociado al caso.</div>";
+            return;
+        }
 
-    /*
+        /*
      * ==========================================================
      * CÁLCULO ECONÓMICO DEL CASO
      * ==========================================================
@@ -144,8 +144,8 @@ public function cerrar(): void
      * ingreso real - costo de repuestos
      */
 
-    // 🧾 Costo de repuestos provenientes del inventario
-    $stmt = $this->pdo->prepare("
+        // 🧾 Costo de repuestos provenientes del inventario
+        $stmt = $this->pdo->prepare("
         SELECT COALESCE(
             SUM(cantidad * costo_unitario),
             0
@@ -154,15 +154,15 @@ public function cerrar(): void
         WHERE caso_id = :caso_id
     ");
 
-    $stmt->execute([
-        ':caso_id' => $caseId
-    ]);
+        $stmt->execute([
+            ':caso_id' => $caseId
+        ]);
 
-    $costoRepuestosInventario = (float)$stmt->fetchColumn();
+        $costoRepuestosInventario = (float)$stmt->fetchColumn();
 
 
-    // 🛒 Costo de compras directas realizadas para el caso
-    $stmt = $this->pdo->prepare("
+        // 🛒 Costo de compras directas realizadas para el caso
+        $stmt = $this->pdo->prepare("
         SELECT COALESCE(
             SUM(cantidad * costo_unitario),
             0
@@ -171,49 +171,49 @@ public function cerrar(): void
         WHERE caso_id = :caso_id
     ");
 
-    $stmt->execute([
-        ':caso_id' => $caseId
-    ]);
+        $stmt->execute([
+            ':caso_id' => $caseId
+        ]);
 
-    $costoComprasDirectas = (float)$stmt->fetchColumn();
-
-
-    // 💰 Costo total real de repuestos
-    $costoTotalRepuestos =
-        $costoRepuestosInventario +
-        $costoComprasDirectas;
+        $costoComprasDirectas = (float)$stmt->fetchColumn();
 
 
-    // 💵 Ingreso realmente recibido
-    $ingresoReal =
-        $precioCobrado -
-        $descuento;
+        // 💰 Costo total real de repuestos
+        $costoTotalRepuestos =
+            $costoRepuestosInventario +
+            $costoComprasDirectas;
 
 
-    // 📈 Utilidad bruta del caso
-    $utilidad =
-        $ingresoReal -
-        $costoTotalRepuestos;
+        // 💵 Ingreso realmente recibido
+        $ingresoReal =
+            $precioCobrado -
+            $descuento;
 
 
-    // 🕓 Finalizar sesión activa si existe
-    $workSession = new WorkSession($this->pdo);
-
-    $active = $workSession->getActiveByCaseAndMechanic(
-        $caseId,
-        $mechanicId
-    );
-
-    if ($active) {
-        $workSession->end((int)$active['id']);
-    }
+        // 📈 Utilidad bruta del caso
+        $utilidad =
+            $ingresoReal -
+            $costoTotalRepuestos;
 
 
-    // ==========================================================
-    // Cerrar caso y guardar información económica
-    // ==========================================================
+        // 🕓 Finalizar sesión activa si existe
+        $workSession = new WorkSession($this->pdo);
 
-    $stmt = $this->pdo->prepare("
+        $active = $workSession->getActiveByCaseAndMechanic(
+            $caseId,
+            $mechanicId
+        );
+
+        if ($active) {
+            $workSession->end((int)$active['id']);
+        }
+
+
+        // ==========================================================
+        // Cerrar caso y guardar información económica
+        // ==========================================================
+
+        $stmt = $this->pdo->prepare("
         UPDATE casos
         SET
             estado = 'cerrado',
@@ -225,117 +225,117 @@ public function cerrar(): void
         WHERE id = :id
     ");
 
-    $stmt->execute([
-        ':precio' => $precioCobrado,
-        ':descuento' => $descuento,
-        ':utilidad' => $utilidad,
-        ':cerrado_por' => $mechanicId,
-        ':id' => $caseId
-    ]);
+        $stmt->execute([
+            ':precio' => $precioCobrado,
+            ':descuento' => $descuento,
+            ':utilidad' => $utilidad,
+            ':cerrado_por' => $mechanicId,
+            ':id' => $caseId
+        ]);
 
 
-    // 📝 Registrar avance automático
-    $this->avanceModel->add(
-    $caseId,
-    $mechanicId,
-    'Caso cerrado por el mecánico.',
-    'Mano de obra',
-    0
-);
+        // 📝 Registrar avance automático
+        $this->avanceModel->add(
+            $caseId,
+            $mechanicId,
+            'Caso cerrado por el mecánico.',
+            'Mano de obra',
+            0
+        );
 
 
-    // 🔁 Redirigir correctamente
-    header(
-        'Location: index.php?controller=mechanic&action=viewCase&case_id='
-        . $caseId
-        . '&veh_id='
-        . $vehiculoId
-    );
+        // 🔁 Redirigir correctamente
+        header(
+            'Location: index.php?controller=mechanic&action=viewCase&case_id='
+                . $caseId
+                . '&veh_id='
+                . $vehiculoId
+        );
 
-    exit;
-}
+        exit;
+    }
 
     // 🆕 Crear un nuevo caso desde uno cerrado
     public function nuevoDesdeExistente(): void
-{
-    $this->ensureLogged();
+    {
+        $this->ensureLogged();
 
-    if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+        if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
-        $vehiculo_id = (int)($_POST['vehiculo_id'] ?? 0);
-        $referencia_anterior = (int)($_POST['referencia_anterior'] ?? 0);
-        $tipo_ingreso = $_POST['tipo_ingreso'] ?? '';
-        $motivo_ingreso = trim($_POST['motivo_ingreso'] ?? '');
-        $observaciones = trim($_POST['observaciones'] ?? '');
+            $vehiculo_id = (int)($_POST['vehiculo_id'] ?? 0);
+            $referencia_anterior = (int)($_POST['referencia_anterior'] ?? 0);
+            $tipo_ingreso = $_POST['tipo_ingreso'] ?? '';
+            $motivo_ingreso = trim($_POST['motivo_ingreso'] ?? '');
+            $observaciones = trim($_POST['observaciones'] ?? '');
 
-        $mecanico_id = (int)$_SESSION['user_id'];
+            $mecanico_id = (int)$_SESSION['user_id'];
 
-        // Validaciones básicas
-        if (!$vehiculo_id || !$referencia_anterior || !$motivo_ingreso) {
+            // Validaciones básicas
+            if (!$vehiculo_id || !$referencia_anterior || !$motivo_ingreso) {
 
-            $_SESSION['error_message'] = "Debe indicar el motivo del nuevo ingreso.";
+                $_SESSION['error_message'] = "Debe indicar el motivo del nuevo ingreso.";
 
-            header(
-                "Location: index.php?controller=mechanic&action=viewCase" .
-                "&veh_id={$vehiculo_id}&case_id={$referencia_anterior}"
-            );
+                header(
+                    "Location: index.php?controller=mechanic&action=viewCase" .
+                        "&veh_id={$vehiculo_id}&case_id={$referencia_anterior}"
+                );
 
-            exit;
-        }
+                exit;
+            }
 
-        // 1️⃣ Verificar si el vehículo ya tiene un caso abierto
-        $stmt = $this->pdo->prepare("
+            // 1️⃣ Verificar si el vehículo ya tiene un caso abierto
+            $stmt = $this->pdo->prepare("
             SELECT COUNT(*)
             FROM casos
             WHERE vehiculo_id = :vehiculo_id
             AND estado = 'abierto'
         ");
 
-        $stmt->execute([
-            'vehiculo_id' => $vehiculo_id
-        ]);
+            $stmt->execute([
+                'vehiculo_id' => $vehiculo_id
+            ]);
 
-        $abiertos = (int)$stmt->fetchColumn();
+            $abiertos = (int)$stmt->fetchColumn();
 
-        if ($abiertos > 0) {
+            if ($abiertos > 0) {
 
-            $_SESSION['error_message'] =
-                "El vehículo ya tiene un caso abierto. Debe cerrarse antes de crear uno nuevo.";
+                $_SESSION['error_message'] =
+                    "El vehículo ya tiene un caso abierto. Debe cerrarse antes de crear uno nuevo.";
 
-            header(
-                "Location: index.php?controller=mechanic&action=viewCase" .
-                "&veh_id={$vehiculo_id}&case_id={$referencia_anterior}"
-            );
+                header(
+                    "Location: index.php?controller=mechanic&action=viewCase" .
+                        "&veh_id={$vehiculo_id}&case_id={$referencia_anterior}"
+                );
 
-            exit;
-        }
+                exit;
+            }
 
-        // 2️⃣ Obtener información del caso anterior
-        $stmt = $this->pdo->prepare("
+            // 2️⃣ Obtener información del caso anterior
+            $stmt = $this->pdo->prepare("
             SELECT causa, diagnostico, observaciones
             FROM casos
             WHERE id = :id
         ");
 
-        $stmt->execute([
-            'id' => $referencia_anterior
-        ]);
+            $stmt->execute([
+                'id' => $referencia_anterior
+            ]);
 
-        $anterior = $stmt->fetch(PDO::FETCH_ASSOC);
+            $anterior = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$anterior) {
+            if (!$anterior) {
 
-            $_SESSION['error_message'] = "El caso anterior no existe.";
+                $_SESSION['error_message'] = "El caso anterior no existe.";
 
-            header(
-                "Location: index.php?controller=mechanic&action=viewCase" .
-                "&veh_id={$vehiculo_id}&case_id={$referencia_anterior}"
-            );
+                header(
+                    "Location: index.php?controller=mechanic&action=viewCase" .
+                        "&veh_id={$vehiculo_id}&case_id={$referencia_anterior}"
+                );
 
-            exit;
-        }
+                exit;
+            }
 
-        /*
+            /*
          * 3️⃣ Determinar si el nuevo caso continúa el anterior
          *
          * Si es una falla diferente, el nuevo caso es independiente.
@@ -343,21 +343,20 @@ public function cerrar(): void
          * las observaciones del nuevo caso.
          */
 
-        if ($tipo_ingreso === 'relacionado') {
+            if ($tipo_ingreso === 'relacionado') {
 
-            $observacionesCaso = "Continuación del caso #{$referencia_anterior}";
+                $observacionesCaso = "Continuación del caso #{$referencia_anterior}";
 
-            if ($observaciones !== '') {
-                $observacionesCaso .= ". " . $observaciones;
+                if ($observaciones !== '') {
+                    $observacionesCaso .= ". " . $observaciones;
+                }
+            } else {
+
+                $observacionesCaso = $observaciones;
             }
 
-        } else {
-
-            $observacionesCaso = $observaciones;
-        }
-
-        // 4️⃣ Crear el nuevo caso
-        $stmt = $this->pdo->prepare("
+            // 4️⃣ Crear el nuevo caso
+            $stmt = $this->pdo->prepare("
             INSERT INTO casos
             (
                 vehiculo_id,
@@ -380,151 +379,150 @@ public function cerrar(): void
             )
         ");
 
-        $stmt->execute([
-            'vehiculo_id' => $vehiculo_id,
-            'mecanico_id' => $mecanico_id,
-            'causa' => $motivo_ingreso,
-            'diagnostico' => '',
-            'observaciones' => $observacionesCaso
-        ]);
+            $stmt->execute([
+                'vehiculo_id' => $vehiculo_id,
+                'mecanico_id' => $mecanico_id,
+                'causa' => $motivo_ingreso,
+                'diagnostico' => '',
+                'observaciones' => $observacionesCaso
+            ]);
 
-        $nuevoCasoId = (int)$this->pdo->lastInsertId();
+            $nuevoCasoId = (int)$this->pdo->lastInsertId();
 
-        // 5️⃣ Registrar avance automático
-        $descripcionAvance = "🆕 Caso creado";
+            // 5️⃣ Registrar avance automático
+            $descripcionAvance = "🆕 Caso creado";
 
-        if ($tipo_ingreso === 'relacionado') {
-            $descripcionAvance .=
-                " como continuación del caso anterior #{$referencia_anterior}";
-        } else {
-            $descripcionAvance .=
-                " por falla o servicio diferente";
+            if ($tipo_ingreso === 'relacionado') {
+                $descripcionAvance .=
+                    " como continuación del caso anterior #{$referencia_anterior}";
+            } else {
+                $descripcionAvance .=
+                    " por falla o servicio diferente";
+            }
+
+            $this->avanceModel->add(
+                $nuevoCasoId,
+                $mecanico_id,
+                $descripcionAvance,
+                'Mano de obra',
+                0
+            );
+
+            // 6️⃣ Redirigir al nuevo caso
+            header(
+                "Location: index.php?controller=mechanic&action=viewCase" .
+                    "&veh_id={$vehiculo_id}&case_id={$nuevoCasoId}"
+            );
+
+            exit;
         }
 
-        $this->avanceModel->add(
-            $nuevoCasoId,
-            $mecanico_id,
-            $descripcionAvance,
-            'Mano de obra',
-            0
-        );
-
-        // 6️⃣ Redirigir al nuevo caso
-        header(
-            "Location: index.php?controller=mechanic&action=viewCase" .
-            "&veh_id={$vehiculo_id}&case_id={$nuevoCasoId}"
-        );
-
-        exit;
+        echo "Solicitud inválida.";
     }
 
-    echo "Solicitud inválida.";
-}
+    public function registrarCompraDirecta(): void
+    {
+        $this->ensureLogged();
 
-public function registrarCompraDirecta(): void
-{
-    $this->ensureLogged();
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $_SESSION['error_message'] = 'Solicitud inválida.';
+            header('Location: index.php');
+            exit;
+        }
 
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        $_SESSION['error_message'] = 'Solicitud inválida.';
-        header('Location: index.php');
-        exit;
-    }
+        $caseId = (int)($_POST['caso_id'] ?? 0);
 
-    $caseId = (int)($_POST['caso_id'] ?? 0);
+        $descripcion = trim($_POST['descripcion'] ?? '');
+        $proveedor = trim($_POST['proveedor'] ?? '');
+        $observacion = trim($_POST['observacion'] ?? '');
 
-    $descripcion = trim($_POST['descripcion'] ?? '');
-    $proveedor = trim($_POST['proveedor'] ?? '');
-    $observacion = trim($_POST['observacion'] ?? '');
+        $cantidad = (float)($_POST['cantidad'] ?? 0);
+        $costoUnitario = (float)($_POST['costo_unitario'] ?? 0);
+        $precioUnitario = (float)($_POST['precio_unitario'] ?? 0);
 
-    $cantidad = (float)($_POST['cantidad'] ?? 0);
-    $costoUnitario = (float)($_POST['costo_unitario'] ?? 0);
-    $precioUnitario = (float)($_POST['precio_unitario'] ?? 0);
-
-    /*
+        /*
      * Primero verificamos que el caso exista.
      * De esta forma obtenemos también el vehículo asociado
      * y podemos conservar correctamente la ficha seleccionada
      * al regresar a la vista.
      */
-    $caso = $this->caseModel->findById($caseId);
+        $caso = $this->caseModel->findById($caseId);
 
-    if (!$caso) {
-        $_SESSION['error_message'] = 'El caso no existe.';
-        header('Location: index.php');
-        exit;
-    }
+        if (!$caso) {
+            $_SESSION['error_message'] = 'El caso no existe.';
+            header('Location: index.php');
+            exit;
+        }
 
-    $vehiculoId = (int)$caso['vehiculo_id'];
+        $vehiculoId = (int)$caso['vehiculo_id'];
 
-    /*
+        /*
      * Validar datos recibidos
      */
-    if (
-        $caseId <= 0 ||
-        $descripcion === '' ||
-        $cantidad <= 0 ||
-        $costoUnitario < 0 ||
-        $precioUnitario < 0
-    ) {
-        $_SESSION['error_message'] =
-            'Debe completar correctamente los datos de la compra directa.';
+        if (
+            $caseId <= 0 ||
+            $descripcion === '' ||
+            $cantidad <= 0 ||
+            $costoUnitario < 0 ||
+            $precioUnitario < 0
+        ) {
+            $_SESSION['error_message'] =
+                'Debe completar correctamente los datos de la compra directa.';
 
-        header(
-            'Location: index.php?controller=mechanic&action=viewCase' .
-            '&veh_id=' . $vehiculoId .
-            '&case_id=' . $caseId
-        );
-        exit;
-    }
+            header(
+                'Location: index.php?controller=mechanic&action=viewCase' .
+                    '&veh_id=' . $vehiculoId .
+                    '&case_id=' . $caseId
+            );
+            exit;
+        }
 
-    /*
+        /*
      * El caso debe estar abierto para registrar una compra directa.
      */
-    if ($caso['estado'] !== 'abierto') {
-        $_SESSION['error_message'] =
-            'No se pueden registrar compras directas en un caso cerrado.';
+        if ($caso['estado'] !== 'abierto') {
+            $_SESSION['error_message'] =
+                'No se pueden registrar compras directas en un caso cerrado.';
 
+            header(
+                'Location: index.php?controller=mechanic&action=viewCase' .
+                    '&veh_id=' . $vehiculoId .
+                    '&case_id=' . $caseId
+            );
+            exit;
+        }
+
+        try {
+
+            $this->casePurchaseModel->add([
+                'caso_id' => $caseId,
+                'usuario_id' => (int)$_SESSION['user_id'],
+                'descripcion' => $descripcion,
+                'proveedor' => $proveedor,
+                'cantidad' => $cantidad,
+                'costo_unitario' => $costoUnitario,
+                'precio_unitario' => $precioUnitario,
+                'observacion' => $observacion
+            ]);
+
+            $_SESSION['success_message'] =
+                'Compra directa registrada correctamente.';
+        } catch (Throwable $e) {
+
+            $_SESSION['error_message'] =
+                'No fue posible registrar la compra directa.';
+        }
+
+        /*
+     * Regresar conservando tanto el vehículo como el caso.
+     */
         header(
             'Location: index.php?controller=mechanic&action=viewCase' .
-            '&veh_id=' . $vehiculoId .
-            '&case_id=' . $caseId
+                '&veh_id=' . $vehiculoId .
+                '&case_id=' . $caseId
         );
         exit;
     }
-
-    try {
-
-        $this->casePurchaseModel->add([
-            'caso_id' => $caseId,
-            'usuario_id' => (int)$_SESSION['user_id'],
-            'descripcion' => $descripcion,
-            'proveedor' => $proveedor,
-            'cantidad' => $cantidad,
-            'costo_unitario' => $costoUnitario,
-            'precio_unitario' => $precioUnitario,
-            'observacion' => $observacion
-        ]);
-
-        $_SESSION['success_message'] =
-            'Compra directa registrada correctamente.';
-
-    } catch (Throwable $e) {
-
-        $_SESSION['error_message'] =
-            'No fue posible registrar la compra directa.';
-    }
-
-    /*
-     * Regresar conservando tanto el vehículo como el caso.
-     */
-    header(
-        'Location: index.php?controller=mechanic&action=viewCase' .
-        '&veh_id=' . $vehiculoId .
-        '&case_id=' . $caseId
-    );
-    exit;
-}
 
     public function imprimir(): void
     {
@@ -541,30 +539,30 @@ public function registrarCompraDirecta(): void
 
         $avanceModel = new Avance($this->pdo);
 
-require_once __DIR__ . '/../models/CasePart.php';
+        require_once __DIR__ . '/../models/CasePart.php';
 
-$casePartModel = new CasePart($this->pdo);
+        $casePartModel = new CasePart($this->pdo);
 
-require_once __DIR__ . '/../models/CasePurchase.php';
+        require_once __DIR__ . '/../models/CasePurchase.php';
 
-$casePurchaseModel = new CasePurchase($this->pdo);
+        $casePurchaseModel = new CasePurchase($this->pdo);
 
-$caso = $this->caseModel->findById($caseId);
-$avances = $avanceModel->getByCase($caseId);
-$totales = $avanceModel->getTotalesPorCaso($caseId);
-$caseParts = $casePartModel->findByCase($caseId);
-$casePurchases = $casePurchaseModel->findByCase($caseId);
+        $caso = $this->caseModel->findById($caseId);
+        $avances = $avanceModel->getByCase($caseId);
+        $totales = $avanceModel->getTotalesPorCaso($caseId);
+        $caseParts = $casePartModel->findByCase($caseId);
+        $casePurchases = $casePurchaseModel->findByCase($caseId);
 
-$pdf = new CasePdf();
+        $pdf = new CasePdf();
 
         $pdf->AliasNbPages();
 
         $pdf->generate(
-    $caso,
-    $avances,
-    $totales,
-    $caseParts,
-    $casePurchases
-);
+            $caso,
+            $avances,
+            $totales,
+            $caseParts,
+            $casePurchases
+        );
     }
 }

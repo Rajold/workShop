@@ -9,14 +9,14 @@ class CasePdf extends FPDF
     {
         // Logo 
         $this->Image(
-    __DIR__ . '/../../public/assets/img/logo.png',
-    10,
-    8,
-    22
-);
+            __DIR__ . '/../../public/assets/img/logo.png',
+            10,
+            8,
+            22
+        );
 
         // Nombre del taller
-        
+
         $this->SetFont('Arial', 'B', 18);
         $this->Cell(0, 10, utf8_decode('
         DONDE LUPE
@@ -33,8 +33,8 @@ class CasePdf extends FPDF
         $this->Ln(4);
 
         // división
-        $this->SetDrawColor(180,180,180);
-        $this->Line(10,30,200,30);
+        $this->SetDrawColor(180, 180, 180);
+        $this->Line(10, 30, 200, 30);
 
         $this->Ln(5);
     }
@@ -43,7 +43,7 @@ class CasePdf extends FPDF
     {
         $this->SetY(-15);
 
-        $this->SetFont('Arial','I',8);
+        $this->SetFont('Arial', 'I', 8);
 
         $this->SetTextColor(120);
 
@@ -58,416 +58,413 @@ class CasePdf extends FPDF
     }
 
     protected function txt(string $texto): string
-{
-    return mb_convert_encoding($texto, 'ISO-8859-1', 'UTF-8');
-}
+    {
+        return mb_convert_encoding($texto, 'ISO-8859-1', 'UTF-8');
+    }
 
     public function titulo($texto)
-{
-    $this->SetFillColor(230,230,230);
+    {
+        $this->SetFillColor(230, 230, 230);
 
-    $this->SetFont('Arial','B',12);
+        $this->SetFont('Arial', 'B', 12);
 
-    $this->Cell(
-        0,
-        8,
-        utf8_decode($texto),
-        0,
-        1,
-        'L',
-        true
-    );
+        $this->Cell(
+            0,
+            8,
+            utf8_decode($texto),
+            0,
+            1,
+            'L',
+            true
+        );
 
-    $this->Ln(2);
-}
+        $this->Ln(2);
+    }
 
-public function fila($etiqueta,$valor)
-{
-    $this->SetFont('Arial','B',10);
-    $this->Cell(50,7,utf8_decode($etiqueta),0,0);
-
-    $this->SetFont('Arial','',10);
-    $this->Cell(0,7,utf8_decode($valor),0,1);
-}
-
-public function tablaDosColumnas(array $filas)
-{
-    foreach ($filas as $titulo => $valor) {
-
-        // Columna izquierda
+    public function fila($etiqueta, $valor)
+    {
         $this->SetFont('Arial', 'B', 10);
-        $this->Cell(
-            55,
-            8,
-            $this->txt($titulo),
-            1,
-            0,
-            'L'
-        );
+        $this->Cell(50, 7, utf8_decode($etiqueta), 0, 0);
 
-        // Columna derecha
         $this->SetFont('Arial', '', 10);
-        $this->Cell(
-            135,
-            8,
-            $this->txt((string)$valor),
-            1,
-            1,
-            'L'
-        );
+        $this->Cell(0, 7, utf8_decode($valor), 0, 1);
     }
 
-    $this->Ln(3);
-}
+    public function tablaDosColumnas(array $filas)
+    {
+        foreach ($filas as $titulo => $valor) {
 
-public function generate(
-    array $caso,
-    array $avances,
-    array $totales,
-    array $caseParts = [],
-    array $casePurchases = []
-)
-{
-    $this->AddPage();
+            // Columna izquierda
+            $this->SetFont('Arial', 'B', 10);
+            $this->Cell(
+                55,
+                8,
+                $this->txt($titulo),
+                1,
+                0,
+                'L'
+            );
 
-    // DATOS DEL VEHÍCULO
-
-  $this->titulo("DATOS DEL VEHÍCULO");
-
-$this->tablaDosColumnas([
-    'Placa'  => $caso['placa'],
-    'Marca'  => $caso['marca'],
-    'Modelo' => $caso['modelo']
-]);
-
-    $this->Ln(4);
-
-    // CLIENTE
-    $this->titulo("CLIENTE");
-
-$this->tablaDosColumnas([
-    'Propietario' => $caso['propietario']
-]);
-
-    $this->Ln(4);
-
-    // CASO
-
-   $this->titulo("INFORMACIÓN DEL CASO");
-
-$this->tablaDosColumnas([
-    'Caso'     => '#' . $caso['id'],
-    'Estado'   => ucfirst($caso['estado']),
-    'Mecánico' => $caso['mecanico_nombre']
-]);
-
-    $this->Ln(4);
-
-    // // CAUSA
-
-    // $this->titulo("CAUSA REPORTADA");
-    // $this->SetFont('Arial','',10);
-
-    // $this->MultiCell(
-    //     0,
-    //     6,
-    //     $caso['causa']
-    // );
-
-    // $this->Ln(4);
-
-$this->titulo("TRABAJOS REALIZADOS");
-
-$this->SetFont('Arial','',10);
-
-foreach ($avances as $avance) {
-
-    $texto = sprintf(
-        "[%s] %s - %s",
-        date('d/m/Y', strtotime($avance['fecha'])),
-        $avance['tipo'],
-        $avance['descripcion']
-    );
-
-    $this->MultiCell(0, 6, $this->txt($texto));
-
-    if ($avance['valor'] > 0) {
-
-        $this->SetFont('Arial','I',9);
-
-        $this->Cell(
-            0,
-            5,
-            '$ ' . number_format($avance['valor'],0,',','.'),
-            0,
-            1,
-            'R'
-        );
-
-        $this->SetFont('Arial','',10);
-    }
-
-    $this->Ln(2);
-}
-
-$this->titulo("REPUESTOS UTILIZADOS");
-
-if (empty($caseParts)) {
-
-    $this->SetFont('Arial', 'I', 10);
-
-    $this->Cell(
-        0,
-        7,
-        $this->txt('No se utilizaron repuestos registrados.'),
-        0,
-        1
-    );
-
-} else {
-
-    // Encabezados de la tabla
-    $this->SetFont('Arial', 'B', 9);
-
-    $this->Cell(
-        75,
-        8,
-        $this->txt('Repuesto'),
-        1,
-        0,
-        'L'
-    );
-
-    $this->Cell(
-        20,
-        8,
-        $this->txt('Cant.'),
-        1,
-        0,
-        'C'
-    );
-
-    $this->Cell(
-        40,
-        8,
-        $this->txt('Precio unit.'),
-        1,
-        0,
-        'R'
-    );
-
-    $this->Cell(
-        45,
-        8,
-        $this->txt('Subtotal'),
-        1,
-        1,
-        'R'
-    );
-
-    // Filas de repuestos
-    $this->SetFont('Arial', '', 9);
-
-    foreach ($caseParts as $repuesto) {
-
-        $nombre = $repuesto['nombre'];
-
-        if (!empty($repuesto['marca'])) {
-            $nombre .= ' - ' . $repuesto['marca'];
+            // Columna derecha
+            $this->SetFont('Arial', '', 10);
+            $this->Cell(
+                135,
+                8,
+                $this->txt((string)$valor),
+                1,
+                1,
+                'L'
+            );
         }
 
-        $this->Cell(
-            75,
-            8,
-            $this->txt($nombre),
-            1,
-            0,
-            'L'
-        );
+        $this->Ln(3);
+    }
 
-        $this->Cell(
-            20,
-            8,
-            number_format(
-                (float)$repuesto['cantidad'],
+    public function generate(
+        array $caso,
+        array $avances,
+        array $totales,
+        array $caseParts = [],
+        array $casePurchases = []
+    ) {
+        $this->AddPage();
+
+        // DATOS DEL VEHÍCULO
+
+        $this->titulo("DATOS DEL VEHÍCULO");
+
+        $this->tablaDosColumnas([
+            'Placa'  => $caso['placa'],
+            'Marca'  => $caso['marca'],
+            'Modelo' => $caso['modelo']
+        ]);
+
+        $this->Ln(4);
+
+        // CLIENTE
+        $this->titulo("CLIENTE");
+
+        $this->tablaDosColumnas([
+            'Propietario' => $caso['propietario']
+        ]);
+
+        $this->Ln(4);
+
+        // CASO
+
+        $this->titulo("INFORMACIÓN DEL CASO");
+
+        $this->tablaDosColumnas([
+            'Caso'     => '#' . $caso['id'],
+            'Estado'   => ucfirst($caso['estado']),
+            'Mecánico' => $caso['mecanico_nombre']
+        ]);
+
+        $this->Ln(4);
+
+        // // CAUSA
+
+        // $this->titulo("CAUSA REPORTADA");
+        // $this->SetFont('Arial','',10);
+
+        // $this->MultiCell(
+        //     0,
+        //     6,
+        //     $caso['causa']
+        // );
+
+        // $this->Ln(4);
+
+        $this->titulo("TRABAJOS REALIZADOS");
+
+        $this->SetFont('Arial', '', 10);
+
+        foreach ($avances as $avance) {
+
+            $texto = sprintf(
+                "[%s] %s - %s",
+                date('d/m/Y', strtotime($avance['fecha'])),
+                $avance['tipo'],
+                $avance['descripcion']
+            );
+
+            $this->MultiCell(0, 6, $this->txt($texto));
+
+            if ($avance['valor'] > 0) {
+
+                $this->SetFont('Arial', 'I', 9);
+
+                $this->Cell(
+                    0,
+                    5,
+                    '$ ' . number_format($avance['valor'], 0, ',', '.'),
+                    0,
+                    1,
+                    'R'
+                );
+
+                $this->SetFont('Arial', '', 10);
+            }
+
+            $this->Ln(2);
+        }
+
+        $this->titulo("REPUESTOS UTILIZADOS");
+
+        if (empty($caseParts)) {
+
+            $this->SetFont('Arial', 'I', 10);
+
+            $this->Cell(
                 0,
-                ',',
-                '.'
-            ),
-            1,
-            0,
-            'C'
-        );
-
-        $this->Cell(
-            40,
-            8,
-            $this->dinero($repuesto['precio_unitario']),
-            1,
-            0,
-            'R'
-        );
-
-        $this->Cell(
-            45,
-            8,
-            $this->dinero($repuesto['subtotal']),
-            1,
-            1,
-            'R'
-        );
-    }
-
-    $this->Ln(3);
-}
-
-// COMPRAS DIRECTAS
-
-if (!empty($casePurchases)) {
-
-    $this->titulo("COMPRAS DIRECTAS");
-
-    $this->SetFont('Arial', 'B', 9);
-
-    $this->Cell(
-        75,
-        8,
-        $this->txt('Descripción'),
-        1,
-        0,
-        'L'
-    );
-
-    $this->Cell(
-        20,
-        8,
-        $this->txt('Cant.'),
-        1,
-        0,
-        'C'
-    );
-
-    $this->Cell(
-        40,
-        8,
-        $this->txt('Precio unit.'),
-        1,
-        0,
-        'R'
-    );
-
-    $this->Cell(
-        45,
-        8,
-        $this->txt('Subtotal'),
-        1,
-        1,
-        'R'
-    );
-
-    $this->SetFont('Arial', '', 9);
-
-    foreach ($casePurchases as $purchase) {
-
-        $this->Cell(
-            75,
-            8,
-            $this->txt($purchase['descripcion']),
-            1,
-            0,
-            'L'
-        );
-
-        $this->Cell(
-            20,
-            8,
-            number_format(
-                (float)$purchase['cantidad'],
+                7,
+                $this->txt('No se utilizaron repuestos registrados.'),
                 0,
-                ',',
-                '.'
-            ),
-            1,
-            0,
-            'C'
-        );
+                1
+            );
+        } else {
 
-        $this->Cell(
-            40,
-            8,
-            $this->dinero($purchase['precio_unitario']),
-            1,
-            0,
-            'R'
-        );
+            // Encabezados de la tabla
+            $this->SetFont('Arial', 'B', 9);
 
-        $this->Cell(
-            45,
-            8,
-            $this->dinero($purchase['subtotal']),
-            1,
-            1,
-            'R'
+            $this->Cell(
+                75,
+                8,
+                $this->txt('Repuesto'),
+                1,
+                0,
+                'L'
+            );
+
+            $this->Cell(
+                20,
+                8,
+                $this->txt('Cant.'),
+                1,
+                0,
+                'C'
+            );
+
+            $this->Cell(
+                40,
+                8,
+                $this->txt('Precio unit.'),
+                1,
+                0,
+                'R'
+            );
+
+            $this->Cell(
+                45,
+                8,
+                $this->txt('Subtotal'),
+                1,
+                1,
+                'R'
+            );
+
+            // Filas de repuestos
+            $this->SetFont('Arial', '', 9);
+
+            foreach ($caseParts as $repuesto) {
+
+                $nombre = $repuesto['nombre'];
+
+                if (!empty($repuesto['marca'])) {
+                    $nombre .= ' - ' . $repuesto['marca'];
+                }
+
+                $this->Cell(
+                    75,
+                    8,
+                    $this->txt($nombre),
+                    1,
+                    0,
+                    'L'
+                );
+
+                $this->Cell(
+                    20,
+                    8,
+                    number_format(
+                        (float)$repuesto['cantidad'],
+                        0,
+                        ',',
+                        '.'
+                    ),
+                    1,
+                    0,
+                    'C'
+                );
+
+                $this->Cell(
+                    40,
+                    8,
+                    $this->dinero($repuesto['precio_unitario']),
+                    1,
+                    0,
+                    'R'
+                );
+
+                $this->Cell(
+                    45,
+                    8,
+                    $this->dinero($repuesto['subtotal']),
+                    1,
+                    1,
+                    'R'
+                );
+            }
+
+            $this->Ln(3);
+        }
+
+        // COMPRAS DIRECTAS
+
+        if (!empty($casePurchases)) {
+
+            $this->titulo("COMPRAS DIRECTAS");
+
+            $this->SetFont('Arial', 'B', 9);
+
+            $this->Cell(
+                75,
+                8,
+                $this->txt('Descripción'),
+                1,
+                0,
+                'L'
+            );
+
+            $this->Cell(
+                20,
+                8,
+                $this->txt('Cant.'),
+                1,
+                0,
+                'C'
+            );
+
+            $this->Cell(
+                40,
+                8,
+                $this->txt('Precio unit.'),
+                1,
+                0,
+                'R'
+            );
+
+            $this->Cell(
+                45,
+                8,
+                $this->txt('Subtotal'),
+                1,
+                1,
+                'R'
+            );
+
+            $this->SetFont('Arial', '', 9);
+
+            foreach ($casePurchases as $purchase) {
+
+                $this->Cell(
+                    75,
+                    8,
+                    $this->txt($purchase['descripcion']),
+                    1,
+                    0,
+                    'L'
+                );
+
+                $this->Cell(
+                    20,
+                    8,
+                    number_format(
+                        (float)$purchase['cantidad'],
+                        0,
+                        ',',
+                        '.'
+                    ),
+                    1,
+                    0,
+                    'C'
+                );
+
+                $this->Cell(
+                    40,
+                    8,
+                    $this->dinero($purchase['precio_unitario']),
+                    1,
+                    0,
+                    'R'
+                );
+
+                $this->Cell(
+                    45,
+                    8,
+                    $this->dinero($purchase['subtotal']),
+                    1,
+                    1,
+                    'R'
+                );
+            }
+
+            $this->Ln(3);
+        }
+
+        // RESUMEN DEL SERVICIO
+
+        $this->titulo("RESUMEN DEL SERVICIO");
+
+        if (($caso['estado'] ?? '') === 'cerrado') {
+
+            $precioCobrado = (float)($caso['precio_cobrado'] ?? 0);
+            $descuento = (float)($caso['descuento'] ?? 0);
+
+            $totalCobrado = max(
+                0,
+                $precioCobrado - $descuento
+            );
+
+            $this->tablaDosColumnas([
+                'Total cobrado' => $this->dinero($totalCobrado)
+            ]);
+        } else {
+
+            $ventaRepuestos = (float)$totales['repuestos'];
+
+            $ventaComprasDirectas = 0;
+
+            foreach ($casePurchases as $purchase) {
+                $ventaComprasDirectas += (float)$purchase['subtotal'];
+            }
+
+            $totalServicio =
+                (float)$totales['mano_obra'] +
+                $ventaRepuestos +
+                $ventaComprasDirectas;
+
+            $this->tablaDosColumnas([
+                'Mano de obra' => $this->dinero($totales['mano_obra']),
+
+                'Repuestos' => $this->dinero(
+                    $ventaRepuestos + $ventaComprasDirectas
+                ),
+
+                'Total del servicio' => $this->dinero($totalServicio)
+            ]);
+        }
+
+        $this->Ln(4);
+
+        $this->Output(
+            'I',
+            "Caso_" . $caso['id'] . ".pdf"
         );
     }
 
-    $this->Ln(3);
-}
-
-// RESUMEN DEL SERVICIO
-
-$this->titulo("RESUMEN DEL SERVICIO");
-
-if (($caso['estado'] ?? '') === 'cerrado') {
-
-    $precioCobrado = (float)($caso['precio_cobrado'] ?? 0);
-    $descuento = (float)($caso['descuento'] ?? 0);
-
-    $totalCobrado = max(
-        0,
-        $precioCobrado - $descuento
-    );
-
-    $this->tablaDosColumnas([
-        'Total cobrado' => $this->dinero($totalCobrado)
-    ]);
-
-} else {
-
-    $ventaRepuestos = (float)$totales['repuestos'];
-
-    $ventaComprasDirectas = 0;
-
-    foreach ($casePurchases as $purchase) {
-        $ventaComprasDirectas += (float)$purchase['subtotal'];
+    public function dinero($valor): string
+    {
+        return '$ ' . number_format((float)$valor, 0, ',', '.');
     }
-
-    $totalServicio =
-        (float)$totales['mano_obra'] +
-        $ventaRepuestos +
-        $ventaComprasDirectas;
-
-    $this->tablaDosColumnas([
-        'Mano de obra' => $this->dinero($totales['mano_obra']),
-
-        'Repuestos' => $this->dinero(
-            $ventaRepuestos + $ventaComprasDirectas
-        ),
-
-        'Total del servicio' => $this->dinero($totalServicio)
-    ]);
-}
-
-$this->Ln(4);
-
-    $this->Output(
-        'I',
-        "Caso_" . $caso['id'] . ".pdf"
-    );
-}
-
-public function dinero($valor): string
-{
-    return '$ ' . number_format((float)$valor, 0, ',', '.');
-}
 }

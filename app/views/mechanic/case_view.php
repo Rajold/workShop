@@ -52,10 +52,10 @@
 
         <?php endif; ?>
 
-        <div class="card shadow-sm mb-4 border-0 case-vehicle-header">
-            <div class="card-body">
+        <div class="card mb-4 case-vehicle-header">
+            <div class="card-body p-4">
 
-                <div class="d-flex justify-content-between align-items-start">
+                <div class="case-vehicle-top">
 
                     <div>
                         <h3 class="mb-1 case-vehicle-title">
@@ -380,69 +380,109 @@
         </div>
     <?php endif; ?>
 
-   <!-- =========================================================
+    <!-- =========================================================
      HISTORIAL DEL VEHÍCULO
      ========================================================= -->
 
-<div class="case-section-title">
-    <span class="section-icon">📚</span>
-    Historial del vehículo
-</div>
+    <div class="case-section-title">
+        <span class="section-icon">📚</span>
+        Historial del vehículo
+    </div>
 
-<?php if (!empty($cases)): ?>
+    <?php if (!empty($cases)): ?>
 
-    <div class="case-history">
+        <div class="case-history">
 
-        <?php foreach ($cases as $c): ?>
+            <?php foreach ($cases as $c): ?>
 
-            <?php
+                <?php
                 $isCurrent = ((int)$c['id'] === (int)$caso['id']);
                 $isOpen = ($c['estado'] === 'abierto');
-            ?>
+                ?>
 
-            <div class="case-history-item">
+                <div class="case-history-item">
 
-                <div class="
+                    <div class="
                     card
                     shadow-sm
                     case-history-card
                     <?= $isCurrent ? 'case-history-current' : '' ?>
                 ">
 
-                    <div class="card-body">
+                        <div class="card-body">
 
-                        <div class="d-flex justify-content-between align-items-start gap-3">
+                            <div class="d-flex justify-content-between align-items-start gap-3">
 
-                            <div>
+                                <div>
 
-                                <div class="case-history-number">
-                                    Caso #<?= (int)$c['id'] ?>
+                                    <div class="case-history-number">
+                                        Caso #<?= (int)$c['id'] ?>
+                                    </div>
+
+                                    <div class="case-history-date">
+                                        <?= htmlspecialchars(
+                                            $c['fecha_ingreso'],
+                                            ENT_QUOTES,
+                                            'UTF-8'
+                                        ) ?>
+                                    </div>
+
                                 </div>
 
-                                <div class="case-history-date">
-                                    <?= htmlspecialchars(
-                                        $c['fecha_ingreso'],
-                                        ENT_QUOTES,
-                                        'UTF-8'
-                                    ) ?>
+
+                                <div>
+
+                                    <?php if ($isOpen): ?>
+
+                                        <span class="case-status case-status-open">
+                                            🟢 Abierto
+                                        </span>
+
+                                    <?php else: ?>
+
+                                        <span class="case-status case-status-closed">
+                                            ⚫ Cerrado
+                                        </span>
+
+                                    <?php endif; ?>
+
                                 </div>
 
                             </div>
 
 
-                            <div>
+                            <div class="case-history-cause">
 
-                                <?php if ($isOpen): ?>
+                                <?= htmlspecialchars(
+                                    $c['causa'] ?: 'Sin descripción',
+                                    ENT_QUOTES,
+                                    'UTF-8'
+                                ) ?>
 
-                                    <span class="case-status case-status-open">
-                                        🟢 Abierto
-                                    </span>
+                            </div>
 
-                                <?php else: ?>
 
-                                    <span class="case-status case-status-closed">
-                                        ⚫ Cerrado
-                                    </span>
+                            <div class="case-actions mt-3">
+
+                                <a
+                                    class="btn btn-sm btn-outline-primary"
+                                    href="index.php?controller=mechanic&action=viewCase&veh_id=<?= $vehicle['id'] ?>&case_id=<?= $c['id'] ?>">
+
+                                    👁 Ver caso
+
+                                </a>
+
+
+                                <?php if ($c['estado'] === 'cerrado'): ?>
+
+                                    <a
+                                        class="btn btn-sm btn-outline-secondary"
+                                        target="_blank"
+                                        href="index.php?controller=case&action=imprimir&case_id=<?= $c['id'] ?>">
+
+                                        📄 PDF
+
+                                    </a>
 
                                 <?php endif; ?>
 
@@ -450,63 +490,21 @@
 
                         </div>
 
-
-                        <div class="case-history-cause">
-
-                            <?= htmlspecialchars(
-                                $c['causa'] ?: 'Sin descripción',
-                                ENT_QUOTES,
-                                'UTF-8'
-                            ) ?>
-
-                        </div>
-
-
-                        <div class="case-actions mt-3">
-
-                            <a
-                                class="btn btn-sm btn-outline-primary"
-                                href="index.php?controller=mechanic&action=viewCase&veh_id=<?= $vehicle['id'] ?>&case_id=<?= $c['id'] ?>">
-
-                                👁 Ver caso
-
-                            </a>
-
-
-                            <?php if ($c['estado'] === 'cerrado'): ?>
-
-                                <a
-                                    class="btn btn-sm btn-outline-secondary"
-                                    target="_blank"
-                                    href="index.php?controller=case&action=imprimir&case_id=<?= $c['id'] ?>">
-
-                                    📄 PDF
-
-                                </a>
-
-                            <?php endif; ?>
-
-                        </div>
-
                     </div>
 
                 </div>
 
-            </div>
+            <?php endforeach; ?>
 
-        <?php endforeach; ?>
+        </div>
 
-    </div>
+    <?php else: ?>
 
-<?php else: ?>
+        <div class="alert alert-info">
+            El vehículo no tiene casos registrados.
+        </div>
 
-    <div class="alert alert-info">
-        El vehículo no tiene casos registrados.
-    </div>
-
-<?php endif; ?>
-    <div class="alert alert-info">El vehículo no tiene más casos registrados.</div>
-    </php endif; ?>
+    <?php endif; ?>
 
     <div class="case-section-title">
         <span class="section-icon">🔧</span>
