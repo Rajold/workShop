@@ -1,0 +1,379 @@
+/* =========================================================
+   CASE VIEW
+   Apariencia de la ficha del vehículo/caso
+   ========================================================= */
+
+.case-view {
+    --cv-primary: #0d6efd;
+    --cv-success: #198754;
+    --cv-warning: #ffc107;
+    --cv-danger: #dc3545;
+    --cv-border: #e5e7eb;
+    --cv-muted: #6c757d;
+    --cv-bg: #f5f7fa;
+    --cv-card: #ffffff;
+
+    background: var(--cv-bg);
+    min-height: 100vh;
+    padding-bottom: 40px;
+}
+
+
+/* =========================================================
+   CONTENEDOR PRINCIPAL
+   ========================================================= */
+
+.case-view .container {
+    max-width: 1200px;
+}
+
+
+/* =========================================================
+   TARJETAS
+   ========================================================= */
+
+.case-view .card {
+    border: 1px solid var(--cv-border);
+    border-radius: 12px;
+    overflow: hidden;
+}
+
+.case-view .card-header {
+    border-bottom: 1px solid rgba(0, 0, 0, .06);
+}
+
+
+/* =========================================================
+   CABECERA DEL VEHÍCULO
+   ========================================================= */
+
+.case-vehicle-header {
+    position: relative;
+    background: var(--cv-card);
+    padding: 24px;
+}
+
+.case-vehicle-title {
+    font-weight: 700;
+    letter-spacing: -.3px;
+    margin-bottom: 4px;
+}
+
+.case-vehicle-subtitle {
+    color: var(--cv-muted);
+    font-size: .95rem;
+}
+
+.case-vehicle-info {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 18px;
+    margin-top: 16px;
+}
+
+.case-vehicle-info-item {
+    color: #343a40;
+    font-size: .92rem;
+}
+
+.case-vehicle-info-item strong {
+    color: #212529;
+}
+
+
+/* =========================================================
+   ESTADO DEL CASO
+   ========================================================= */
+
+.case-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    border-radius: 999px;
+    padding: 7px 13px;
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+.case-status-open {
+    background: rgba(25, 135, 84, .12);
+    color: #146c43;
+}
+
+.case-status-closed {
+    background: rgba(108, 117, 125, .12);
+    color: #495057;
+}
+
+
+/* =========================================================
+   SECCIONES
+   ========================================================= */
+
+.case-section-title {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin: 30px 0 14px;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.case-section-title .section-icon {
+    font-size: 1.15rem;
+}
+
+
+/* =========================================================
+   HISTORIAL
+   ========================================================= */
+
+.case-history {
+    position: relative;
+}
+
+.case-history-item {
+    position: relative;
+    margin-bottom: 12px;
+}
+
+.case-history-card {
+    transition:
+        transform .15s ease,
+        box-shadow .15s ease;
+}
+
+.case-history-card:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 .35rem .9rem rgba(0, 0, 0, .08) !important;
+}
+
+.case-history-current {
+    border: 2px solid var(--cv-primary) !important;
+    background: #f8fbff;
+}
+
+.case-history-number {
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.case-history-date {
+    color: var(--cv-muted);
+    font-size: .85rem;
+}
+
+.case-history-cause {
+    margin-top: 10px;
+    color: #343a40;
+}
+
+
+/* =========================================================
+   FICHA DEL CASO
+   ========================================================= */
+
+.case-data-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 16px;
+}
+
+.case-data-item {
+    padding: 14px 16px;
+    border: 1px solid var(--cv-border);
+    border-radius: 10px;
+    background: #fafbfc;
+}
+
+.case-data-label {
+    display: block;
+    color: var(--cv-muted);
+    font-size: .78rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+    margin-bottom: 5px;
+}
+
+.case-data-value {
+    color: #212529;
+    line-height: 1.5;
+}
+
+
+/* =========================================================
+   SESIÓN DE TRABAJO
+   ========================================================= */
+
+.case-work-session {
+    border-radius: 12px;
+}
+
+.case-session-active {
+    border-left: 4px solid var(--cv-success);
+}
+
+.case-session-inactive {
+    border-left: 4px solid var(--cv-primary);
+}
+
+
+/* =========================================================
+   RESUMEN COMERCIAL
+   ========================================================= */
+
+.case-financial-summary {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+.case-financial-card {
+    padding: 18px;
+    border: 1px solid var(--cv-border);
+    border-radius: 12px;
+    background: var(--cv-card);
+}
+
+.case-financial-label {
+    color: var(--cv-muted);
+    font-size: .85rem;
+    margin-bottom: 5px;
+}
+
+.case-financial-value {
+    font-size: 1.35rem;
+    font-weight: 700;
+}
+
+.case-financial-total {
+    background: #f8fbff;
+    border-color: rgba(13, 110, 253, .3);
+}
+
+.case-financial-total .case-financial-value {
+    color: var(--cv-primary);
+    font-size: 1.7rem;
+}
+
+
+/* =========================================================
+   TABLAS
+   ========================================================= */
+
+.case-view .table {
+    margin-bottom: 0;
+}
+
+.case-view .table thead th {
+    font-size: .78rem;
+    text-transform: uppercase;
+    letter-spacing: .03em;
+    color: #6c757d;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.case-view .table tbody td {
+    vertical-align: middle;
+}
+
+.case-view .table tbody tr:last-child td {
+    border-bottom: 0;
+}
+
+
+/* =========================================================
+   BOTONES DE ACCIÓN
+   ========================================================= */
+
+.case-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.case-actions .btn {
+    border-radius: 8px;
+}
+
+
+/* =========================================================
+   ALERTAS
+   ========================================================= */
+
+.case-view .alert {
+    border-radius: 10px;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 767.98px) {
+
+    .case-view {
+        padding-bottom: 25px;
+    }
+
+    .case-vehicle-header {
+        padding: 18px;
+    }
+
+    .case-data-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .case-financial-summary {
+        grid-template-columns: 1fr;
+    }
+
+    .case-actions {
+        flex-direction: column;
+    }
+
+    .case-actions .btn {
+        width: 100%;
+    }
+}
+
+/* =========================================================
+   LÍNEA VISUAL DEL HISTORIAL
+   ========================================================= */
+
+.case-history {
+    position: relative;
+    padding-left: 24px;
+}
+
+.case-history::before {
+    content: "";
+    position: absolute;
+    left: 5px;
+    top: 8px;
+    bottom: 8px;
+    width: 2px;
+    background: #dee2e6;
+}
+
+.case-history-item::before {
+    content: "";
+    position: absolute;
+    left: -24px;
+    top: 24px;
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #6c757d;
+    border: 3px solid #f5f7fa;
+}
+
+.case-history-item:has(.case-history-current)::before {
+    background: #0d6efd;
+}
+
+.case-history-item:has(.case-status-open)::before {
+    background: #198754;
+}

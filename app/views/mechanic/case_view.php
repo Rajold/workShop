@@ -2,9 +2,15 @@
 // app/views/mechanic/case_view.php
 ?>
 
-<!-- Cargar Bootstrap desde CDN -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Bootstrap -->
+<link
+    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
+    rel="stylesheet">
 
+<!-- Estilos específicos de la ficha -->
+<link
+    href="css/case_view.css"
+    rel="stylesheet">
 <a
     href="index.php?controller=case&action=imprimir&case_id=<?= $caso['id'] ?>"
     target="_blank"
@@ -14,7 +20,7 @@
 
 </a>
 
-<div class="container mt-4">
+<div class="container mt-4 case-view">
     <h2 class="mb-4">Ficha del vehículo</h2>
 
     <?php if ($vehicle): ?>
@@ -46,13 +52,13 @@
 
         <?php endif; ?>
 
-        <div class="card shadow-sm mb-4 border-0">
+        <div class="card shadow-sm mb-4 border-0 case-vehicle-header">
             <div class="card-body">
 
                 <div class="d-flex justify-content-between align-items-start">
 
                     <div>
-                        <h3 class="mb-1">
+                        <h3 class="mb-1 case-vehicle-title">
 
                             <?php if (!empty($vehicle['display_name'])): ?>
 
@@ -69,7 +75,7 @@
 
                         <?php if (!empty($vehicle['tipo_moto'])): ?>
 
-                            <div class="text-muted mb-2">
+                            <div class="case-vehicle-subtitle mb-2">
 
                                 <?= htmlspecialchars($vehicle['tipo_moto']) ?>
 
@@ -97,11 +103,12 @@
         </div>
     </div> -->
 
-                        <p class="mb-1">
+                        <p class="mb-1 case-vehicle-info-item">
                             <strong>Propietario:</strong>
                             <?= htmlspecialchars($vehicle['propietario']) ?>
                         </p>
-                        <p><strong>Teléfono:</strong>
+                        <p class="case-vehicle-info-item">
+                            <strong>Teléfono:</strong>
                             <?= htmlspecialchars($vehicle['telefono'] ?? '-') ?>
                         </p>
 
@@ -119,7 +126,7 @@
                             💬 WhatsApp
                         </a>
 
-                        <p class="mb-0">
+                        <p class="mb-0 case-vehicle-info-item">
                             <strong>Color:</strong>
                             <?= htmlspecialchars($vehicle['color']) ?>
                         </p>
@@ -373,62 +380,103 @@
         </div>
     <?php endif; ?>
 
-    <h3 class="mb-3">📚 Historial del vehículo</h3>
+   <!-- =========================================================
+     HISTORIAL DEL VEHÍCULO
+     ========================================================= -->
 
-    <?php if (!empty($cases)): ?>
+<div class="case-section-title">
+    <span class="section-icon">📚</span>
+    Historial del vehículo
+</div>
 
-        <div class="row">
+<?php if (!empty($cases)): ?>
 
-            <?php foreach ($cases as $c): ?>
+    <div class="case-history">
 
-                <div class="col-md-6 mb-3">
+        <?php foreach ($cases as $c): ?>
 
-                    <div class="card h-100 shadow-sm <?= $c['id'] == $caso['id'] ? 'border-primary' : '' ?>">
+            <?php
+                $isCurrent = ((int)$c['id'] === (int)$caso['id']);
+                $isOpen = ($c['estado'] === 'abierto');
+            ?>
 
-                        <div class="card-body">
+            <div class="case-history-item">
 
-                            <h5 class="card-title">
+                <div class="
+                    card
+                    shadow-sm
+                    case-history-card
+                    <?= $isCurrent ? 'case-history-current' : '' ?>
+                ">
 
-                                Caso #<?= $c['id'] ?>
+                    <div class="card-body">
 
-                            </h5>
+                        <div class="d-flex justify-content-between align-items-start gap-3">
 
-                            <p class="mb-1">
+                            <div>
 
-                                <strong>Fecha:</strong>
+                                <div class="case-history-number">
+                                    Caso #<?= (int)$c['id'] ?>
+                                </div>
 
-                                <?= htmlspecialchars($c['fecha_ingreso']) ?>
+                                <div class="case-history-date">
+                                    <?= htmlspecialchars(
+                                        $c['fecha_ingreso'],
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    ) ?>
+                                </div>
 
-                            </p>
+                            </div>
 
-                            <p class="mb-2">
 
-                                <?= htmlspecialchars($c['causa'] ?: 'Sin descripción') ?>
+                            <div>
 
-                            </p>
+                                <?php if ($isOpen): ?>
 
-                            <span class="badge bg-<?= $c['estado'] == 'abierto' ? 'success' : 'secondary' ?>">
+                                    <span class="case-status case-status-open">
+                                        🟢 Abierto
+                                    </span>
 
-                                <?= ucfirst($c['estado']) ?>
+                                <?php else: ?>
 
-                            </span>
+                                    <span class="case-status case-status-closed">
+                                        ⚫ Cerrado
+                                    </span>
+
+                                <?php endif; ?>
+
+                            </div>
 
                         </div>
 
-                        <div class="card-footer bg-white">
+
+                        <div class="case-history-cause">
+
+                            <?= htmlspecialchars(
+                                $c['causa'] ?: 'Sin descripción',
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>
+
+                        </div>
+
+
+                        <div class="case-actions mt-3">
 
                             <a
                                 class="btn btn-sm btn-outline-primary"
                                 href="index.php?controller=mechanic&action=viewCase&veh_id=<?= $vehicle['id'] ?>&case_id=<?= $c['id'] ?>">
 
-                                👁 Ver
+                                👁 Ver caso
 
                             </a>
 
-                            <?php if ($c['estado'] == 'cerrado'): ?>
+
+                            <?php if ($c['estado'] === 'cerrado'): ?>
 
                                 <a
-                                    class="btn btn-sm btn-outline-danger"
+                                    class="btn btn-sm btn-outline-secondary"
                                     target="_blank"
                                     href="index.php?controller=case&action=imprimir&case_id=<?= $c['id'] ?>">
 
@@ -444,32 +492,105 @@
 
                 </div>
 
-            <?php endforeach; ?>
+            </div>
 
-        </div>
+        <?php endforeach; ?>
 
-    <?php else: ?>
+    </div>
 
-        <div class="alert alert-info">
+<?php else: ?>
 
-            El vehículo no tiene casos registrados.
+    <div class="alert alert-info">
+        El vehículo no tiene casos registrados.
+    </div>
 
-        </div>
-
-    <?php endif; ?>
+<?php endif; ?>
     <div class="alert alert-info">El vehículo no tiene más casos registrados.</div>
     </php endif; ?>
 
-    <h2 class="mt-4">Ficha del caso</h2>
+    <div class="case-section-title">
+        <span class="section-icon">🔧</span>
+        Ficha del caso
+    </div>
 
     <?php if ($caso): ?>
-        <div class="card mb-4">
+        <div class="card shadow-sm mb-4 border-0">
+
             <div class="card-body">
-                <p><strong>Causa:</strong> <?= htmlspecialchars($caso['causa'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-                <p><strong>Observaciones:</strong> <?= htmlspecialchars($caso['observaciones'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-                <p><strong>Diagnóstico:</strong> <?= htmlspecialchars($caso['diagnostico'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
-                <p><strong>Estado:</strong> <?= htmlspecialchars($caso['estado'] ?? '', ENT_QUOTES, 'UTF-8') ?></p>
+
+                <div class="case-data-grid">
+
+                    <div class="case-data-item">
+                        <span class="case-data-label">
+                            Causa del ingreso
+                        </span>
+
+                        <div class="case-data-value">
+                            <?= htmlspecialchars(
+                                $caso['causa'] ?? '',
+                                ENT_QUOTES,
+                                'UTF-8'
+                            ) ?>
+                        </div>
+                    </div>
+
+
+                    <div class="case-data-item">
+                        <span class="case-data-label">
+                            Estado
+                        </span>
+
+                        <div class="case-data-value">
+                            <?php if ($caso['estado'] === 'abierto'): ?>
+
+                                <span class="case-status case-status-open">
+                                    🟢 Caso abierto
+                                </span>
+
+                            <?php else: ?>
+
+                                <span class="case-status case-status-closed">
+                                    ⚫ Caso cerrado
+                                </span>
+
+                            <?php endif; ?>
+                        </div>
+                    </div>
+
+
+                    <div class="case-data-item">
+                        <span class="case-data-label">
+                            Observaciones
+                        </span>
+
+                        <div class="case-data-value">
+                            <?= nl2br(htmlspecialchars(
+                                $caso['observaciones'] ?? '',
+                                ENT_QUOTES,
+                                'UTF-8'
+                            )) ?>
+                        </div>
+                    </div>
+
+
+                    <div class="case-data-item">
+                        <span class="case-data-label">
+                            Diagnóstico
+                        </span>
+
+                        <div class="case-data-value">
+                            <?= nl2br(htmlspecialchars(
+                                $caso['diagnostico'] ?? '',
+                                ENT_QUOTES,
+                                'UTF-8'
+                            )) ?>
+                        </div>
+                    </div>
+
+                </div>
+
             </div>
+
         </div>
 
         <?php if (!empty($pendingItems)): ?>
@@ -625,65 +746,72 @@
                     </form>
                 <?php endif; ?>
             </div>
-<!-- Total comercial del caso abierto -->
-<div class="card border-primary shadow-sm mt-4 mb-3">
+            <!-- =========================================================
+     RESUMEN COMERCIAL DEL CASO
+     ========================================================= -->
 
-    <div class="card-body">
+            <div class="case-section-title">
+                <span class="section-icon">💰</span>
+                Resumen del servicio
+            </div>
 
-        <div class="d-flex justify-content-between mb-2">
-            <span>
-                👨‍🔧 Mano de obra
-            </span>
+            <div class="case-financial-summary">
 
-            <strong>
-                $<?= number_format(
-                    (float)$financial['mano_obra'],
-                    0,
-                    ',',
-                    '.'
-                ) ?>
-            </strong>
-        </div>
+                <!-- Mano de obra -->
+                <div class="case-financial-card">
+                    <div class="case-financial-label">
+                        👨‍🔧 Mano de obra
+                    </div>
 
-        <div class="d-flex justify-content-between mb-3">
-            <span>
-                🔩 Repuestos
-            </span>
+                    <div class="case-financial-value">
+                        $<?= number_format(
+                                (float)$financial['mano_obra'],
+                                0,
+                                ',',
+                                '.'
+                            ) ?>
+                    </div>
+                </div>
 
-            <strong>
-                $<?= number_format(
-                    (float)$financial['total_repuestos_venta'],
-                    0,
-                    ',',
-                    '.'
-                ) ?>
-            </strong>
-        </div>
 
-        <hr>
+                <!-- Repuestos -->
+                <div class="case-financial-card">
+                    <div class="case-financial-label">
+                        🔩 Repuestos
+                    </div>
 
-        <div class="d-flex justify-content-between align-items-center">
-            <strong>
-                💰 Total del servicio
-            </strong>
+                    <div class="case-financial-value">
+                        $<?= number_format(
+                                (float)$financial['total_repuestos_venta'],
+                                0,
+                                ',',
+                                '.'
+                            ) ?>
+                    </div>
+                </div>
 
-            <strong class="fs-4 text-primary">
-                $<?= number_format(
-                    (float)$financial['total_venta_teorica'],
-                    0,
-                    ',',
-                    '.'
-                ) ?>
-            </strong>
-        </div>
 
-    </div>
+                <!-- Total -->
+                <div class="case-financial-card case-financial-total">
+                    <div class="case-financial-label">
+                        Total del servicio
+                    </div>
 
-</div>
+                    <div class="case-financial-value">
+                        $<?= number_format(
+                                (float)$financial['total_venta_teorica'],
+                                0,
+                                ',',
+                                '.'
+                            ) ?>
+                    </div>
+                </div>
+
+            </div>
             <!-- Botón para cerrar caso -->
             <button
                 type="button"
-                class="btn btn-warning w-100 mt-3"
+                class="btn btn-warning w-100 mt-3 py-2 fw-semibold"
                 data-bs-toggle="modal"
                 data-bs-target="#modalCerrarCaso">
 
