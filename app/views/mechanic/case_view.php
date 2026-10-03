@@ -130,94 +130,6 @@
                             <strong>Color:</strong>
                             <?= htmlspecialchars($vehicle['color']) ?>
                         </p>
-                        <?php if (!empty($compatibleParts)): ?>
-
-                            <div class="card mt-4 border-success">
-
-                                <div class="card-header bg-success text-white">
-
-                                    <i class="bi bi-tools"></i>
-
-                                    Repuestos compatibles
-
-                                </div>
-
-                                <div class="list-group list-group-flush">
-
-                                    <?php foreach ($compatibleParts as $part): ?>
-
-                                        <?php
-
-                                        $stock = (float)$part['stock_actual'];
-
-                                        if ($stock <= 0) {
-
-                                            $badge = 'danger';
-                                            $texto = 'Agotado';
-                                        } elseif ($stock <= $part['stock_minimo']) {
-
-                                            $badge = 'warning';
-                                            $texto = 'Stock bajo';
-                                        } else {
-
-                                            $badge = 'success';
-                                            $texto = 'Disponible';
-                                        }
-
-                                        ?>
-
-                                        <div class="list-group-item">
-
-                                            <div class="d-flex justify-content-between align-items-center">
-
-                                                <div>
-
-                                                    <strong>
-
-                                                        <?= htmlspecialchars($part['nombre']) ?>
-
-                                                    </strong>
-
-                                                    <br>
-
-                                                    <small class="text-muted">
-
-                                                        <?= htmlspecialchars($part['codigo']) ?>
-
-                                                    </small>
-
-                                                </div>
-
-                                                <div class="text-end">
-
-                                                    <span class="badge bg-<?= $badge ?>">
-
-                                                        <?= $texto ?>
-
-                                                    </span>
-
-                                                    <br>
-
-                                                    <small>
-
-                                                        Stock:
-                                                        <?= $stock ?>
-
-                                                    </small>
-
-                                                </div>
-
-                                            </div>
-
-                                        </div>
-
-                                    <?php endforeach; ?>
-
-                                </div>
-
-                            </div>
-
-                        <?php endif; ?>
                     </div>
 
                     <div class="text-end">
@@ -384,127 +296,64 @@
      HISTORIAL DEL VEHÍCULO
      ========================================================= -->
 
-    <div class="case-section-title">
-        <span class="section-icon">📚</span>
-        Historial del vehículo
-    </div>
+    <details class="case-collapsible case-collapsible-history">
+        <summary>
+            <span class="case-collapsible-title">
+                <span class="case-collapsible-icon">📚</span>
+                <span>Historial del vehículo</span>
+            </span>
+            <span class="case-collapsible-meta">
+                <?= count($cases) ?> <?= count($cases) === 1 ? 'caso' : 'casos' ?>
+            </span>
+        </summary>
 
-    <?php if (!empty($cases)): ?>
-
-        <div class="case-history">
-
-            <?php foreach ($cases as $c): ?>
-
-                <?php
-                $isCurrent = ((int)$c['id'] === (int)$caso['id']);
-                $isOpen = ($c['estado'] === 'abierto');
-                ?>
-
-                <div class="case-history-item">
-
-                    <div class="
-                    card
-                    shadow-sm
-                    case-history-card
-                    <?= $isCurrent ? 'case-history-current' : '' ?>
-                ">
-
-                        <div class="card-body">
-
-                            <div class="d-flex justify-content-between align-items-start gap-3">
-
-                                <div>
-
-                                    <div class="case-history-number">
-                                        Caso #<?= (int)$c['id'] ?>
+        <div class="case-collapsible-body">
+            <?php if (!empty($cases)): ?>
+                <div class="case-history">
+                    <?php foreach ($cases as $c): ?>
+                        <?php
+                        $isCurrent = ((int)$c['id'] === (int)$caso['id']);
+                        $isOpen = ($c['estado'] === 'abierto');
+                        ?>
+                        <div class="case-history-item">
+                            <div class="card shadow-sm case-history-card <?= $isCurrent ? 'case-history-current' : '' ?>">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-start gap-3">
+                                        <div>
+                                            <div class="case-history-number">Caso #<?= (int)$c['id'] ?></div>
+                                            <div class="case-history-date"><?= htmlspecialchars($c['fecha_ingreso'], ENT_QUOTES, 'UTF-8') ?></div>
+                                        </div>
+                                        <div>
+                                            <?php if ($isOpen): ?>
+                                                <span class="case-status case-status-open">🟢 Abierto</span>
+                                            <?php else: ?>
+                                                <span class="case-status case-status-closed">⚫ Cerrado</span>
+                                            <?php endif; ?>
+                                        </div>
                                     </div>
-
-                                    <div class="case-history-date">
-                                        <?= htmlspecialchars(
-                                            $c['fecha_ingreso'],
-                                            ENT_QUOTES,
-                                            'UTF-8'
-                                        ) ?>
+                                    <div class="case-history-cause">
+                                        <?= htmlspecialchars($c['causa'] ?: 'Sin descripción', ENT_QUOTES, 'UTF-8') ?>
                                     </div>
-
+                                    <div class="case-actions mt-3">
+                                        <a class="btn btn-sm btn-outline-primary" href="index.php?controller=mechanic&action=viewCase&veh_id=<?= $vehicle['id'] ?>&case_id=<?= $c['id'] ?>">
+                                            👁 Ver caso
+                                        </a>
+                                        <?php if ($c['estado'] === 'cerrado'): ?>
+                                            <a class="btn btn-sm btn-outline-secondary" target="_blank" href="index.php?controller=case&action=imprimir&case_id=<?= $c['id'] ?>">
+                                                📄 PDF
+                                            </a>
+                                        <?php endif; ?>
+                                    </div>
                                 </div>
-
-
-                                <div>
-
-                                    <?php if ($isOpen): ?>
-
-                                        <span class="case-status case-status-open">
-                                            🟢 Abierto
-                                        </span>
-
-                                    <?php else: ?>
-
-                                        <span class="case-status case-status-closed">
-                                            ⚫ Cerrado
-                                        </span>
-
-                                    <?php endif; ?>
-
-                                </div>
-
                             </div>
-
-
-                            <div class="case-history-cause">
-
-                                <?= htmlspecialchars(
-                                    $c['causa'] ?: 'Sin descripción',
-                                    ENT_QUOTES,
-                                    'UTF-8'
-                                ) ?>
-
-                            </div>
-
-
-                            <div class="case-actions mt-3">
-
-                                <a
-                                    class="btn btn-sm btn-outline-primary"
-                                    href="index.php?controller=mechanic&action=viewCase&veh_id=<?= $vehicle['id'] ?>&case_id=<?= $c['id'] ?>">
-
-                                    👁 Ver caso
-
-                                </a>
-
-
-                                <?php if ($c['estado'] === 'cerrado'): ?>
-
-                                    <a
-                                        class="btn btn-sm btn-outline-secondary"
-                                        target="_blank"
-                                        href="index.php?controller=case&action=imprimir&case_id=<?= $c['id'] ?>">
-
-                                        📄 PDF
-
-                                    </a>
-
-                                <?php endif; ?>
-
-                            </div>
-
                         </div>
-
-                    </div>
-
+                    <?php endforeach; ?>
                 </div>
-
-            <?php endforeach; ?>
-
+            <?php else: ?>
+                <div class="alert alert-info mb-0">El vehículo no tiene casos registrados.</div>
+            <?php endif; ?>
         </div>
-
-    <?php else: ?>
-
-        <div class="alert alert-info">
-            El vehículo no tiene casos registrados.
-        </div>
-
-    <?php endif; ?>
+    </details>
 
     <div class="case-section-title">
         <span class="section-icon">🔧</span>
@@ -688,6 +537,54 @@
 
         <?php endif; ?>
 
+        <?php if (!empty($compatibleParts)): ?>
+
+            <details class="case-collapsible case-collapsible-compatible">
+                <summary>
+                    <span class="case-collapsible-title">
+                        <span class="case-collapsible-icon">🔩</span>
+                        <span>Repuestos compatibles</span>
+                    </span>
+                    <span class="case-collapsible-meta">
+                        <?= count($compatibleParts) ?> encontrados
+                    </span>
+                </summary>
+
+                <div class="case-collapsible-body">
+                    <div class="list-group list-group-flush">
+                        <?php foreach ($compatibleParts as $part): ?>
+                            <?php
+                            $stock = (float)$part['stock_actual'];
+                            if ($stock <= 0) {
+                                $badge = 'danger';
+                                $texto = 'Agotado';
+                            } elseif ($stock <= $part['stock_minimo']) {
+                                $badge = 'warning';
+                                $texto = 'Stock bajo';
+                            } else {
+                                $badge = 'success';
+                                $texto = 'Disponible';
+                            }
+                            ?>
+                            <div class="list-group-item case-compatible-item">
+                                <div class="d-flex justify-content-between align-items-center gap-3">
+                                    <div>
+                                        <strong><?= htmlspecialchars($part['nombre']) ?></strong><br>
+                                        <small class="text-muted"><?= htmlspecialchars($part['codigo']) ?></small>
+                                    </div>
+                                    <div class="text-end">
+                                        <span class="badge bg-<?= $badge ?>"><?= $texto ?></span><br>
+                                        <small>Stock: <?= $stock ?></small>
+                                    </div>
+                                </div>
+                            </div>
+                        <?php endforeach; ?>
+                    </div>
+                </div>
+            </details>
+
+        <?php endif; ?>
+
         <?php if ($caso['estado'] === 'abierto'): ?>
             <div class="case-work-panel">
                 <?php if (empty($activeSession)): ?>
@@ -812,26 +709,26 @@
 
                     <div class="case-work-end">
 
-                        <form
-                            method="post"
-                            action="index.php?controller=mechanic&action=endSession">
+    <form
+        method="post"
+        action="index.php?controller=mechanic&action=endSession">
 
-                            <input
-                                type="hidden"
-                                name="session_id"
-                                value="<?= $activeSession['id'] ?>">
+        <input
+            type="hidden"
+            name="session_id"
+            value="<?= $activeSession['id'] ?>">
 
-                            <button
-                                type="submit"
-                                class="btn btn-outline-danger">
+        <button
+            type="submit"
+            class="btn btn-outline-danger">
 
-                                ■ Terminar sesión de trabajo
+            ■ Terminar sesión de trabajo
 
-                            </button>
+        </button>
 
-                        </form>
+    </form>
 
-                    </div>
+</div>
                 <?php endif; ?>
             </div>
             <!-- =========================================================
@@ -990,7 +887,18 @@
 
         <?php if (!empty($casePurchases)): ?>
 
-            <div class="card shadow-sm mt-4">
+            <details class="case-collapsible case-collapsible-purchases">
+                <summary>
+                    <span class="case-collapsible-title">
+                        <span class="case-collapsible-icon">🛒</span>
+                        <span>Compras directas</span>
+                    </span>
+                    <span class="case-collapsible-meta">
+                        <?= count($casePurchases) ?> <?= count($casePurchases) === 1 ? 'registro' : 'registros' ?>
+                    </span>
+                </summary>
+                <div class="case-collapsible-body p-0">
+                    <div class="card shadow-sm">
 
                 <div class="card-header bg-primary text-white">
                     <strong>🛒 Compras directas</strong>
@@ -1060,11 +968,25 @@
 
                 </div>
 
-            </div>
+                    </div>
+                </div>
+            </details>
 
         <?php endif; ?>
 
-        <?php require __DIR__ . '/partials/_advance_history.php'; ?>
+        <details class="case-collapsible case-collapsible-advances">
+            <summary>
+                <span class="case-collapsible-title">
+                    <span class="case-collapsible-icon">📋</span>
+                    <span>Historial de avances</span>
+                </span>
+                <span class="case-collapsible-meta">Consultar registros</span>
+            </summary>
+            <div class="case-collapsible-body">
+                <?php require __DIR__ . '/partials/_advance_history.php'; ?>
+            </div>
+        </details>
+
 
 
 
