@@ -593,23 +593,41 @@
 
         <?php if (!empty($pendingItems)): ?>
 
-            <div class="card border-warning shadow-sm mt-4 mb-4">
+            <div class="case-pending-panel">
 
-                <div class="card-header bg-warning">
+                <div class="case-pending-header">
 
-                    <strong>📌 Pendientes del vehículo</strong>
+                    <div>
+                        <div class="case-pending-title">
+                            📌 Pendientes del vehículo
+                        </div>
+
+                        <div class="case-pending-subtitle">
+                            Trabajos o elementos pendientes de resolver
+                        </div>
+                    </div>
+
+                    <span class="case-pending-count">
+                        <?= count($pendingItems) ?>
+                    </span>
 
                 </div>
 
-                <div class="card-body">
+                <div class="case-pending-body">
 
                     <?php foreach ($pendingItems as $pending): ?>
 
-                        <div class="border rounded p-3 mb-3">
+                        <div class="case-pending-item">
 
-                            <div class="mb-2">
+                            <div class="case-pending-description">
 
-                                <?= nl2br(htmlspecialchars($pending['descripcion'])) ?>
+                                <?= nl2br(
+                                    htmlspecialchars(
+                                        $pending['descripcion'],
+                                        ENT_QUOTES,
+                                        'UTF-8'
+                                    )
+                                ) ?>
 
                             </div>
 
@@ -623,8 +641,7 @@
 
                             </small>
 
-                            <div class="mt-3">
-
+                            <div class="case-pending-actions">
                                 <button
                                     type="button"
                                     class="btn btn-success btn-sm btn-resolve-pending"
@@ -672,36 +689,91 @@
         <?php endif; ?>
 
         <?php if ($caso['estado'] === 'abierto'): ?>
-            <div class="alert alert-info">
+            <div class="case-work-panel">
                 <?php if (empty($activeSession)): ?>
-                    <form method="post" action="index.php?controller=mechanic&action=startSession" class="mb-3">
-                        <input type="hidden" name="case_id" value="<?= $caso['id'] ?>">
-                        <button type="submit" class="btn btn-primary">Iniciar sesión de trabajo</button>
+                    <div class="case-work-header">
+
+                        <div>
+                            <div class="case-work-title">
+                                🔧 Sesión de trabajo
+                            </div>
+
+                            <div class="case-work-subtitle">
+                                Inicie una sesión para registrar trabajos realizados en este caso.
+                            </div>
+                        </div>
+
+                        <span class="case-work-status case-work-status-inactive">
+                            ● Sin sesión activa
+                        </span>
+
+                    </div>
+
+                    <form
+                        method="post"
+                        action="index.php?controller=mechanic&action=startSession">
+
+                        <input
+                            type="hidden"
+                            name="case_id"
+                            value="<?= $caso['id'] ?>">
+
+                        <button
+                            type="submit"
+                            class="btn btn-primary case-work-start">
+
+                            ▶ Iniciar sesión de trabajo
+
+                        </button>
+
                     </form>
                 <?php else: ?>
-                    <p><strong>Sesión activa</strong></p>
+                    <div class="case-work-header">
 
-                    <h4>Agregar avance</h4>
-                    <a
-                        href="index.php?controller=inventory&action=selectForCase&case_id=<?= $caso['id'] ?>&veh_id=<?= $veh_id ?>"
-                        class="btn btn-primary">
+                        <div>
+                            <div class="case-work-title">
+                                🔧 Sesión de trabajo
+                            </div>
 
-                        <i class="bi bi-box-seam"></i>
+                            <div class="case-work-subtitle">
+                                Registre aquí los trabajos y elementos utilizados.
+                            </div>
+                        </div>
 
-                        Agregar repuesto
+                        <span class="case-work-status case-work-status-active">
+                            ● Sesión activa
+                        </span>
 
-                    </a>
+                    </div>
 
-                    <button
-                        type="button"
-                        class="btn btn-outline-primary ms-2"
-                        data-bs-toggle="modal"
-                        data-bs-target="#modalCompraDirecta">
+                    <div class="case-work-actions-title">
+                        Acciones del caso
+                    </div>
+                    <div class="case-work-actions">
 
-                        🛒 Registrar compra directa
+                        <a
+                            href="index.php?controller=inventory&action=selectForCase&case_id=<?= $caso['id'] ?>&veh_id=<?= $veh_id ?>"
+                            class="btn btn-primary">
 
-                    </button>
+                            <i class="bi bi-box-seam"></i>
+                            Agregar repuesto
 
+                        </a>
+
+                        <button
+                            type="button"
+                            class="btn btn-outline-primary"
+                            data-bs-toggle="modal"
+                            data-bs-target="#modalCompraDirecta">
+
+                            🛒 Registrar compra directa
+
+                        </button>
+
+                    </div>
+                    <div class="case-work-form-title">
+                        Registrar avance
+                    </div>
                     <form method="post">
                         <div class="mb-3">
                             <textarea name="nuevo_avance" rows="4" class="form-control" placeholder="Describa el avance..." required></textarea>
@@ -738,10 +810,28 @@
                         <button type="submit" class="btn btn-success">Guardar avance</button>
                     </form>
 
-                    <form method="post" action="index.php?controller=mechanic&action=endSession" class="mt-3">
-                        <input type="hidden" name="session_id" value="<?= $activeSession['id'] ?>">
-                        <button type="submit" class="btn btn-danger">Terminar sesión de trabajo</button>
-                    </form>
+                    <div class="case-work-end">
+
+                        <form
+                            method="post"
+                            action="index.php?controller=mechanic&action=endSession">
+
+                            <input
+                                type="hidden"
+                                name="session_id"
+                                value="<?= $activeSession['id'] ?>">
+
+                            <button
+                                type="submit"
+                                class="btn btn-outline-danger">
+
+                                ■ Terminar sesión de trabajo
+
+                            </button>
+
+                        </form>
+
+                    </div>
                 <?php endif; ?>
             </div>
             <!-- =========================================================
@@ -914,14 +1004,10 @@
 
                             <thead class="table-light">
                                 <tr>
-                                    <thead class="table-light">
-                                        <tr>
-                                            <th>Descripción</th>
-                                            <th class="text-end">Cantidad</th>
-                                            <th class="text-end">Precio unitario</th>
-                                            <th class="text-end">Subtotal</th>
-                                        </tr>
-                                    </thead>
+                                    <th>Descripción</th>
+                                    <th class="text-end">Cantidad</th>
+                                    <th class="text-end">Precio unitario</th>
+                                    <th class="text-end">Subtotal</th>
                                 </tr>
                             </thead>
 

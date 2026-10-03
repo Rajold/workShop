@@ -716,4 +716,352 @@
         border-radius: 12px;
     }
 
+}/* =========================================================
+   PENDIENTES DEL VEHÍCULO
+   ========================================================= */
+
+.case-pending-panel {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    border: 1px solid #f0d98c;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fffdf5;
+}
+
+.case-pending-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 16px 20px;
+    background: #fff8dc;
+    border-bottom: 1px solid #f0d98c;
+}
+
+.case-pending-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #664d03;
+}
+
+.case-pending-subtitle {
+    margin-top: 3px;
+    color: #856404;
+    font-size: .82rem;
+}
+
+.case-pending-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 9px;
+    border-radius: 50%;
+    background: #ffc107;
+    color: #212529;
+    font-weight: 700;
+}
+
+.case-pending-body {
+    padding: 14px;
+}
+
+.case-pending-item {
+    padding: 16px;
+    margin-bottom: 10px;
+    border: 1px solid #eadfbd;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.case-pending-item:last-child {
+    margin-bottom: 0;
+}
+
+.case-pending-description {
+    color: #343a40;
+    line-height: 1.5;
+}
+
+.case-pending-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.case-pending-actions .btn {
+    border-radius: 8px;
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+@media (max-width: 767.98px) {
+
+    .case-pending-header {
+        align-items: flex-start;
+    }
+
+    .case-pending-actions {
+        flex-direction: column;
+    }
+
+    .case-pending-actions .btn {
+        width: 100%;
+    }
+
+}
+
+/* =========================================================
+   PENDIENTES DEL VEHÍCULO
+   ========================================================= */
+
+.case-pending-panel {
+    margin-top: 24px;
+    margin-bottom: 24px;
+    border: 1px solid #f0d98c;
+    border-radius: 14px;
+    overflow: hidden;
+    background: #fffdf5;
+}
+
+.case-pending-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+    padding: 16px 20px;
+    background: #fff8dc;
+    border-bottom: 1px solid #f0d98c;
+}
+
+.case-pending-title {
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: #664d03;
+}
+
+.case-pending-subtitle {
+    margin-top: 3px;
+    color: #856404;
+    font-size: .82rem;
+}
+
+.case-pending-count {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 32px;
+    height: 32px;
+    padding: 0 9px;
+    border-radius: 50%;
+    background: #ffc107;
+    color: #212529;
+    font-weight: 700;
+}
+
+.case-pending-body {
+    padding: 14px;
+}
+
+.case-pending-item {
+    padding: 16px;
+    margin-bottom: 10px;
+    border: 1px solid #eadfbd;
+    border-radius: 10px;
+    background: #ffffff;
+}
+
+.case-pending-item:last-child {
+    margin-bottom: 0;
+}
+
+.case-pending-description {
+    color: #343a40;
+    line-height: 1.5;
+}
+
+.case-pending-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-top: 14px;
+}
+
+.case-pending-actions .btn {
+    border-radius: 8px;
+    font-size: .85rem;
+    font-weight: 600;
+}
+
+@media (max-width: 767.98px) {
+
+    .case-pending-header {
+        align-items: flex-start;
+    }
+
+    .case-pending-actions {
+        flex-direction: column;
+    }
+
+    .case-pending-actions .btn {
+        width: 100%;
+    }
+
+}
+
+/* =========================================================
+   PANEL DE SESIÓN DE TRABAJO
+   ========================================================= */
+
+.case-work-panel {
+    margin-top: 24px;
+    margin-bottom: 28px;
+    padding: 22px;
+    border: 1px solid #dce3ea;
+    border-radius: 14px;
+    background: #ffffff;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, .05);
+}
+
+.case-work-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 20px;
+    padding-bottom: 18px;
+    margin-bottom: 20px;
+    border-bottom: 1px solid #edf0f2;
+}
+
+.case-work-title {
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: #212529;
+}
+
+.case-work-subtitle {
+    margin-top: 4px;
+    color: #6c757d;
+    font-size: .87rem;
+}
+
+.case-work-status {
+    display: inline-flex;
+    align-items: center;
+    padding: 7px 12px;
+    border-radius: 999px;
+    font-size: .8rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.case-work-status-active {
+    background: rgba(25, 135, 84, .12);
+    color: #146c43;
+}
+
+.case-work-status-inactive {
+    background: rgba(108, 117, 125, .12);
+    color: #495057;
+}
+
+.case-work-start {
+    border-radius: 9px;
+    padding: 9px 16px;
+    font-weight: 600;
+}
+
+.case-work-actions-title {
+    margin-bottom: 10px;
+    color: #495057;
+    font-size: .82rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: .04em;
+}
+
+.case-work-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin-bottom: 22px;
+}
+
+.case-work-actions .btn {
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+.case-work-form-title {
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid #edf0f2;
+    color: #343a40;
+    font-size: .95rem;
+    font-weight: 700;
+}
+
+.case-work-panel textarea,
+.case-work-panel select,
+.case-work-panel input[type="number"] {
+    border-radius: 8px;
+    border-color: #d8dee4;
+}
+
+.case-work-panel textarea:focus,
+.case-work-panel select:focus,
+.case-work-panel input[type="number"]:focus {
+    border-color: #86b7fe;
+    box-shadow: 0 0 0 .2rem rgba(13, 110, 253, .12);
+}
+
+.case-work-panel .form-label {
+    color: #495057;
+    font-size: .87rem;
+    font-weight: 600;
+}
+
+.case-work-panel .btn-success {
+    border-radius: 8px;
+    padding: 9px 16px;
+    font-weight: 600;
+}
+
+.case-work-end {
+    margin-top: 22px;
+    padding-top: 16px;
+    border-top: 1px solid #edf0f2;
+}
+
+.case-work-end .btn {
+    border-radius: 8px;
+    font-weight: 600;
+}
+
+@media (max-width: 767.98px) {
+
+    .case-work-panel {
+        padding: 16px;
+        border-radius: 12px;
+    }
+
+    .case-work-header {
+        flex-direction: column;
+    }
+
+    .case-work-actions {
+        flex-direction: column;
+    }
+
+    .case-work-actions .btn {
+        width: 100%;
+    }
+
+    .case-work-status {
+        align-self: flex-start;
+    }
+
 }

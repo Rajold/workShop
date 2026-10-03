@@ -1,6 +1,3 @@
-//_advance_history.php
-
-
 <?php if (!empty($caseParts)): ?>
 
     <section class="case-parts-section mb-4">
