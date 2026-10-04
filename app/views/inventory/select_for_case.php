@@ -106,8 +106,6 @@
                                 value="<?= $caseId ?>">
 
                             <input type="hidden" name="veh_id" value="<?= $vehId ?>">
-                            
-                            <input type="hidden" name="pending_id" value="<?= $pendingId ?>">
 
                             <input type="hidden" name="pending_id" value="<?= $pendingId ?>">
 
@@ -200,21 +198,18 @@
                 ?>
 
                     <tr>
-
                         <td><?= htmlspecialchars($item['nombre']) ?></td>
+                        <td><?= $item['cantidad'] ?>
+                            <?= number_format($item['precio_venta'], 0, ',', '.') ?>
+                        </td>
 
-                        <td><?= $item['cantidad'] ?></td>
-
-                        <?= number_format($item['precio_venta'], 0, ',', '.') ?>
 
                         <td>
-
                             <strong>
 
                                 $<?= number_format($subtotal, 0, ',', '.') ?>
 
                             </strong>
-
                         </td>
                         <td>
 

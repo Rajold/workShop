@@ -257,26 +257,29 @@ class InventoryController extends BaseController
         $this->redirect('index.php?controller=inventory&action=create');
     }
 
-    public function selectForCase(): void
-    {
-        $this->ensureLogged();
+  public function selectForCase(): void
+{
+    $this->ensureLogged();
 
-        $caseId = (int)($_GET['case_id'] ?? 0);
-        $vehId  = (int)($_GET['veh_id'] ?? 0);
-        $pendingId = (int)($_GET['pending_id'] ?? 0);
+    $caseId = (int)($_GET['case_id'] ?? 0);
+    $vehId  = (int)($_GET['veh_id'] ?? 0);
+    $pendingId = (int)($_GET['pending_id'] ?? 0);
 
-        $search = trim($_GET['q'] ?? '');
+    $search = trim($_GET['q'] ?? '');
 
-        $parts = $this->partModel->all($search);
+    $parts = $search !== ''
+        ? $this->partModel->search($search)
+        : $this->partModel->all();
 
-        $this->render('inventory/select_for_case', [
-            'caseId' => $caseId,
-            'vehId'  => $vehId,
-            'pendingId' => $pendingId,
-            'parts'  => $parts,
-            'search' => $search
-        ]);
-    }
+    $this->render('inventory/select_for_case', [
+        'caseId' => $caseId,
+        'vehId' => $vehId,
+        'pendingId' => $pendingId,
+        'parts' => $parts,
+        'search' => $search
+    ]);
+}
+
 
     public function addToCart(): void
     {
