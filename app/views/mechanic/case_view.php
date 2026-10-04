@@ -130,6 +130,19 @@
                             <strong>Color:</strong>
                             <?= htmlspecialchars($vehicle['color']) ?>
                         </p>
+
+<div class="case-vehicle-edit">
+    <button
+        type="button"
+        class="btn btn-outline-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#modalEditarVehiculo">
+
+        ✏️ Editar datos del vehículo
+
+    </button>
+</div>
+
                     </div>
 
                     <div class="text-end">
@@ -1486,6 +1499,174 @@
                         class="btn btn-primary">
 
                         🛒 Registrar compra
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Modal para Editar datos del vehículo -->
+<div
+    class="modal fade"
+    id="modalEditarVehiculo"
+    tabindex="-1"
+    aria-labelledby="modalEditarVehiculoLabel"
+    aria-hidden="true">
+
+    <div class="modal-dialog modal-dialog-centered">
+
+        <div class="modal-content">
+
+            <form
+                method="post"
+                action="index.php?controller=mechanic&action=updateVehicle">
+
+                <div class="modal-header">
+
+                    <h5
+                        class="modal-title"
+                        id="modalEditarVehiculoLabel">
+
+                        ✏️ Editar datos del vehículo
+
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <input
+                        type="hidden"
+                        name="veh_id"
+                        value="<?= (int)$vehicle['id'] ?>">
+
+                    <input
+                        type="hidden"
+                        name="case_id"
+                        value="<?= (int)($caso['id'] ?? 0) ?>">
+
+                    <div class="mb-3">
+
+                        <label
+                            for="editarPlaca"
+                            class="form-label">
+
+                            Placa
+
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control text-uppercase"
+                            id="editarPlaca"
+                            name="placa"
+                            value="<?= htmlspecialchars($vehicle['placa']) ?>"
+                            maxlength="10"
+                            required>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label
+                            for="editarPropietario"
+                            class="form-label">
+
+                            Propietario
+
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="editarPropietario"
+                            name="propietario"
+                            value="<?= htmlspecialchars($vehicle['propietario']) ?>"
+                            required>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label
+                            for="editarTelefono"
+                            class="form-label">
+
+                            Teléfono
+
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="editarTelefono"
+                            name="telefono"
+                            value="<?= htmlspecialchars($vehicle['telefono'] ?? '') ?>"
+                            maxlength="20">
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label
+                            for="editarColor"
+                            class="form-label">
+
+                            Color
+
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="editarColor"
+                            name="color"
+                            value="<?= htmlspecialchars($vehicle['color'] ?? '') ?>"
+                            maxlength="50">
+
+                    </div>
+
+                    <div class="alert alert-info mb-0">
+
+                        <small>
+                            Estos cambios actualizarán los datos actuales del
+                            vehículo sin modificar el historial de sus casos.
+                        </small>
+
+                    </div>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cancelar
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-primary">
+
+                        💾 Guardar cambios
 
                     </button>
 

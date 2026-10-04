@@ -197,6 +197,27 @@ class Vehicle extends BaseModel
         ]);
     }
 
+    public function updateBasicData(int $id, array $data): bool
+{
+    $stmt = $this->db->prepare("
+        UPDATE vehiculos
+        SET
+            placa = :placa,
+            color = :color,
+            propietario = :propietario,
+            telefono = :telefono
+        WHERE id = :id
+    ");
+
+    return $stmt->execute([
+        ':placa'      => $data['placa'],
+        ':color'      => $data['color'] ?? null,
+        ':propietario'=> $data['propietario'] ?? null,
+        ':telefono'   => $data['telefono'] ?? null,
+        ':id'         => $id
+    ]);
+}
+
     public function all()
     {
         $stmt = $this->db->query("SELECT * FROM vehiculos ORDER BY placa");

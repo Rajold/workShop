@@ -323,6 +323,80 @@ class MechanicController extends BaseController
         ]);
     }
 
+    public function updateVehicle()
+{
+    $this->ensureLogged();
+
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        header('Location: index.php');
+        exit;
+    }
+
+    $veh_id = (int)($_POST['veh_id'] ?? 0);
+    $case_id = (int)($_POST['case_id'] ?? 0);
+
+    if ($veh_id <= 0) {
+        $this->error('Vehículo no válido.');
+
+        header('Location: index.php?controller=mechanic&action=dashboard');
+        exit;
+    }
+
+    $placa = strtoupper(trim($_POST['placa'] ?? ''));
+    $color = trim($_POST['color'] ?? '');
+    $propietario = trim($_POST['propietario'] ?? '');
+    $telefono = trim($_POST['telefono'] ?? '');
+
+    if ($placa === '') {
+        $this->error('La placa no puede estar vacía.');
+
+        header(
+            "Location: index.php?controller=mechanic&action=viewCase&veh_id={$veh_id}&case_id={$case_id}"
+        );
+        exit;
+    }
+
+    /*
+     * Verificar que la placa no pertenezca a otro vehículo.
+     */
+    $vehicleWithPlate = $this->vehicleModel->findByPlate($placa);
+
+    if (
+        $vehicleWithPlate
+        && (int)$vehicleWithPlate['id'] !== $veh_id
+    ) {
+        $this->error(
+            "No se puede usar la placa {$placa} porque ya está registrada en otro vehículo."
+        );
+
+        header(
+            "Location: index.php?controller=mechanic&action=viewCase&veh_id={$veh_id}&case_id={$case_id}"
+        );
+        exit;
+    }
+
+    $data = [
+        'placa'       => $placa,
+        'color'       => $color,
+        'propietario' => $propietario,
+        'telefono'    => $telefono
+    ];
+
+    if ($this->vehicleModel->updateBasicData($veh_id, $data)) {
+
+        $this->success('Datos del vehículo actualizados correctamente.');
+
+    } else {
+
+        $this->error('No fue posible actualizar los datos del vehículo.');
+    }
+
+    header(
+        "Location: index.php?controller=mechanic&action=viewCase&veh_id={$veh_id}&case_id={$case_id}"
+    );
+    exit;
+}
+
     public function openCase()
     {
         $this->ensureLogged();
