@@ -1,293 +1,507 @@
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+<!-- Encabezado -->
+<div class="inventory-header">
+    <div>
+        <div class="inventory-title">
+            <div class="inventory-title-icon">
+                <i class="bi bi-box-seam"></i>
+            </div>
 
-<div class="container mt-4">
-
-    <div class="d-flex justify-content-between align-items-center mb-4">
-        <h2>
-            <i class="bi bi-box-seam"></i>
-            Inventario
-        </h2>
-<div class="btn-group">
-
-    <a href="index.php?controller=inventory&action=create"
-    class="btn btn-primary">
-    <i class="bi bi-plus-circle"></i>
-    Nuevo artículo
-</a>
-<a
-    href="index.php?controller=inventory&action=kardex"
-    class="btn btn-dark">
-
-    <i class="bi bi-clock-history"></i>
-    
-    Kardex General
-    
-</a>
-
-</div>
+            <div>
+                <h1>Inventario</h1>
+                <p>Gestiona tus repuestos, herramientas y existencias.</p>
+            </div>
+        </div>
     </div>
 
-    <form method="GET" class="row g-2 mb-4">
+    <div class="inventory-header-actions">
+        <a
+            href="index.php?controller=inventory&action=kardex"
+            class="btn btn-outline-dark">
 
-        <input type="hidden" name="controller" value="inventory">
-        <input type="hidden" name="action" value="index">
+            <i class="bi bi-clock-history"></i>
+            Kardex
+        </a>
 
-        <div class="col-md-10">
+        <a
+            href="index.php?controller=inventory&action=create"
+            class="btn btn-primary">
+
+            <i class="bi bi-plus-lg"></i>
+            Nuevo artículo
+        </a>
+    </div>
+</div>
+
+
+<!-- Buscador -->
+<div class="inventory-search-card">
+
+    <form method="GET">
+
+        <input
+            type="hidden"
+            name="controller"
+            value="inventory">
+
+        <input
+            type="hidden"
+            name="action"
+            value="index">
+
+        <div class="inventory-search">
+
+            <i class="bi bi-search"></i>
+
             <input
                 type="text"
-                class="form-control"
                 name="q"
                 placeholder="Buscar por código, nombre o marca..."
-                value="<?= htmlspecialchars($_GET['q'] ?? '') ?>">
-        </div>
+                value="<?= htmlspecialchars($search ?? '') ?>">
 
-        <div class="col-md-2 d-grid">
-            <button class="btn btn-secondary">
+            <?php if (!empty($search)): ?>
+
+                <a
+                    href="index.php?controller=inventory&action=index"
+                    class="inventory-search-clear"
+                    title="Limpiar búsqueda">
+
+                    <i class="bi bi-x-circle"></i>
+
+                </a>
+
+            <?php endif; ?>
+
+            <button type="submit" class="btn btn-primary">
                 Buscar
             </button>
+
         </div>
 
     </form>
 
-    <div class="row mb-4">
+    <?php if (!empty($search)): ?>
 
-        <div class="col-md-3">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h3><?= $stats['total'] ?></h3>
+        <div class="inventory-search-result">
 
-                    <small>Total artículos</small>
-                </div>
-            </div>
+            <i class="bi bi-funnel"></i>
+
+            Resultados para:
+            <strong><?= htmlspecialchars($search) ?></strong>
+
         </div>
 
-        <div class="col-md-3">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h3 class="text-warning">
+    <?php endif; ?>
 
-                        <?= $stats['stock_bajo'] ?>
+</div>
 
-                    </h3>
 
-                    <small>Stock bajo</small>
-                </div>
-            </div>
+<!-- Estadísticas -->
+<div class="inventory-stats">
+
+    <div class="inventory-stat-card">
+
+        <div class="stat-icon stat-icon-blue">
+            <i class="bi bi-boxes"></i>
         </div>
 
-        <div class="col-md-3">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h3 class="text-danger">
-
-                        <?= $stats['agotados'] ?>
-
-                    </h3>
-
-                    <small>Sin existencias</small>
-                </div>
-            </div>
-        </div>
-
-        <div class="col-md-3">
-            <div class="card text-center">
-                <div class="card-body">
-                    <h3 class="text-primary">
-
-                        <?= $stats['herramientas'] ?>
-
-                    </h3>
-
-                    <small>Herramientas</small>
-                </div>
-            </div>
+        <div>
+            <span>Total artículos</span>
+            <strong><?= $stats['total'] ?></strong>
         </div>
 
     </div>
 
-    <div class="card">
 
-        <div class="card-body p-0">
+    <div class="inventory-stat-card">
 
-            <table class="table table-hover mb-0">
+        <div class="stat-icon stat-icon-yellow">
+            <i class="bi bi-exclamation-triangle"></i>
+        </div>
 
-                <thead class="table-dark">
+        <div>
+            <span>Stock bajo</span>
+            <strong><?= $stats['stock_bajo'] ?></strong>
+        </div>
+
+    </div>
+
+
+    <div class="inventory-stat-card">
+
+        <div class="stat-icon stat-icon-red">
+            <i class="bi bi-x-circle"></i>
+        </div>
+
+        <div>
+            <span>Agotados</span>
+            <strong><?= $stats['agotados'] ?></strong>
+        </div>
+
+    </div>
+
+
+    <div class="inventory-stat-card">
+
+        <div class="stat-icon stat-icon-purple">
+            <i class="bi bi-tools"></i>
+        </div>
+
+        <div>
+            <span>Herramientas</span>
+            <strong><?= $stats['herramientas'] ?></strong>
+        </div>
+
+    </div>
+
+</div>
+
+
+<!-- Tabla -->
+<div class="inventory-table-card">
+
+    <div class="inventory-table-header">
+
+        <div>
+            <h3>Artículos</h3>
+
+            <span>
+                <?= count($parts) ?>
+                <?= count($parts) === 1 ? 'resultado' : 'resultados' ?>
+            </span>
+        </div>
+
+    </div>
+
+
+    <div class="table-responsive">
+
+        <table class="table inventory-table">
+
+            <thead>
+
+                <tr>
+                    <th>Código</th>
+                    <th>Artículo</th>
+                    <th>Marca</th>
+                    <th>Stock</th>
+                    <th>Estado</th>
+                    <th class="text-end">Acciones</th>
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+            <?php if (empty($parts)): ?>
+
+                <tr>
+
+                    <td colspan="6">
+
+                        <div class="inventory-empty">
+
+                            <div class="inventory-empty-icon">
+                                <i class="bi bi-search"></i>
+                            </div>
+
+                            <h4>No encontramos artículos</h4>
+
+                            <?php if (!empty($search)): ?>
+
+                                <p>
+                                    No hay resultados para
+                                    <strong>
+                                        "<?= htmlspecialchars($search) ?>"
+                                    </strong>
+                                </p>
+
+                                <a
+                                    href="index.php?controller=inventory&action=index"
+                                    class="btn btn-outline-primary btn-sm">
+
+                                    Ver todo el inventario
+
+                                </a>
+
+                            <?php else: ?>
+
+                                <p>
+                                    Todavía no hay artículos registrados.
+                                </p>
+
+                                <a
+                                    href="index.php?controller=inventory&action=create"
+                                    class="btn btn-primary btn-sm">
+
+                                    <i class="bi bi-plus-lg"></i>
+                                    Crear artículo
+
+                                </a>
+
+                            <?php endif; ?>
+
+                        </div>
+
+                    </td>
+
+                </tr>
+
+            <?php else: ?>
+
+                <?php foreach ($parts as $part): ?>
+
+                    <?php
+
+                    $stock = (float)$part['stock_actual'];
+                    $minimo = max(1, (float)$part['stock_minimo']);
+
+                    if ($stock <= 0) {
+
+                        $stockColor = 'danger';
+                        $stockText = 'Agotado';
+                        $porcentaje = 0;
+
+                    } elseif ($stock <= $part['stock_minimo']) {
+
+                        $stockColor = 'warning';
+                        $stockText = 'Stock bajo';
+                        $porcentaje = min(
+                            100,
+                            ($stock / $minimo) * 100
+                        );
+
+                    } else {
+
+                        $stockColor = 'success';
+                        $stockText = 'Disponible';
+                        $porcentaje = 100;
+                    }
+
+                    ?>
 
                     <tr>
 
-                        <th>Código</th>
-                        <th>Artículo</th>
-                        <th>Tipo</th>
-                        <th>Marca</th>
-                        <th>Stock</th>
-                        <th>Estado</th>
-                        <th width="170">Acciones</th>
+                        <!-- Código -->
+                        <td>
 
-                    </tr>
+                            <span class="inventory-code">
+                                <?= htmlspecialchars($part['codigo']) ?>
+                            </span>
 
-                </thead>
+                        </td>
 
-                <tbody>
 
-                    <?php if (empty($parts)): ?>
+                        <!-- Artículo -->
+                        <td>
 
-                        <tr>
+                            <div class="inventory-product">
 
-                            <td colspan="7" class="text-center p-4 text-muted">
+                                <div class="inventory-product-icon">
+                                    <i class="bi bi-box"></i>
+                                </div>
 
-                                No hay artículos registrados.
-
-                            </td>
-
-                        </tr>
-
-                    <?php else: ?>
-
-                        <?php foreach ($parts as $part): ?>
-
-                            <?php
-
-                            $rowClass = '';
-
-                            if ($part['stock_actual'] <= 0) {
-
-                                $rowClass = 'table-danger';
-                            } elseif ($part['stock_actual'] <= $part['stock_minimo']) {
-
-                                $rowClass = 'table-warning';
-                            }
-
-                            ?>
-
-                            <tr class="<?= $rowClass ?>">
-
-                                <td><?= htmlspecialchars($part['codigo']) ?></td>
-
-                                <td><?= htmlspecialchars($part['nombre']) ?></td>
-
-                                <td><?= htmlspecialchars($part['tipo']) ?></td>
-
-                                <td><?= htmlspecialchars($part['marca']) ?></td>
-
-                                <td>
-
-                                    <?php
-
-                                    $stock = (float)$part['stock_actual'];
-                                    $minimo = max(1, (float)$part['stock_minimo']);
-
-                                    if ($stock <= 0) {
-
-                                        $color = 'danger';
-                                        $texto = 'Agotado';
-                                        $porcentaje = 0;
-                                    } elseif ($stock <= $part['stock_minimo']) {
-
-                                        $color = 'warning';
-                                        $texto = 'Bajo';
-                                        $porcentaje = min(100, ($stock / $minimo) * 100);
-                                    } else {
-
-                                        $color = 'success';
-                                        $texto = 'Disponible';
-                                        $porcentaje = 100;
-                                    }
-
-                                    ?>
+                                <div>
 
                                     <strong>
-
-                                        <?= $stock ?>
-
+                                        <?= htmlspecialchars($part['nombre']) ?>
                                     </strong>
 
-                                    <span class="badge bg-<?= $color ?> ms-2">
+                                    <small>
+                                        <?= htmlspecialchars($part['tipo'] ?? '') ?>
+                                    </small>
 
-                                        <?= $texto ?>
+                                </div>
 
+                            </div>
+
+                        </td>
+
+
+                        <!-- Marca -->
+                        <td>
+
+                            <?php if (!empty($part['marca'])): ?>
+
+                                <span class="inventory-brand">
+                                    <?= htmlspecialchars($part['marca']) ?>
+                                </span>
+
+                            <?php else: ?>
+
+                                <span class="text-muted">
+                                    —
+                                </span>
+
+                            <?php endif; ?>
+
+                        </td>
+
+
+                        <!-- Stock -->
+                        <td>
+
+                            <div class="inventory-stock">
+
+                                <div class="inventory-stock-number">
+
+                                    <strong>
+                                        <?= rtrim(
+                                            rtrim(number_format($stock, 2, '.', ''),
+                                            '0'),
+                                            '.'
+                                        ) ?>
+                                    </strong>
+
+                                    <span>
+                                        <?= htmlspecialchars($part['unidad'] ?? 'und.') ?>
                                     </span>
 
-                                    <div class="progress mt-2" style="height:8px;">
+                                </div>
 
-                                        <div
-                                            class="progress-bar bg-<?= $color ?>"
-                                            role="progressbar"
-                                            style="width: <?= $porcentaje ?>%">
+                                <div class="progress inventory-progress">
 
-                                        </div>
+                                    <div
+                                        class="progress-bar bg-<?= $stockColor ?>"
+                                        role="progressbar"
+                                        style="width: <?= $porcentaje ?>%">
 
                                     </div>
 
-                                </td>
+                                </div>
 
-                                <td>
+                            </div>
 
-                                    <?php if ($part['activo']): ?>
-
-                                        <span class="badge bg-success">
-                                            Activo
-                                        </span>
-
-                                    <?php else: ?>
-
-                                        <span class="badge bg-danger">
-                                            Inactivo
-                                        </span>
-
-                                    <?php endif; ?>
-
-                                </td>
-
-                                <td>
-
-                                    <a
-                                        href="index.php?controller=inventory&action=edit&id=<?= $part['id'] ?>"
-                                        class="btn btn-sm btn-warning">
-                                        
-                                        <i class="bi bi-pencil"></i>
-                                        Editar
-                                        
-                                    </a>
-                                    <a
-                                        href="index.php?controller=inventory&action=applications&id=<?= $part['id'] ?>"
-                                        class="btn btn-sm btn-primary">
-                                        Aplicaciones
-</a>
-                                    <a
-                                        href="index.php?controller=inventory&action=movements&id=<?= $part['id'] ?>"
-                                        class="btn btn-sm btn-info">
-
-                                        <i class="bi bi-clock-history"></i>
-                                        Movimientos
-                                    </a>
-                                    <a
-                                        href="index.php?controller=inventory&action=addStock&id=<?= $part['id'] ?>"
-                                        class="btn btn-success btn-sm">
-                                        <i class="bi bi-box-arrow-in-down"></i>
-                                        Stock
-                                    </a>
-                                    <a
-                                        href="index.php?controller=inventory&action=adjustStock&id=<?= $part['id'] ?>"
-                                        class="btn btn-warning btn-sm">
-                                        <i class="bi bi-sliders"></i>
-                                        Ajuste
-
-                                    </a>
+                        </td>
 
 
-                                </td>
+                        <!-- Estado -->
+                        <td>
 
-                            </tr>
+                            <?php if (!$part['activo']): ?>
 
-                        <?php endforeach; ?>
+                                <span class="inventory-status status-inactive">
+                                    <span></span>
+                                    Inactivo
+                                </span>
 
-                    <?php endif; ?>
+                            <?php elseif ($stock <= 0): ?>
 
-                </tbody>
+                                <span class="inventory-status status-danger">
+                                    <span></span>
+                                    Agotado
+                                </span>
 
-            </table>
+                            <?php elseif ($stock <= $part['stock_minimo']): ?>
 
-        </div>
+                                <span class="inventory-status status-warning">
+                                    <span></span>
+                                    Stock bajo
+                                </span>
+
+                            <?php else: ?>
+
+                                <span class="inventory-status status-success">
+                                    <span></span>
+                                    Disponible
+                                </span>
+
+                            <?php endif; ?>
+
+                        </td>
+
+
+                        <!-- Acciones -->
+                        <td>
+
+                            <div class="dropdown text-end">
+
+                                <button
+                                    class="btn inventory-action-btn"
+                                    type="button"
+                                    data-bs-toggle="dropdown"
+                                    aria-expanded="false">
+
+                                    <i class="bi bi-three-dots"></i>
+                                    <span>Acciones</span>
+
+                                </button>
+
+                                <ul class="dropdown-menu dropdown-menu-end">
+
+                                    <li>
+                                        <a
+                                            class="dropdown-item"
+                                            href="index.php?controller=inventory&action=edit&id=<?= $part['id'] ?>">
+
+                                            <i class="bi bi-pencil"></i>
+                                            Editar
+
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a
+                                            class="dropdown-item"
+                                            href="index.php?controller=inventory&action=applications&id=<?= $part['id'] ?>">
+
+                                            <i class="bi bi-motorcycle"></i>
+                                            Aplicaciones
+
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a
+                                            class="dropdown-item"
+                                            href="index.php?controller=inventory&action=movements&id=<?= $part['id'] ?>">
+
+                                            <i class="bi bi-clock-history"></i>
+                                            Movimientos
+
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <hr class="dropdown-divider">
+                                    </li>
+
+                                    <li>
+                                        <a
+                                            class="dropdown-item text-success"
+                                            href="index.php?controller=inventory&action=addStock&id=<?= $part['id'] ?>">
+
+                                            <i class="bi bi-box-arrow-in-down"></i>
+                                            Agregar stock
+
+                                        </a>
+                                    </li>
+
+                                    <li>
+                                        <a
+                                            class="dropdown-item text-warning"
+                                            href="index.php?controller=inventory&action=adjustStock&id=<?= $part['id'] ?>">
+
+                                            <i class="bi bi-sliders"></i>
+                                            Ajustar stock
+
+                                        </a>
+                                    </li>
+
+                                </ul>
+
+                            </div>
+
+                        </td>
+
+                    </tr>
+
+                <?php endforeach; ?>
+
+            <?php endif; ?>
+
+            </tbody>
+
+        </table>
 
     </div>
 
