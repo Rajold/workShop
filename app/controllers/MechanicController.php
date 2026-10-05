@@ -150,16 +150,16 @@ class MechanicController extends BaseController
         $pendingModel = new Pending($this->pdo);
         $pendingItems = [];
         $financial = [
-    'mano_obra' => 0,
-    'repuestos_venta' => 0,
-    'repuestos_costo' => 0,
-    'compras_directas_venta' => 0,
-    'compras_directas_costo' => 0,
-    'total_repuestos_venta' => 0,
-    'total_repuestos_costo' => 0,
-    'total_venta_teorica' => 0,
-    'utilidad_repuestos' => 0
-];
+            'mano_obra' => 0,
+            'repuestos_venta' => 0,
+            'repuestos_costo' => 0,
+            'compras_directas_venta' => 0,
+            'compras_directas_costo' => 0,
+            'total_repuestos_venta' => 0,
+            'total_repuestos_costo' => 0,
+            'total_venta_teorica' => 0,
+            'utilidad_repuestos' => 0
+        ];
         $financial = [
             'mano_obra' => 0,
             'repuestos_venta' => 0,
@@ -207,6 +207,65 @@ class MechanicController extends BaseController
                 $caso = $cases[0] ?? null;
             }
 
+            // ⏱ Calcular tiempo del caso directamente desde MySQL
+$tiempoCaso = null;
+
+if ($caso && !empty($caso['fecha_ingreso'])) {
+
+    if (
+        $caso['estado'] === 'cerrado' &&
+        !empty($caso['fecha_cierre'])
+    ) {
+
+        $stmtTiempo = $this->pdo->prepare("
+            SELECT GREATEST(
+                0,
+                TIMESTAMPDIFF(
+                    SECOND,
+                    CONCAT(fecha_ingreso, ' ', COALESCE(hora_ingreso, '00:00:00')),
+                    fecha_cierre
+                )
+            )
+            FROM casos
+            WHERE id = ?
+        ");
+
+        $stmtTiempo->execute([(int)$caso['id']]);
+
+        $segundos = (int)$stmtTiempo->fetchColumn();
+
+        $contadorActivo = false;
+
+    } else {
+
+        $stmtTiempo = $this->pdo->prepare("
+            SELECT GREATEST(
+                0,
+                TIMESTAMPDIFF(
+                    SECOND,
+                    CONCAT(fecha_ingreso, ' ', COALESCE(hora_ingreso, '00:00:00')),
+                    NOW()
+                )
+            )
+            FROM casos
+            WHERE id = ?
+        ");
+
+        $stmtTiempo->execute([(int)$caso['id']]);
+
+        $segundos = (int)$stmtTiempo->fetchColumn();
+
+        $contadorActivo = true;
+    }
+
+    $tiempoCaso = [
+        'segundos' => $segundos,
+        'activo' => $contadorActivo
+    ];
+}
+
+
+
             // 🧾 Cargar avances, totales y sesión activa
             if ($caso) {
 
@@ -226,7 +285,7 @@ class MechanicController extends BaseController
                 $casePurchases = $casePurchaseModel->findByCase(
                     (int)$caso['id']
                 );
-                                $caseId = (int)$caso['id'];
+                $caseId = (int)$caso['id'];
 
                 $financial['mano_obra'] =
                     (float)$totales['mano_obra'];
@@ -267,7 +326,7 @@ class MechanicController extends BaseController
             $descripcion = trim($_POST['nuevo_avance']);
             $tipo = trim($_POST['tipo'] ?? '');
             $valor = (int)($_POST['valor'] ?? 0);
-            
+
 
             if ($descripcion !== '' && $tipo !== '' && $activeSession) {
 
@@ -319,83 +378,84 @@ class MechanicController extends BaseController
             'caseParts' => $caseParts,
             'casePurchases' => $casePurchases,
             'financial' => $financial,
-            'pendingItems' => $pendingItems
+            'pendingItems' => $pendingItems,
+            'tiempoCaso' => $tiempoCaso,
+
         ]);
     }
 
     public function updateVehicle()
-{
-    $this->ensureLogged();
+    {
+        $this->ensureLogged();
 
-    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-        header('Location: index.php');
-        exit;
-    }
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            header('Location: index.php');
+            exit;
+        }
 
-    $veh_id = (int)($_POST['veh_id'] ?? 0);
-    $case_id = (int)($_POST['case_id'] ?? 0);
+        $veh_id = (int)($_POST['veh_id'] ?? 0);
+        $case_id = (int)($_POST['case_id'] ?? 0);
 
-    if ($veh_id <= 0) {
-        $this->error('Vehículo no válido.');
+        if ($veh_id <= 0) {
+            $this->error('Vehículo no válido.');
 
-        header('Location: index.php?controller=mechanic&action=dashboard');
-        exit;
-    }
+            header('Location: index.php?controller=mechanic&action=dashboard');
+            exit;
+        }
 
-    $placa = strtoupper(trim($_POST['placa'] ?? ''));
-    $color = trim($_POST['color'] ?? '');
-    $propietario = trim($_POST['propietario'] ?? '');
-    $telefono = trim($_POST['telefono'] ?? '');
+        $placa = strtoupper(trim($_POST['placa'] ?? ''));
+        $color = trim($_POST['color'] ?? '');
+        $propietario = trim($_POST['propietario'] ?? '');
+        $telefono = trim($_POST['telefono'] ?? '');
 
-    if ($placa === '') {
-        $this->error('La placa no puede estar vacía.');
+        if ($placa === '') {
+            $this->error('La placa no puede estar vacía.');
 
-        header(
-            "Location: index.php?controller=mechanic&action=viewCase&veh_id={$veh_id}&case_id={$case_id}"
-        );
-        exit;
-    }
+            header(
+                "Location: index.php?controller=mechanic&action=viewCase&veh_id={$veh_id}&case_id={$case_id}"
+            );
+            exit;
+        }
 
-    /*
+        /*
      * Verificar que la placa no pertenezca a otro vehículo.
      */
-    $vehicleWithPlate = $this->vehicleModel->findByPlate($placa);
+        $vehicleWithPlate = $this->vehicleModel->findByPlate($placa);
 
-    if (
-        $vehicleWithPlate
-        && (int)$vehicleWithPlate['id'] !== $veh_id
-    ) {
-        $this->error(
-            "No se puede usar la placa {$placa} porque ya está registrada en otro vehículo."
-        );
+        if (
+            $vehicleWithPlate
+            && (int)$vehicleWithPlate['id'] !== $veh_id
+        ) {
+            $this->error(
+                "No se puede usar la placa {$placa} porque ya está registrada en otro vehículo."
+            );
+
+            header(
+                "Location: index.php?controller=mechanic&action=viewCase&veh_id={$veh_id}&case_id={$case_id}"
+            );
+            exit;
+        }
+
+        $data = [
+            'placa'       => $placa,
+            'color'       => $color,
+            'propietario' => $propietario,
+            'telefono'    => $telefono
+        ];
+
+        if ($this->vehicleModel->updateBasicData($veh_id, $data)) {
+
+            $this->success('Datos del vehículo actualizados correctamente.');
+        } else {
+
+            $this->error('No fue posible actualizar los datos del vehículo.');
+        }
 
         header(
             "Location: index.php?controller=mechanic&action=viewCase&veh_id={$veh_id}&case_id={$case_id}"
         );
         exit;
     }
-
-    $data = [
-        'placa'       => $placa,
-        'color'       => $color,
-        'propietario' => $propietario,
-        'telefono'    => $telefono
-    ];
-
-    if ($this->vehicleModel->updateBasicData($veh_id, $data)) {
-
-        $this->success('Datos del vehículo actualizados correctamente.');
-
-    } else {
-
-        $this->error('No fue posible actualizar los datos del vehículo.');
-    }
-
-    header(
-        "Location: index.php?controller=mechanic&action=viewCase&veh_id={$veh_id}&case_id={$case_id}"
-    );
-    exit;
-}
 
     public function openCase()
     {

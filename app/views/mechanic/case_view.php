@@ -11,17 +11,78 @@
 <link
     href="css/case_view.css"
     rel="stylesheet">
-<a
-    href="index.php?controller=case&action=imprimir&case_id=<?= $caso['id'] ?>"
-    target="_blank"
-    class="btn btn-danger">
 
-    🖨 Imprimir PDF
-
-</a>
 
 <div class="container mt-4 case-view">
+
+    <!-- CABECERA SUPERIOR -->
+    <div class="case-topbar">
+
+        <!-- IZQUIERDA: PDF -->
+        <div class="case-topbar-left">
+
+            <a
+                href="index.php?controller=case&action=imprimir&case_id=<?= $caso['id'] ?>"
+                target="_blank"
+                class="btn btn-danger">
+
+                <i class="bi bi-file-earmark-pdf"></i>
+                Imprimir PDF
+
+            </a>
+
+        </div>
+
+
+        <!-- DERECHA: USUARIO + TIEMPO -->
+        <div class="case-topbar-right">
+
+
+
+
+            <?php if (!empty($tiempoCaso)): ?>
+
+                <div
+                    class="case-duration"
+                    data-case-duration
+                    data-seconds="<?= (int)$tiempoCaso['segundos'] ?>"
+                    data-active="<?= $tiempoCaso['activo'] ? '1' : '0' ?>">
+
+                    <div class="case-duration-icon">
+                        <i class="bi bi-clock-history"></i>
+                    </div>
+
+                    <div class="case-duration-content">
+
+                        <span class="case-duration-label">
+                            Tiempo en taller
+                        </span>
+
+                        <strong
+                            class="case-duration-value"
+                            data-case-duration-value>
+                            Calculando...
+                        </strong>
+
+                    </div>
+
+                    <span
+                        class="case-duration-status"
+                        data-case-duration-status>
+                    </span>
+
+                </div>
+
+            <?php endif; ?>
+
+        </div>
+
+    </div>
+
+
     <h2 class="mb-4">Ficha del vehículo</h2>
+
+
 
     <?php if ($vehicle): ?>
 
@@ -131,17 +192,17 @@
                             <?= htmlspecialchars($vehicle['color']) ?>
                         </p>
 
-<div class="case-vehicle-edit">
-    <button
-        type="button"
-        class="btn btn-outline-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#modalEditarVehiculo">
+                        <div class="case-vehicle-edit">
+                            <button
+                                type="button"
+                                class="btn btn-outline-primary"
+                                data-bs-toggle="modal"
+                                data-bs-target="#modalEditarVehiculo">
 
-        ✏️ Editar datos del vehículo
+                                ✏️ Editar datos del vehículo
 
-    </button>
-</div>
+                            </button>
+                        </div>
 
                     </div>
 
@@ -161,120 +222,40 @@
                                     ⚫ Caso cerrado
                                 </span>
 
+
+
                                 <?php if ($caso['estado'] === 'cerrado'): ?>
+
                                     <?php if (!empty($hasOpenCase)): ?>
-                                        <button class="btn btn-secondary mt-3 w-100" disabled title="Ya existe un caso abierto para este vehículo">
+
+                                        <button
+                                            class="btn btn-secondary mt-3 w-100"
+                                            disabled
+                                            title="Ya existe un caso abierto para este vehículo">
+
                                             🆕 Nuevo caso (no disponible)
+
                                         </button>
+
                                     <?php else: ?>
-                                        <form method="POST" action="index.php?controller=case&action=nuevoDesdeExistente">
 
-                                            <input
-                                                type="hidden"
-                                                name="vehiculo_id"
-                                                value="<?= htmlspecialchars($caso['vehiculo_id']) ?>">
+                                        <!-- Botón abre el modal -->
+                                        <button
+                                            type="button"
+                                            class="btn btn-success mt-3 w-100"
+                                            data-bs-toggle="modal"
+                                            data-bs-target="#modalNuevoCaso">
 
-                                            <input
-                                                type="hidden"
-                                                name="referencia_anterior"
-                                                value="<?= htmlspecialchars($caso['id']) ?>">
+                                            🆕 Crear nuevo caso
 
-                                            <!-- Tipo de ingreso -->
-                                            <div class="mt-3 text-start">
+                                        </button>
 
-                                                <label class="form-label fw-bold">
-                                                    Tipo de nuevo ingreso
-                                                </label>
 
-                                                <div class="form-check">
-                                                    <input
-                                                        class="form-check-input"
-                                                        type="radio"
-                                                        name="tipo_ingreso"
-                                                        id="ingresoRelacionado"
-                                                        value="relacionado"
-                                                        checked>
 
-                                                    <label
-                                                        class="form-check-label"
-                                                        for="ingresoRelacionado">
-                                                        🔄 Continuación del caso anterior
-                                                    </label>
-                                                </div>
-
-                                                <div class="form-check">
-                                                    <input
-                                                        class="form-check-input"
-                                                        type="radio"
-                                                        name="tipo_ingreso"
-                                                        id="ingresoNuevo"
-                                                        value="nuevo">
-
-                                                    <label
-                                                        class="form-check-label"
-                                                        for="ingresoNuevo">
-                                                        🆕 Falla o servicio diferente
-                                                    </label>
-                                                </div>
-
-                                            </div>
-
-                                            <!-- Motivo -->
-                                            <div class="mt-3 text-start">
-
-                                                <label
-                                                    for="motivo_ingreso"
-                                                    class="form-label fw-bold">
-                                                    Motivo del ingreso
-                                                </label>
-
-                                                <textarea
-                                                    class="form-control"
-                                                    name="motivo_ingreso"
-                                                    id="motivo_ingreso"
-                                                    rows="3"
-                                                    placeholder="Describa por qué el vehículo ingresa nuevamente al taller..."
-                                                    required></textarea>
-
-                                                <small class="text-muted">
-                                                    Ejemplo: La falla persiste, apareció una nueva falla,
-                                                    el cliente solicita una revisión adicional, etc.
-                                                </small>
-
-                                            </div>
-
-                                            <!-- Observaciones -->
-                                            <div class="mt-3 text-start">
-
-                                                <label
-                                                    for="observaciones"
-                                                    class="form-label fw-bold">
-                                                    Observaciones
-                                                </label>
-
-                                                <textarea
-                                                    class="form-control"
-                                                    name="observaciones"
-                                                    id="observaciones"
-                                                    rows="3"
-                                                    placeholder="Información adicional proporcionada por el cliente o relevante para el ingreso..."></textarea>
-
-                                                <small class="text-muted">
-                                                    Ejemplo: El cliente indica que la falla aparece principalmente
-                                                    cuando el motor está caliente.
-                                                </small>
-
-                                            </div>
-
-                                            <button
-                                                type="submit"
-                                                class="btn btn-success mt-3 w-100">
-                                                🆕 Crear nuevo caso
-                                            </button>
-
-                                        </form>
                                     <?php endif; ?>
+
                                 <?php endif; ?>
+
 
 
                             <?php endif; ?>
@@ -300,10 +281,13 @@
             </div>
         </div>
     <?php else: ?>
-        <div class="alert alert-warning">
-            Ningún vehículo seleccionado.
-        </div>
-    <?php endif; ?>
+
+    <div class="alert alert-warning">
+        Ningún vehículo seleccionado.
+    </div>
+
+<?php endif; ?>
+
 
     <!-- =========================================================
      HISTORIAL DEL VEHÍCULO
@@ -722,26 +706,26 @@
 
                     <div class="case-work-end">
 
-    <form
-        method="post"
-        action="index.php?controller=mechanic&action=endSession">
+                        <form
+                            method="post"
+                            action="index.php?controller=mechanic&action=endSession">
 
-        <input
-            type="hidden"
-            name="session_id"
-            value="<?= $activeSession['id'] ?>">
+                            <input
+                                type="hidden"
+                                name="session_id"
+                                value="<?= $activeSession['id'] ?>">
 
-        <button
-            type="submit"
-            class="btn btn-outline-danger">
+                            <button
+                                type="submit"
+                                class="btn btn-outline-danger">
 
-            ■ Terminar sesión de trabajo
+                                ■ Terminar sesión de trabajo
 
-        </button>
+                            </button>
 
-    </form>
+                        </form>
 
-</div>
+                    </div>
                 <?php endif; ?>
             </div>
             <!-- =========================================================
@@ -913,73 +897,73 @@
                 <div class="case-collapsible-body p-0">
                     <div class="card shadow-sm">
 
-                <div class="card-header bg-primary text-white">
-                    <strong>🛒 Compras directas</strong>
-                </div>
+                        <div class="card-header bg-primary text-white">
+                            <strong>🛒 Compras directas</strong>
+                        </div>
 
-                <div class="card-body p-0">
+                        <div class="card-body p-0">
 
-                    <div class="table-responsive">
+                            <div class="table-responsive">
 
-                        <table class="table table-hover table-sm mb-0">
+                                <table class="table table-hover table-sm mb-0">
 
-                            <thead class="table-light">
-                                <tr>
-                                    <th>Descripción</th>
-                                    <th class="text-end">Cantidad</th>
-                                    <th class="text-end">Precio unitario</th>
-                                    <th class="text-end">Subtotal</th>
-                                </tr>
-                            </thead>
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Descripción</th>
+                                            <th class="text-end">Cantidad</th>
+                                            <th class="text-end">Precio unitario</th>
+                                            <th class="text-end">Subtotal</th>
+                                        </tr>
+                                    </thead>
 
-                            <tbody>
+                                    <tbody>
 
-                                <?php foreach ($casePurchases as $purchase): ?>
+                                        <?php foreach ($casePurchases as $purchase): ?>
 
-                                    <tr>
+                                            <tr>
 
-                                        <td>
-                                            <?= htmlspecialchars($purchase['descripcion']) ?>
-                                        </td>
+                                                <td>
+                                                    <?= htmlspecialchars($purchase['descripcion']) ?>
+                                                </td>
 
-                                        <td class="text-end">
-                                            <?= number_format(
-                                                (float)$purchase['cantidad'],
-                                                2,
-                                                ',',
-                                                '.'
-                                            ) ?>
-                                        </td>
+                                                <td class="text-end">
+                                                    <?= number_format(
+                                                        (float)$purchase['cantidad'],
+                                                        2,
+                                                        ',',
+                                                        '.'
+                                                    ) ?>
+                                                </td>
 
-                                        <td class="text-end">
-                                            $<?= number_format(
-                                                    (float)$purchase['precio_unitario'],
-                                                    0,
-                                                    ',',
-                                                    '.'
-                                                ) ?>
-                                        </td>
+                                                <td class="text-end">
+                                                    $<?= number_format(
+                                                            (float)$purchase['precio_unitario'],
+                                                            0,
+                                                            ',',
+                                                            '.'
+                                                        ) ?>
+                                                </td>
 
-                                        <td class="text-end fw-bold">
-                                            $<?= number_format(
-                                                    (float)$purchase['subtotal'],
-                                                    0,
-                                                    ',',
-                                                    '.'
-                                                ) ?>
-                                        </td>
+                                                <td class="text-end fw-bold">
+                                                    $<?= number_format(
+                                                            (float)$purchase['subtotal'],
+                                                            0,
+                                                            ',',
+                                                            '.'
+                                                        ) ?>
+                                                </td>
 
-                                    </tr>
+                                            </tr>
 
-                                <?php endforeach; ?>
+                                        <?php endforeach; ?>
 
-                            </tbody>
+                                    </tbody>
 
-                        </table>
+                                </table>
 
-                    </div>
+                            </div>
 
-                </div>
+                        </div>
 
                     </div>
                 </div>
@@ -1733,10 +1717,6 @@
     actualizarResumen();
 </script>
 
-<!-- Cargar Bootstrap JS y Popper.js desde CDN -->
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.min.js"></script>
-
 <script>
     document.addEventListener('DOMContentLoaded', function() {
 
@@ -1795,3 +1775,231 @@
 
     actualizarFormulario();
 </script>
+
+<?php if (
+    !empty($caso) &&
+    $caso['estado'] === 'cerrado' &&
+    empty($hasOpenCase)
+): ?>
+
+    <div
+        class="modal fade"
+        id="modalNuevoCaso"
+        tabindex="-1"
+        aria-labelledby="modalNuevoCasoLabel"
+        aria-hidden="true">
+
+        <div class="modal-dialog modal-lg modal-dialog-centered">
+
+            <div class="modal-content">
+
+                <div class="modal-header">
+
+                    <div>
+                        <h5
+                            class="modal-title"
+                            id="modalNuevoCasoLabel">
+
+                            🆕 Crear nuevo caso
+
+                        </h5>
+
+                        <small class="text-muted">
+                            <?= htmlspecialchars($vehicle['marca'] ?? '') ?>
+                            <?= htmlspecialchars($vehicle['modelo'] ?? '') ?>
+                            ·
+                            <?= htmlspecialchars($vehicle['placa'] ?? '') ?>
+                        </small>
+                    </div>
+
+                    <button
+                        type="button"
+                        class="btn-close"
+                        data-bs-dismiss="modal"
+                        aria-label="Cerrar">
+                    </button>
+
+                </div>
+
+
+                <form
+                    method="POST"
+                    action="index.php?controller=case&action=nuevoDesdeExistente">
+
+                    <div class="modal-body">
+
+                        <input
+                            type="hidden"
+                            name="vehiculo_id"
+                            value="<?= htmlspecialchars($caso['vehiculo_id']) ?>">
+
+                        <input
+                            type="hidden"
+                            name="referencia_anterior"
+                            value="<?= htmlspecialchars($caso['id']) ?>">
+
+
+                        <!-- TIPO DE INGRESO -->
+
+                        <div class="mb-4">
+
+                            <label class="form-label fw-bold">
+                                Tipo de nuevo ingreso
+                            </label>
+
+                            <div class="row g-3">
+
+                                <div class="col-md-6">
+
+                                    <label class="border rounded p-3 d-block h-100">
+
+                                        <div class="form-check">
+
+                                            <input
+                                                class="form-check-input"
+                                                type="radio"
+                                                name="tipo_ingreso"
+                                                id="ingresoRelacionado"
+                                                value="relacionado"
+                                                checked>
+
+                                            <label
+                                                class="form-check-label fw-semibold"
+                                                for="ingresoRelacionado">
+
+                                                🔄 Continuación del caso anterior
+
+                                            </label>
+
+                                        </div>
+
+                                        <small class="text-muted d-block mt-2 ms-4">
+
+                                            El vehículo regresa por la misma falla
+                                            o por un problema relacionado.
+
+                                        </small>
+
+                                    </label>
+
+                                </div>
+
+
+                                <div class="col-md-6">
+
+                                    <label class="border rounded p-3 d-block h-100">
+
+                                        <div class="form-check">
+
+                                            <input
+                                                class="form-check-input"
+                                                type="radio"
+                                                name="tipo_ingreso"
+                                                id="ingresoNuevo"
+                                                value="nuevo">
+
+                                            <label
+                                                class="form-check-label fw-semibold"
+                                                for="ingresoNuevo">
+
+                                                🆕 Falla o servicio diferente
+
+                                            </label>
+
+                                        </div>
+
+                                        <small class="text-muted d-block mt-2 ms-4">
+
+                                            Se inicia un trabajo diferente al
+                                            realizado anteriormente.
+
+                                        </small>
+
+                                    </label>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- MOTIVO -->
+
+                        <div class="mb-4">
+
+                            <label
+                                for="motivo_ingreso"
+                                class="form-label fw-bold">
+
+                                Motivo del ingreso
+
+                            </label>
+
+                            <textarea
+                                class="form-control"
+                                name="motivo_ingreso"
+                                id="motivo_ingreso"
+                                rows="3"
+                                placeholder="Describa por qué el vehículo ingresa nuevamente al taller..."
+                                required></textarea>
+
+                        </div>
+
+
+                        <!-- OBSERVACIONES -->
+
+                        <div class="mb-2">
+
+                            <label
+                                for="observaciones"
+                                class="form-label fw-bold">
+
+                                Observaciones
+
+                            </label>
+
+                            <textarea
+                                class="form-control"
+                                name="observaciones"
+                                id="observaciones"
+                                rows="3"
+                                placeholder="Información adicional proporcionada por el cliente o relevante para el ingreso..."></textarea>
+
+                        </div>
+
+                    </div>
+
+
+                    <div class="modal-footer">
+
+                        <button
+                            type="button"
+                            class="btn btn-secondary"
+                            data-bs-dismiss="modal">
+
+                            Cancelar
+
+                        </button>
+
+                        <button
+                            type="submit"
+                            class="btn btn-success">
+
+                            <i class="bi bi-plus-circle"></i>
+
+                            Crear nuevo caso
+
+                        </button>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </div>
+
+    </div>
+
+<?php endif; ?>

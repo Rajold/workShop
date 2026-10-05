@@ -106,21 +106,38 @@ class RepairCase
     }
 
     public function crearNuevoDesde(int $vehiculoId, int $referenciaAnterior): ?int
-    {
-        try {
-            $stmt = $this->pdo->prepare("
-            INSERT INTO casos (vehiculo_id, fecha_ingreso, estado, referencia_anterior)
-            VALUES (:vehiculo_id, NOW(), 'abierto', :referencia_anterior)
+{
+    try {
+        $stmt = $this->pdo->prepare("
+            INSERT INTO casos (
+                vehiculo_id,
+                fecha_ingreso,
+                hora_ingreso,
+                estado,
+                referencia_anterior
+            )
+            VALUES (
+                :vehiculo_id,
+                CURDATE(),
+                CURTIME(),
+                'abierto',
+                :referencia_anterior
+            )
         ");
-            $stmt->execute([
-                ':vehiculo_id' => $vehiculoId,
-                ':referencia_anterior' => $referenciaAnterior
-            ]);
 
-            return (int)$this->pdo->lastInsertId();
-        } catch (PDOException $e) {
-            error_log("Error al crear nuevo caso: " . $e->getMessage());
-            return null;
-        }
+        $stmt->execute([
+            ':vehiculo_id' => $vehiculoId,
+            ':referencia_anterior' => $referenciaAnterior
+        ]);
+
+        return (int)$this->pdo->lastInsertId();
+
+    } catch (PDOException $e) {
+
+        error_log("Error al crear nuevo caso: " . $e->getMessage());
+
+        return null;
     }
+}
+
 }

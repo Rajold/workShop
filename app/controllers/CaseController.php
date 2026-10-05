@@ -357,27 +357,30 @@ class CaseController
 
             // 4️⃣ Crear el nuevo caso
             $stmt = $this->pdo->prepare("
-            INSERT INTO casos
-            (
-                vehiculo_id,
-                mecanico_id,
-                causa,
-                diagnostico,
-                observaciones,
-                estado,
-                fecha_ingreso
-            )
-            VALUES
-            (
-                :vehiculo_id,
-                :mecanico_id,
-                :causa,
-                :diagnostico,
-                :observaciones,
-                'abierto',
-                NOW()
-            )
-        ");
+    INSERT INTO casos
+    (
+        vehiculo_id,
+        mecanico_id,
+        causa,
+        diagnostico,
+        observaciones,
+        estado,
+        fecha_ingreso,
+        hora_ingreso
+    )
+    VALUES
+    (
+        :vehiculo_id,
+        :mecanico_id,
+        :causa,
+        :diagnostico,
+        :observaciones,
+        'abierto',
+        CURDATE(),
+        CURTIME()
+    )
+");
+
 
             $stmt->execute([
                 'vehiculo_id' => $vehiculo_id,

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 03, 2026 at 03:06 AM
+-- Generation Time: Oct 04, 2026 at 09:13 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -643,7 +643,15 @@ INSERT INTO `avances` (`id`, `caso_id`, `mecanico_id`, `descripcion`, `tipo`, `v
 (587, 173, 3, 'Cargar batería', 'Mano de obra', 7000, '2026-10-01 23:46:02'),
 (588, 173, 3, 'Costos de taller.', 'Mano de obra', 13000, '2026-10-02 16:04:56'),
 (589, 173, 3, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-02 16:05:16'),
-(590, 171, 3, 'Costos de taller.m', 'Mano de obra', 50000, '2026-10-02 16:06:38');
+(590, 171, 3, 'Costos de taller.m', 'Mano de obra', 50000, '2026-10-02 16:06:38'),
+(591, 174, 3, '🆕 Caso creado por falla o servicio diferente', 'Mano de obra', 0, '2026-10-03 19:32:13'),
+(592, 174, 3, 'Instalación.', 'Mano de obra', 15000, '2026-10-03 20:44:54'),
+(593, 174, 3, '40 anteriores Cambio de pastillas.', 'Mano de obra', 0, '2026-10-03 22:48:23'),
+(594, 174, 3, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-03 22:49:09'),
+(595, 172, 3, 'Csmbio fluidos freno.', 'Mano de obra', 25000, '2026-10-03 22:50:12'),
+(596, 172, 3, 'Cambio carenado y cristal velocímetro,', 'Mano de obra', 20000, '2026-10-03 22:51:25'),
+(597, 172, 3, 'Mantenimiento suspensión delantera.', 'Mano de obra', 60000, '2026-10-03 22:51:51'),
+(598, 172, 3, 'Cambio de bandas traseras.', 'Mano de obra', 20000, '2026-10-04 01:55:11');
 
 -- --------------------------------------------------------
 
@@ -834,7 +842,8 @@ INSERT INTO `casos` (`id`, `vehiculo_id`, `mecanico_id`, `fecha_ingreso`, `hora_
 (170, 31, 3, '2026-10-01', NULL, 'Cambio de aceite.', '', '', 'cerrado', '2026-10-01 16:02:13', 3, 5000, 0, 5000.00),
 (171, 37, 3, '2026-10-01', NULL, 'Se ahoga, no revoluciona.', 'Continuación del caso #161', '', 'abierto', NULL, NULL, NULL, 0, 0.00),
 (172, 136, 3, '2026-10-01', '18:21:54', 'Mantenimiento', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
-(173, 137, 3, '2026-10-01', '18:23:45', 'No da arranque', NULL, NULL, 'cerrado', '2026-10-02 11:05:16', 3, 30000, 0, 25520.00);
+(173, 137, 3, '2026-10-01', '18:23:45', 'No da arranque', NULL, NULL, 'cerrado', '2026-10-02 11:05:16', 3, 30000, 0, 25520.00),
+(174, 126, 3, '2026-10-03', NULL, 'Cambio de rodamientos', '', '', 'cerrado', '2026-10-03 17:49:09', 3, 43000, 0, 29000.00);
 
 -- --------------------------------------------------------
 
@@ -927,7 +936,10 @@ INSERT INTO `caso_repuestos` (`id`, `caso_id`, `parte_id`, `usuario_id`, `cantid
 (67, 115, 61, 6, 1.00, 10000.00, 15000.00, 15000.00, '2026-10-01 00:13:02'),
 (68, 171, 57, 3, 30.00, 24.00, 200.00, 6000.00, '2026-10-01 21:49:45'),
 (69, 173, 65, 3, 1.00, 4000.00, 6000.00, 6000.00, '2026-10-01 23:46:29'),
-(70, 173, 57, 3, 20.00, 24.00, 200.00, 4000.00, '2026-10-01 23:46:57');
+(70, 173, 57, 3, 20.00, 24.00, 200.00, 4000.00, '2026-10-01 23:46:57'),
+(71, 174, 83, 3, 1.00, 4000.00, 8000.00, 8000.00, '2026-10-03 19:46:44'),
+(72, 174, 84, 3, 1.00, 5000.00, 10000.00, 10000.00, '2026-10-03 19:46:44'),
+(73, 174, 85, 3, 1.00, 5000.00, 10000.00, 10000.00, '2026-10-03 19:46:44');
 
 -- --------------------------------------------------------
 
@@ -1389,7 +1401,13 @@ INSERT INTO `movimientos_inventario` (`id`, `parte_id`, `usuario_id`, `caso_id`,
 (149, 65, 3, 173, 'consumo', 'Consumo durante reparación', 1.00, 0.00, 4000.00, 'Aplicado desde WorkShop', '2026-10-01 18:46:29'),
 (150, 57, 3, 173, 'consumo', 'Consumo durante reparación', 20.00, 500.00, 24.00, 'Aplicado desde WorkShop', '2026-10-01 18:46:57'),
 (151, 80, 3, NULL, 'compra', 'Compra inicial', 12.00, 12.00, 500.00, '', '2026-10-02 18:53:49'),
-(152, 81, 3, NULL, 'compra', 'Compra inicial', 12.00, 12.00, 500.00, '', '2026-10-02 18:56:24');
+(152, 81, 3, NULL, 'compra', 'Compra inicial', 12.00, 12.00, 500.00, '', '2026-10-02 18:56:24'),
+(153, 83, 3, NULL, 'compra', 'Compra inicial', 3.00, 3.00, 4000.00, '', '2026-10-03 14:38:56'),
+(154, 85, 3, NULL, 'compra', 'Compra inicial', 1.00, 1.00, 5000.00, '', '2026-10-03 14:45:20'),
+(155, 84, 3, NULL, 'compra', 'Compra inicial', 1.00, 1.00, 5000.00, '', '2026-10-03 14:45:39'),
+(156, 83, 3, 174, 'consumo', 'Consumo durante reparación', 1.00, 2.00, 4000.00, 'Aplicado desde WorkShop', '2026-10-03 14:46:44'),
+(157, 84, 3, 174, 'consumo', 'Consumo durante reparación', 1.00, 0.00, 5000.00, 'Aplicado desde WorkShop', '2026-10-03 14:46:44'),
+(158, 85, 3, 174, 'consumo', 'Consumo durante reparación', 1.00, 0.00, 5000.00, 'Aplicado desde WorkShop', '2026-10-03 14:46:44');
 
 -- --------------------------------------------------------
 
@@ -1502,7 +1520,10 @@ INSERT INTO `partes` (`id`, `codigo`, `categoria_id`, `tipo`, `nombre`, `marca`,
 (78, 'Oring004', 25, 'repuesto', 'Oring 120', 'Sin marca', 3, 'NA', 3, 'Unidad', 3.00, 0.00, 1.00, 1000.00, 2000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-29 11:11:06', '2026-09-29 11:12:08'),
 (79, 'AnilloEsc001', 25, 'repuesto', 'Anillo Escape 04Q154M', 'Darrow', 16, '04Q154M', 3, 'Unidad', 4.00, 0.00, 1.00, 1200.00, 5000.00, 'Vitrina', '7 707008 705656', NULL, 1, '2026-09-29 17:42:21', '2026-09-29 17:44:29'),
 (80, 'TornGol#6', 19, 'repuesto', 'Tornillo Goloso #6', 'Sin marca', 3, 'NA', 3, 'Unidad', 12.00, 0.00, 10.00, 500.00, 0.00, 'Tornillera', 'NA', NULL, 1, '2026-10-02 18:53:30', '2026-10-02 18:56:10'),
-(81, 'ChapGol#6', 19, 'repuesto', 'Chapeta Goloso #6', 'Sin marca', 3, 'NA', 3, 'Unidad', 12.00, 0.00, 10.00, 500.00, 800.00, 'Tornillera', 'NA', NULL, 1, '2026-10-02 18:55:45', '2026-10-02 18:56:24');
+(81, 'ChapGol#6', 19, 'repuesto', 'Chapeta Goloso #6', 'Sin marca', 3, 'NA', 3, 'Unidad', 12.00, 0.00, 10.00, 500.00, 800.00, 'Tornillera', 'NA', NULL, 1, '2026-10-02 18:55:45', '2026-10-02 18:56:24'),
+(83, 'RodBol6202', 16, 'repuesto', 'Rodamiento Bolas 6202-Rs', 'Evol', 26, '6202-Rs', 3, 'Unidad', 2.00, 0.00, 1.00, 4000.00, 8000.00, 'Vitrina', 'NA', NULL, 1, '2026-10-03 14:37:31', '2026-10-03 14:46:44'),
+(84, 'RodBol-6204-2Rs', 16, 'repuesto', '6204-2Rs', 'Koyo', 5, '6204-2Rs', 3, 'Unidad', 0.00, 0.00, 1.00, 5000.00, 10000.00, 'Vitrina', '4 549250 006203', NULL, 1, '2026-10-03 14:43:17', '2026-10-03 14:46:44'),
+(85, 'RodBol-6302-2Rs', 16, 'repuesto', '6302-2Rs', 'Koyo', 5, '6302-2Rs', 3, 'Unidad', 0.00, 0.00, 1.00, 5000.00, 10000.00, 'Vitrina', '4 549250 006203', NULL, 1, '2026-10-03 14:44:54', '2026-10-03 14:46:44');
 
 -- --------------------------------------------------------
 
@@ -1544,10 +1565,11 @@ INSERT INTO `pendientes` (`id`, `vehiculo_id`, `caso_origen_id`, `caso_resuelto_
 (15, 118, 139, NULL, 6, '50000', 'descartado', '2026-09-11 14:56:25', '2026-09-21 07:56:35'),
 (16, 36, 140, NULL, 6, 'Quitar gps.', 'pendiente', '2026-09-21 12:58:21', NULL),
 (17, 125, 150, NULL, 6, '300-50Anteriores= 250 -340= -90000', 'pendiente', '2026-09-21 13:00:01', NULL),
-(18, 126, 153, NULL, 6, '40 anteriores Cambio de pastillas.', 'pendiente', '2026-09-21 13:01:28', NULL),
+(18, 126, 153, 174, 6, '40 anteriores Cambio de pastillas.', 'resuelto', '2026-09-21 13:01:28', '2026-10-03 17:48:23'),
 (19, 128, 155, NULL, 6, 'no llegó pago.', 'pendiente', '2026-09-21 13:02:58', NULL),
 (20, 85, 90, NULL, 6, '90 abono', 'pendiente', '2026-09-28 22:25:12', NULL),
-(21, 102, 169, NULL, 6, 'pasa en 8 días', 'pendiente', '2026-10-01 00:17:03', NULL);
+(21, 102, 169, NULL, 6, 'pasa en 8 días', 'pendiente', '2026-10-01 00:17:03', NULL),
+(22, 136, 172, NULL, 3, 'Cambiar cadena, bombillo stop.', 'pendiente', '2026-10-04 02:18:05', NULL);
 
 -- --------------------------------------------------------
 
@@ -1694,7 +1716,8 @@ INSERT INTO `sesiones_trabajo` (`id`, `caso_id`, `mecanico_id`, `fecha_inicio`, 
 (239, 170, 3, '2026-10-01', '16:01:37', '2026-10-01', '16:02:13', 421),
 (240, 171, 3, '2026-10-01', '16:29:41', NULL, NULL, 0),
 (241, 173, 3, '2026-10-01', '18:23:54', '2026-10-02', '11:05:07', 1421),
-(242, 172, 3, '2026-10-02', '18:04:54', NULL, NULL, 0);
+(242, 172, 3, '2026-10-02', '18:04:54', NULL, NULL, 0),
+(243, 174, 3, '2026-10-03', '14:32:48', '2026-10-03', '17:49:09', 616);
 
 -- --------------------------------------------------------
 
@@ -2051,19 +2074,19 @@ ALTER TABLE `aplicacion_parte`
 -- AUTO_INCREMENT for table `avances`
 --
 ALTER TABLE `avances`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=591;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=599;
 
 --
 -- AUTO_INCREMENT for table `casos`
 --
 ALTER TABLE `casos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=174;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=175;
 
 --
 -- AUTO_INCREMENT for table `caso_repuestos`
 --
 ALTER TABLE `caso_repuestos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=71;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
 
 --
 -- AUTO_INCREMENT for table `categorias_partes`
@@ -2099,25 +2122,25 @@ ALTER TABLE `modelos_moto`
 -- AUTO_INCREMENT for table `movimientos_inventario`
 --
 ALTER TABLE `movimientos_inventario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=153;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=159;
 
 --
 -- AUTO_INCREMENT for table `partes`
 --
 ALTER TABLE `partes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=82;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
 
 --
 -- AUTO_INCREMENT for table `pendientes`
 --
 ALTER TABLE `pendientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `sesiones_trabajo`
 --
 ALTER TABLE `sesiones_trabajo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=243;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=244;
 
 --
 -- AUTO_INCREMENT for table `tipos_moto`
