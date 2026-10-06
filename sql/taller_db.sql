@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 04, 2026 at 09:13 PM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Oct 06, 2026 at 04:48 AM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -651,7 +651,26 @@ INSERT INTO `avances` (`id`, `caso_id`, `mecanico_id`, `descripcion`, `tipo`, `v
 (595, 172, 3, 'Csmbio fluidos freno.', 'Mano de obra', 25000, '2026-10-03 22:50:12'),
 (596, 172, 3, 'Cambio carenado y cristal velocímetro,', 'Mano de obra', 20000, '2026-10-03 22:51:25'),
 (597, 172, 3, 'Mantenimiento suspensión delantera.', 'Mano de obra', 60000, '2026-10-03 22:51:51'),
-(598, 172, 3, 'Cambio de bandas traseras.', 'Mano de obra', 20000, '2026-10-04 01:55:11');
+(598, 172, 3, 'Cambio de bandas traseras.', 'Mano de obra', 20000, '2026-10-04 01:55:11'),
+(599, 172, 6, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-05 11:55:48'),
+(600, 175, 6, '🆕 Caso creado por falla o servicio diferente', 'Mano de obra', 0, '2026-10-05 15:38:20'),
+(601, 172, 6, 'Cambiar cadena, bombillo stop.', 'Mano de obra', 20000, '2026-10-05 15:47:03'),
+(602, 176, 6, 'Cambio de bmba de freno.', 'Mano de obra', 15000, '2026-10-05 15:50:25'),
+(603, 176, 6, 'Cambio base y manigueta de embrague.', 'Mano de obra', 10000, '2026-10-05 15:52:04'),
+(604, 175, 6, 'Cambio de cadena.', 'Mano de obra', 20000, '2026-10-05 15:53:10'),
+(605, 175, 6, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-05 15:53:20'),
+(607, 176, 6, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-05 18:25:36'),
+(608, 178, 6, 'Revisión y Cambio de prensa.', 'Mano de obra', 50000, '2026-10-05 22:59:30'),
+(609, 179, 6, 'Cambio de bomba de freno.', 'Mano de obra', 30000, '2026-10-05 23:23:22'),
+(610, 178, 6, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-06 00:18:19'),
+(611, 179, 3, 'Cambio direccionales.', 'Mano de obra', 10000, '2026-10-06 00:21:59'),
+(612, 166, 3, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-06 00:23:04'),
+(613, 160, 3, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-06 00:23:31'),
+(614, 164, 3, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-06 00:24:12'),
+(615, 180, 3, '🆕 Caso creado por falla o servicio diferente', 'Mano de obra', 0, '2026-10-06 00:26:43'),
+(616, 179, 3, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-06 00:27:47'),
+(617, 169, 3, 'pasa en 8 días.', 'Mano de obra', 12750, '2026-10-06 02:40:06'),
+(618, 169, 3, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-06 02:40:20');
 
 -- --------------------------------------------------------
 
@@ -829,21 +848,27 @@ INSERT INTO `casos` (`id`, `vehiculo_id`, `mecanico_id`, `fecha_ingreso`, `hora_
 (157, 69, 3, '2026-09-18', NULL, 'Cambiar cableado arranque eléctrico.', 'Continuación del caso #141. Para mejorar  la fuerza del motor de arrnque.', '', 'cerrado', '2026-09-18 17:07:49', NULL, 40000, 0, 0.00),
 (158, 38, 3, '2026-09-18', NULL, 'Ruido en el motor', 'Continuación del caso #36. Descarga la baterìa, revisar amortiguadores.', '', 'cerrado', '2026-09-25 14:38:48', 3, 141000, 0, 109600.00),
 (159, 130, 3, '2026-09-19', '18:29:26', 'Escape suena duro.', NULL, NULL, 'cerrado', '2026-09-21 08:03:46', 6, 30000, 0, 30000.00),
-(160, 131, 6, '2026-09-21', '17:11:26', 'Colocar filtro, Se ahoga.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
+(160, 131, 6, '2026-09-21', '17:11:26', 'Colocar filtro, Se ahoga.', NULL, NULL, 'cerrado', '2026-10-05 19:23:31', 3, 60000, 0, 60000.00),
 (161, 37, 6, '2026-09-22', NULL, 'Batería se descarga, Arranque no funciona.', 'Continuación del caso #135. Terminal de batería en mal estado.', '', 'cerrado', '2026-10-01 16:29:14', 3, 91000, 0, 34800.00),
 (162, 130, 3, '2026-09-23', NULL, 'Quitar fuga de aceite / cambiar manzana.', 'Continuación del caso #159', '', 'cerrado', '2026-09-23 15:40:03', 6, 145000, 0, 145000.00),
 (163, 132, 6, '2026-09-23', '15:57:28', 'No enciende', NULL, NULL, 'cerrado', '2026-09-25 14:39:21', 3, 65000, 0, 43600.00),
-(164, 38, 3, '2026-09-26', NULL, 'Se ahoga después de caliente.', 'Continuación del caso #158. Fría trabaja bien.', '', 'abierto', NULL, NULL, NULL, 0, 0.00),
+(164, 38, 3, '2026-09-26', NULL, 'Se ahoga después de caliente.', 'Continuación del caso #158. Fría trabaja bien.', '', 'cerrado', '2026-10-05 19:24:12', 3, 6000, 0, 2000.00),
 (165, 111, 6, '2026-09-28', NULL, 'Cambio de switch', 'Continuación del caso #126', '', 'cerrado', '2026-09-28 17:26:49', 6, 20000, 0, 20000.00),
-(166, 133, 3, '2026-09-29', '17:39:35', 'Falla en la caja de cambios', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
+(166, 133, 3, '2026-09-29', '17:39:35', 'Falla en la caja de cambios', NULL, NULL, 'cerrado', '2026-10-05 19:23:04', 3, 105000, 0, 77800.00),
 (167, 134, 3, '2026-09-30', '11:28:07', 'Rueda trasera se queda frenada.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
 (168, 135, 3, '2026-09-30', '19:04:17', 'Dificíl encender en las mañanas.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
-(169, 102, 6, '2026-09-30', NULL, 'Nofrena delantero', '', '', 'abierto', NULL, NULL, NULL, 0, 0.00),
+(169, 102, 6, '2026-09-30', NULL, 'Nofrena delantero', '', '', 'cerrado', '2026-10-05 21:40:20', 3, 12750, 0, 12750.00),
 (170, 31, 3, '2026-10-01', NULL, 'Cambio de aceite.', '', '', 'cerrado', '2026-10-01 16:02:13', 3, 5000, 0, 5000.00),
 (171, 37, 3, '2026-10-01', NULL, 'Se ahoga, no revoluciona.', 'Continuación del caso #161', '', 'abierto', NULL, NULL, NULL, 0, 0.00),
-(172, 136, 3, '2026-10-01', '18:21:54', 'Mantenimiento', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
+(172, 136, 3, '2026-10-01', '18:21:54', 'Mantenimiento', NULL, NULL, 'cerrado', '2026-10-05 06:55:48', 6, 349000, 0, 182800.00),
 (173, 137, 3, '2026-10-01', '18:23:45', 'No da arranque', NULL, NULL, 'cerrado', '2026-10-02 11:05:16', 3, 30000, 0, 25520.00),
-(174, 126, 3, '2026-10-03', NULL, 'Cambio de rodamientos', '', '', 'cerrado', '2026-10-03 17:49:09', 3, 43000, 0, 29000.00);
+(174, 126, 3, '2026-10-03', NULL, 'Cambio de rodamientos', '', '', 'cerrado', '2026-10-03 17:49:09', 3, 43000, 0, 29000.00),
+(175, 136, 6, '2026-10-05', '10:38:20', 'Cambio de cadena.', 'Tornillos faltantes y bombillo stop', '', 'cerrado', '2026-10-05 10:53:20', 6, 20000, 0, 20000.00),
+(176, 138, 6, '2026-10-05', '10:49:52', 'Cambiar base embrague, bomba de freno y direccionales.', NULL, NULL, 'cerrado', '2026-10-05 13:25:35', 6, 25000, 0, 25000.00),
+(177, 139, 6, '2026-10-05', '14:04:20', 'Consume el aceite y tira humo.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
+(178, 140, 6, '2026-10-05', '15:01:44', 'Falla en el embrague, patina la prensa.', NULL, NULL, 'cerrado', '2026-10-05 19:18:19', 6, 124000, 0, 65000.00),
+(179, 141, 6, '2026-10-05', '18:22:48', 'No frena delantero.', NULL, NULL, 'cerrado', '2026-10-05 19:27:47', 3, 40000, 0, 40000.00),
+(180, 35, 3, '2026-10-05', '19:26:43', 'Escape flojo, suena mal.', 'Nivel de aceite bajo.', '', 'abierto', NULL, NULL, NULL, 0, 0.00);
 
 -- --------------------------------------------------------
 
@@ -1030,7 +1055,9 @@ INSERT INTO `compras_caso` (`id`, `caso_id`, `usuario_id`, `descripcion`, `prove
 (17, 172, 3, 'Bandas freno Trasero.', '', 1.00, 19000.00, 25000.00, 25000.00, '2026-10-02 18:27:40', ''),
 (18, 172, 3, 'Uniòn escape', 'Chiquimotos', 1.00, 3000.00, 5000.00, 5000.00, '2026-10-02 18:31:08', ''),
 (19, 172, 3, 'Carenado', 'Chiquimotos', 1.00, 34400.00, 42000.00, 42000.00, '2026-10-02 18:32:15', ''),
-(20, 172, 3, 'Acrílico visor Velocímetro', 'Chiquimotos', 1.00, 18000.00, 20000.00, 20000.00, '2026-10-02 18:35:16', '');
+(20, 172, 3, 'Acrílico visor Velocímetro', 'Chiquimotos', 1.00, 18000.00, 20000.00, 20000.00, '2026-10-02 18:35:16', ''),
+(21, 178, 6, 'Prensa', 'Chiquimotos', 1.00, 49000.00, 59000.00, 59000.00, '2026-10-05 18:00:48', ''),
+(22, 178, 6, 'Discos de embrague.', 'Chiquimotos', 1.00, 10000.00, 15000.00, 15000.00, '2026-10-05 18:03:20', '');
 
 -- --------------------------------------------------------
 
@@ -1226,7 +1253,10 @@ INSERT INTO `modelos_moto` (`id`, `marca_moto_id`, `tipo_moto_id`, `linea`, `cil
 (85, 2, 7, 'Ax', 115, 1, '2026-09-26 18:26:53', '2026-09-26 18:26:53'),
 (86, 4, 7, 'Fz', 160, 1, '2026-09-26 18:29:58', '2026-09-26 18:29:58'),
 (87, 11, 6, 'Jetyx', 115, 1, '2026-09-30 16:17:49', '2026-09-30 16:17:49'),
-(88, 11, 6, 'Jetyx', 125, 1, '2026-09-30 16:18:10', '2026-09-30 16:18:10');
+(88, 11, 6, 'Jetyx', 125, 1, '2026-09-30 16:18:10', '2026-09-30 16:18:10'),
+(89, 7, 7, 'Discover Str', 125, 1, '2026-10-05 15:48:36', '2026-10-05 15:48:36'),
+(90, 14, 7, 'Hunk', 160, 1, '2026-10-05 20:00:46', '2026-10-05 20:00:46'),
+(91, 8, 6, 'Special R', 110, 1, '2026-10-05 23:22:14', '2026-10-05 23:22:14');
 
 -- --------------------------------------------------------
 
@@ -1568,8 +1598,27 @@ INSERT INTO `pendientes` (`id`, `vehiculo_id`, `caso_origen_id`, `caso_resuelto_
 (18, 126, 153, 174, 6, '40 anteriores Cambio de pastillas.', 'resuelto', '2026-09-21 13:01:28', '2026-10-03 17:48:23'),
 (19, 128, 155, NULL, 6, 'no llegó pago.', 'pendiente', '2026-09-21 13:02:58', NULL),
 (20, 85, 90, NULL, 6, '90 abono', 'pendiente', '2026-09-28 22:25:12', NULL),
-(21, 102, 169, NULL, 6, 'pasa en 8 días', 'pendiente', '2026-10-01 00:17:03', NULL),
-(22, 136, 172, NULL, 3, 'Cambiar cadena, bombillo stop.', 'pendiente', '2026-10-04 02:18:05', NULL);
+(21, 102, 169, 169, 6, 'pasa en 8 días', 'resuelto', '2026-10-01 00:17:03', '2026-10-05 21:40:06'),
+(22, 136, 172, 172, 3, 'Cambiar cadena, bombillo stop.', 'resuelto', '2026-10-04 02:18:05', '2026-10-05 10:47:03');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `reaperturas_caso`
+--
+
+CREATE TABLE `reaperturas_caso` (
+  `id` int(11) NOT NULL,
+  `caso_id` int(11) NOT NULL,
+  `mecanico_id` int(11) NOT NULL,
+  `motivo` varchar(100) NOT NULL,
+  `comentario` text DEFAULT NULL,
+  `fecha_reapertura` datetime NOT NULL DEFAULT current_timestamp(),
+  `precio_cobrado_anterior` int(11) DEFAULT NULL,
+  `descuento_anterior` int(11) DEFAULT NULL,
+  `utilidad_anterior` int(11) DEFAULT NULL,
+  `fecha_cierre_anterior` datetime DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 -- --------------------------------------------------------
 
@@ -1705,10 +1754,10 @@ INSERT INTO `sesiones_trabajo` (`id`, `caso_id`, `mecanico_id`, `fecha_inicio`, 
 (228, 162, 6, '2026-09-23', '15:15:58', '2026-09-23', '15:40:03', 444),
 (229, 163, 6, '2026-09-23', '15:57:32', NULL, NULL, 0),
 (230, 161, 3, '2026-09-25', '16:52:19', '2026-10-01', '16:29:14', 9037),
-(231, 164, 3, '2026-09-26', '13:05:09', NULL, NULL, 0),
+(231, 164, 3, '2026-09-26', '13:05:09', '2026-10-05', '19:24:12', 13759),
 (232, 90, 6, '2026-09-28', '17:24:57', NULL, NULL, 0),
 (233, 165, 6, '2026-09-28', '17:26:20', '2026-09-28', '17:26:49', 420),
-(234, 166, 3, '2026-09-29', '17:39:46', NULL, NULL, 0),
+(234, 166, 3, '2026-09-29', '17:39:46', '2026-10-05', '19:23:04', 9163),
 (235, 167, 3, '2026-09-30', '11:28:14', NULL, NULL, 0),
 (236, 168, 3, '2026-09-30', '19:04:24', NULL, NULL, 0),
 (237, 115, 6, '2026-09-30', '19:11:10', '2026-09-30', '19:13:57', 423),
@@ -1717,7 +1766,14 @@ INSERT INTO `sesiones_trabajo` (`id`, `caso_id`, `mecanico_id`, `fecha_inicio`, 
 (240, 171, 3, '2026-10-01', '16:29:41', NULL, NULL, 0),
 (241, 173, 3, '2026-10-01', '18:23:54', '2026-10-02', '11:05:07', 1421),
 (242, 172, 3, '2026-10-02', '18:04:54', NULL, NULL, 0),
-(243, 174, 3, '2026-10-03', '14:32:48', '2026-10-03', '17:49:09', 616);
+(243, 174, 3, '2026-10-03', '14:32:48', '2026-10-03', '17:49:09', 616),
+(244, 176, 6, '2026-10-05', '10:50:03', '2026-10-05', '13:25:35', 576),
+(245, 175, 6, '2026-10-05', '10:52:49', '2026-10-05', '10:53:20', 421),
+(246, 177, 6, '2026-10-05', '14:04:25', NULL, NULL, 0),
+(247, 178, 6, '2026-10-05', '15:02:36', '2026-10-05', '19:18:18', 676),
+(248, 179, 6, '2026-10-05', '18:22:54', NULL, NULL, 0),
+(249, 179, 3, '2026-10-05', '19:21:41', '2026-10-05', '19:27:47', 426),
+(250, 169, 3, '2026-10-05', '21:39:30', '2026-10-05', '21:40:20', 421);
 
 -- --------------------------------------------------------
 
@@ -1915,7 +1971,11 @@ INSERT INTO `vehiculos` (`id`, `placa`, `marca`, `modelo`, `modelo_moto_id`, `co
 (134, 'GWF52D', 'Kymco', 'Jetix 125', 29, 'Rojo', 'Tìo Manuel Carros', ''),
 (135, 'PLACA', 'Yamaha', 'Crypton 115', 13, 'Rojo', 'Oscar Arturo Gómez', ''),
 (136, 'GJM09D', 'Yamaha', 'Crypton 115', 13, 'Negro', 'Harold Parra Gil', ''),
-(137, 'DLE50C', 'Bajaj', 'Pulsar 180', 55, 'Verde', 'Wilson Cuellar', '');
+(137, 'DLE50C', 'Bajaj', 'Pulsar 180', 55, 'Verde', 'Wilson Cuellar', ''),
+(138, 'FDV87F', 'Bajaj', 'Discover Str 125', 89, 'Rojo', 'Daniel Cruz', ''),
+(139, 'RVO15F', 'Yamaha', 'Crypton Fi 115', 21, 'Negro', 'Angie xm', '3218560634'),
+(140, 'FIL94H', 'Hero', 'Hunk 160', 90, 'Blanco', 'Refrigeradores', ''),
+(141, 'KFT51G', 'Akt', 'Special R 110', 91, 'Negro', 'V', '4');
 
 --
 -- Indexes for dumped tables
@@ -2031,6 +2091,15 @@ ALTER TABLE `pendientes`
   ADD KEY `usuario_id` (`usuario_id`);
 
 --
+-- Indexes for table `reaperturas_caso`
+--
+ALTER TABLE `reaperturas_caso`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_reapertura_mecanico` (`mecanico_id`),
+  ADD KEY `idx_reapertura_caso` (`caso_id`),
+  ADD KEY `idx_reapertura_fecha` (`fecha_reapertura`);
+
+--
 -- Indexes for table `sesiones_trabajo`
 --
 ALTER TABLE `sesiones_trabajo`
@@ -2074,13 +2143,13 @@ ALTER TABLE `aplicacion_parte`
 -- AUTO_INCREMENT for table `avances`
 --
 ALTER TABLE `avances`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=599;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=619;
 
 --
 -- AUTO_INCREMENT for table `casos`
 --
 ALTER TABLE `casos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=175;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=181;
 
 --
 -- AUTO_INCREMENT for table `caso_repuestos`
@@ -2098,7 +2167,7 @@ ALTER TABLE `categorias_partes`
 -- AUTO_INCREMENT for table `compras_caso`
 --
 ALTER TABLE `compras_caso`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT for table `fabricante_repuesto`
@@ -2116,7 +2185,7 @@ ALTER TABLE `marcas_moto`
 -- AUTO_INCREMENT for table `modelos_moto`
 --
 ALTER TABLE `modelos_moto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=89;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- AUTO_INCREMENT for table `movimientos_inventario`
@@ -2137,10 +2206,16 @@ ALTER TABLE `pendientes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
+-- AUTO_INCREMENT for table `reaperturas_caso`
+--
+ALTER TABLE `reaperturas_caso`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `sesiones_trabajo`
 --
 ALTER TABLE `sesiones_trabajo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=244;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=251;
 
 --
 -- AUTO_INCREMENT for table `tipos_moto`
@@ -2158,7 +2233,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `vehiculos`
 --
 ALTER TABLE `vehiculos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=138;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
 
 --
 -- Constraints for dumped tables
@@ -2231,6 +2306,13 @@ ALTER TABLE `pendientes`
   ADD CONSTRAINT `pendientes_ibfk_2` FOREIGN KEY (`caso_origen_id`) REFERENCES `casos` (`id`),
   ADD CONSTRAINT `pendientes_ibfk_3` FOREIGN KEY (`caso_resuelto_id`) REFERENCES `casos` (`id`),
   ADD CONSTRAINT `pendientes_ibfk_4` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`);
+
+--
+-- Constraints for table `reaperturas_caso`
+--
+ALTER TABLE `reaperturas_caso`
+  ADD CONSTRAINT `fk_reapertura_caso` FOREIGN KEY (`caso_id`) REFERENCES `casos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `fk_reapertura_mecanico` FOREIGN KEY (`mecanico_id`) REFERENCES `usuarios` (`id`);
 
 --
 -- Constraints for table `sesiones_trabajo`

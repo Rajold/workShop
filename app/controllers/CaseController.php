@@ -255,6 +255,72 @@ class CaseController
         exit;
     }
 
+    // 🔓 Reabrir un caso cerrado
+    public function reabrir(): void
+    {
+        $this->ensureLogged();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            $_SESSION['error_message'] = 'Solicitud inválida.';
+            header('Location: index.php');
+            exit;
+        }
+
+        $caseId = (int)($_POST['caso_id'] ?? 0);
+        $mechanicId = (int)$_SESSION['user_id'];
+
+        $motivo = trim($_POST['motivo'] ?? '');
+        $comentario = trim($_POST['comentario'] ?? '');
+
+        if ($caseId <= 0) {
+            $_SESSION['error_message'] = 'Caso no válido.';
+            header('Location: index.php');
+            exit;
+        }
+
+        if ($motivo === '') {
+            $_SESSION['error_message'] = 'Debe indicar el motivo de la reapertura.';
+            header(
+                "Location: index.php?controller=mechanic&action=viewCase&case_id={$caseId}"
+            );
+            exit;
+        }
+
+        // Obtener el caso para conocer el vehículo
+        $caso = $this->caseModel->findById($caseId);
+
+        if (!$caso) {
+            $_SESSION['error_message'] = 'El caso no existe.';
+            header('Location: index.php');
+            exit;
+        }
+
+        try {
+
+            $this->caseModel->reabrir(
+                $caseId,
+                $mechanicId,
+                $motivo,
+                $comentario
+            );
+
+            $_SESSION['success_message'] =
+                'El caso #' . $caseId . ' fue reabierto correctamente.';
+        } catch (Throwable $e) {
+
+            $_SESSION['error_message'] = $e->getMessage();
+        }
+
+        header(
+            "Location: index.php?controller=mechanic" .
+                "&action=viewCase" .
+                "&veh_id={$caso['vehiculo_id']}" .
+                "&case_id={$caseId}"
+        );
+
+        exit;
+    }
+
     // 🆕 Crear un nuevo caso desde uno cerrado
     public function nuevoDesdeExistente(): void
     {

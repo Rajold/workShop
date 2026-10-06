@@ -282,11 +282,11 @@
         </div>
     <?php else: ?>
 
-    <div class="alert alert-warning">
-        Ningún vehículo seleccionado.
-    </div>
+        <div class="alert alert-warning">
+            Ningún vehículo seleccionado.
+        </div>
 
-<?php endif; ?>
+    <?php endif; ?>
 
 
     <!-- =========================================================
@@ -808,6 +808,17 @@
                 <h5 class="mb-0">✅ Caso cerrado</h5>
             </div>
 
+            <!-- Botón para reabrir caso -->
+            <button
+                type="button"
+                class="btn btn-outline-danger w-100 mb-4 py-2 fw-semibold"
+                data-bs-toggle="modal"
+                data-bs-target="#modalReabrirCaso">
+
+                🔓 Reabrir caso
+
+            </button>
+
             <div class="card border-success shadow-sm mb-4">
 
                 <div class="card-header bg-success text-white">
@@ -1197,6 +1208,135 @@
 
         </div>
     </div>
+</div>
+
+<!-- Modal Reabrir Caso -->
+<div
+    class="modal fade"
+    id="modalReabrirCaso"
+    tabindex="-1"
+    aria-labelledby="modalReabrirCasoLabel"
+    aria-hidden="true">
+
+    <div class="modal-dialog">
+
+        <div class="modal-content">
+
+            <form
+                method="post"
+                action="index.php?controller=case&action=reabrir">
+
+                <div class="modal-header bg-danger text-white">
+
+                    <h5
+                        class="modal-title"
+                        id="modalReabrirCasoLabel">
+
+                        🔓 Reabrir caso
+
+                    </h5>
+
+                    <button
+                        type="button"
+                        class="btn-close btn-close-white"
+                        data-bs-dismiss="modal">
+                    </button>
+
+                </div>
+
+                <div class="modal-body">
+
+                    <input
+                        type="hidden"
+                        name="caso_id"
+                        value="<?= $caso['id'] ?>">
+
+                    <div class="alert alert-warning">
+
+                        <strong>⚠️ Atención</strong>
+
+                        <p class="mb-0 mt-2">
+                            El cierre actual quedará registrado como histórico
+                            y el caso volverá a estado abierto para continuar
+                            trabajando en él.
+                        </p>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label
+                            for="motivoReapertura"
+                            class="form-label">
+
+                            Motivo de la reapertura
+
+                        </label>
+
+                        <input
+                            type="text"
+                            class="form-control"
+                            id="motivoReapertura"
+                            name="motivo"
+                            maxlength="100"
+                            placeholder="Ej.: Trabajo adicional solicitado por el cliente"
+                            required>
+
+                    </div>
+
+                    <div class="mb-3">
+
+                        <label
+                            for="comentarioReapertura"
+                            class="form-label">
+
+                            Comentario
+                            <span class="text-muted">(opcional)</span>
+
+                        </label>
+
+                        <textarea
+                            class="form-control"
+                            id="comentarioReapertura"
+                            name="comentario"
+                            rows="4"
+                            placeholder="Describa brevemente qué debe hacerse después de la reapertura..."></textarea>
+
+                    </div>
+
+                    <p class="text-danger mb-0">
+                        ¿Está seguro de reabrir este caso?
+                    </p>
+
+                </div>
+
+                <div class="modal-footer">
+
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        data-bs-dismiss="modal">
+
+                        Cancelar
+
+                    </button>
+
+                    <button
+                        type="submit"
+                        class="btn btn-danger">
+
+                        🔓 Reabrir caso
+
+                    </button>
+
+                </div>
+
+            </form>
+
+        </div>
+
+    </div>
+
 </div>
 
 <!-- Modal convertir pendiente a mano de obra -->
