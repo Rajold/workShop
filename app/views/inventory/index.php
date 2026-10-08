@@ -173,20 +173,6 @@
 
     </div>
 
-
-    <div class="inventory-stat-card">
-
-        <div class="stat-icon stat-icon-purple">
-            <i class="bi bi-tools"></i>
-        </div>
-
-        <div>
-            <span>Herramientas</span>
-            <strong><?= $stats['herramientas'] ?></strong>
-        </div>
-
-    </div>
-
 </div>
 
 
