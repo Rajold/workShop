@@ -175,15 +175,10 @@ class Dashboard
             ->fetchColumn();
     }
 
-    /*
-    |--------------------------------------------------------------------------
-    | DATOS FINANCIEROS
-    |--------------------------------------------------------------------------
-    */
+    /*DATOS FINANCIEROS*/
 
     /**
-     * Venta de mano de obra de todos los casos cerrados.
-     */
+     * Venta de mano de obra de todos los casos cerrados.*/
     public function getManoObraTotal(): float
     {
         $stmt = $this->db->query("
@@ -337,9 +332,26 @@ class Dashboard
             - $this->getCostoInventarioPeriodo($inicio, $fin);
     }
 
+    /**
+ * Costo actual del inventario disponible. */
+public function getCostoInventarioActual(): float
+{
+    $stmt = $this->db->query("
+        SELECT COALESCE(
+            SUM(stock_actual * costo),
+            0
+        )
+        FROM partes
+        WHERE activo = 1
+          AND tipo = 'repuesto'
+    ");
+
+    return (float)$stmt->fetchColumn();
+}
+
 
     /**
-     * Venta de compras directas realizadas para casos.
+     * Venta de compras directas en un caso.
      */
     public function getVentaComprasDirectasTotal(): float
     {
@@ -712,6 +724,9 @@ class Dashboard
 
             'gananciaInventarioTotal' =>
             $this->getGananciaInventarioPeriodo($inicio, $fin),
+
+            'costoInventarioActual' =>
+            $this->getCostoInventarioActual(),
 
             // COMPRAS DIRECTAS
 

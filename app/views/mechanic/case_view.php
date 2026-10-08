@@ -1162,19 +1162,6 @@
                             </strong>
                         </p>
 
-                        <p class="mb-0">
-                            Utilidad:
-                            <strong id="utilidad">
-                                $<?= number_format(
-                                        $financial['total_venta_teorica']
-                                            - $financial['total_repuestos_costo'],
-                                        0,
-                                        ',',
-                                        '.'
-                                    ) ?>
-                            </strong>
-                        </p>
-
                     </div>
 
                     <p class="text-danger mb-0">

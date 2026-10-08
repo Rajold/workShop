@@ -535,16 +535,14 @@ document.addEventListener('DOMContentLoaded', function () {
 </div>
 
 
-<!-- =========================================================
-     TOTALES
-========================================================== -->
+<!-- TOTALES-->
 
 <h5 class="mt-5 mb-3">📊 Totales generales</h5>
 
 <div class="row g-4">
 
     <!-- Facturación -->
-    <div class="col-md-4">
+    <div class="col-md-3">
 
         <div class="card shadow-sm border-success h-100">
 
@@ -569,7 +567,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     <!-- Costo repuestos -->
-    <div class="col-md-4">
+    <div class="col-md-3">
 
         <div class="card shadow-sm border-danger h-100">
 
@@ -594,7 +592,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
 
     <!-- Utilidad -->
-    <div class="col-md-4">
+    <div class="col-md-3">
 
         <div class="card shadow-sm border-primary h-100">
 
@@ -616,6 +614,34 @@ document.addEventListener('DOMContentLoaded', function () {
         </div>
 
     </div>
+
+    <!-- Costo inventario actual -->
+<div class="col-md-3">
+
+    <div class="card shadow-sm border-warning h-100">
+
+        <div class="card-body text-center">
+
+            <h6>📦 Costo del inventario actual</h6>
+
+            <h2>
+                $<?= number_format(
+                    $stats['costoInventarioActual'],
+                    0,
+                    ',',
+                    '.'
+                ) ?>
+            </h2>
+
+            <small class="text-muted">
+                Valor de costo de los repuestos actualmente disponibles
+            </small>
+
+        </div>
+
+    </div>
+
+</div>
 
 </div>
 
