@@ -25,29 +25,43 @@ class InventoryController extends BaseController
         $this->motorcycleModel = new ModeloMoto($pdo);
     }
 
-    /**
-     * Listado del inventario.
-     */
-    public function index(): void
-    {
-        $search = trim($_GET['q'] ?? '');
-        $stats = $this->partModel->getStatistics();
-        if ($search !== '') {
-            $parts = $this->partModel->search($search);
-        } else {
-            $parts = $this->partModel->all();
-        }
+    public function index()
+{
+    $this->ensureLogged();
 
-        $this->render(
-            'inventory/index',
-            [
-                'parts'  => $parts,
-                'search' => $search,
-                'stats'  => $stats,
-                'title'  => 'Inventario'
-            ]
+    $search = trim($_GET['q'] ?? '');
+
+    $tipo = $_GET['tipo'] ?? 'repuesto';
+
+    $tiposPermitidos = [
+        'repuesto',
+        'insumo',
+        'herramienta'
+    ];
+
+    if (!in_array($tipo, $tiposPermitidos, true)) {
+        $tipo = 'repuesto';
+    }
+
+    if ($search !== '') {
+        $parts = $this->partModel->search(
+            $search,
+            $tipo
+        );
+    } else {
+        $parts = $this->partModel->all(
+            $tipo
         );
     }
+
+    $stats = $this->partModel->getStatistics(
+        $tipo
+    );
+
+    require __DIR__ . '/../views/layouts/header.php';
+    require __DIR__ . '/../views/inventory/index.php';
+    require __DIR__ . '/../views/layouts/footer.php';
+}
 
     /**
      * Formulario de nuevo artículo.

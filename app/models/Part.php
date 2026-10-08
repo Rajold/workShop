@@ -13,21 +13,31 @@ class Part extends BaseModel
     /**
      * Obtiene todas las partes activas.
      */
-    public function all(): array
-    {
-        $sql = "
-            SELECT
-                p.*,
-                c.nombre AS categoria
-            FROM partes p
-            LEFT JOIN categorias_partes c
-                ON c.id = p.categoria_id
-            ORDER BY p.activo DESC,
-         p.nombre ASC
-        ";
+    /**
+ * Obtiene todas las partes activas de un tipo determinado.
+ */
+public function all(string $tipo = 'repuesto'): array
+{
+    $sql = "
+        SELECT
+            p.*,
+            c.nombre AS categoria
+        FROM partes p
+        LEFT JOIN categorias_partes c
+            ON c.id = p.categoria_id
+        WHERE p.activo = 1
+          AND p.tipo = :tipo
+        ORDER BY p.nombre ASC
+    ";
 
-        return $this->db->query($sql)->fetchAll(PDO::FETCH_ASSOC);
-    }
+    $stmt = $this->db->prepare($sql);
+
+    $stmt->execute([
+        ':tipo' => $tipo
+    ]);
+
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
     /**
      * Busca una parte por ID.
@@ -64,35 +74,38 @@ class Part extends BaseModel
     }
 
     /**
-     * Búsqueda por nombre o código.
-     */
-    public function search(string $texto): array
-    {
-        $stmt = $this->db->prepare("
-            SELECT
-                p.*,
-                c.nombre AS categoria
-            FROM partes p
-            LEFT JOIN categorias_partes c
-                ON c.id = p.categoria_id
-            WHERE
-      p.codigo LIKE ?
-   OR p.nombre LIKE ?
-   OR p.marca LIKE ?
-            ORDER BY p.activo DESC,
-         p.nombre ASC
-        ");
+ * Búsqueda por nombre, código o marca dentro de un tipo.
+ */
+public function search(string $texto, string $tipo = 'repuesto'): array
+{
+    $stmt = $this->db->prepare("
+        SELECT
+            p.*,
+            c.nombre AS categoria
+        FROM partes p
+        LEFT JOIN categorias_partes c
+            ON c.id = p.categoria_id
+        WHERE p.activo = 1
+          AND p.tipo = :tipo
+          AND (
+              p.codigo LIKE :buscar_codigo
+              OR p.nombre LIKE :buscar_nombre
+              OR p.marca LIKE :buscar_marca
+          )
+        ORDER BY p.nombre ASC
+    ");
 
-        $like = "%{$texto}%";
+    $like = "%{$texto}%";
 
-        $stmt->execute([
-            $like,
-            $like,
-            $like
-        ]);
+    $stmt->execute([
+        ':tipo'          => $tipo,
+        ':buscar_codigo' => $like,
+        ':buscar_nombre' => $like,
+        ':buscar_marca'  => $like
+    ]);
 
-        return $stmt->fetchAll(PDO::FETCH_ASSOC);
-    }
+    return $stmt->fetchAll(PDO::FETCH_ASSOC);
+}
 
     /**
      * Crear parte.
@@ -343,12 +356,10 @@ unidad = :unidad,
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-    /**
-     * Obtiene estadísticas generales del inventario.
-     */
-    public function getStatistics(): array
-    {
-        $stmt = $this->db->query("
+/**  estadísticas del inventario para un tipo determinado. */
+public function getStatistics(string $tipo = 'repuesto'): array
+{
+    $stmt = $this->db->prepare("
         SELECT
 
             COUNT(*) AS total,
@@ -370,27 +381,24 @@ unidad = :unidad,
                 END
             ) AS agotados,
 
-            SUM(
-                CASE
-                    WHEN tipo = 'herramienta'
-                    THEN 1
-                    ELSE 0
-                END
-            ) AS herramientas,
+            COALESCE(SUM(stock_actual * costo), 0) AS valor_compra,
 
-            COALESCE(SUM(stock_actual * costo),0) AS valor_compra,
+            COALESCE(SUM(stock_actual * precio_venta), 0) AS valor_venta,
 
-            COALESCE(SUM(stock_actual * precio_venta),0) AS valor_venta,
-
-            COALESCE(SUM(stock_actual),0) AS unidades
+            COALESCE(SUM(stock_actual), 0) AS unidades
 
         FROM partes
 
         WHERE activo = 1
+          AND tipo = :tipo
     ");
 
-        return $stmt->fetch(PDO::FETCH_ASSOC);
-    }
+    $stmt->execute([
+        ':tipo' => $tipo
+    ]);
+
+    return $stmt->fetch(PDO::FETCH_ASSOC);
+}
 
     /**
      * Actualiza el costo de un artículo.

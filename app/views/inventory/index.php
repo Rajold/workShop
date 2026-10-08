@@ -48,6 +48,40 @@
             name="action"
             value="index">
 
+            <div class="mb-3">
+
+    <label for="tipo" class="form-label fw-semibold">
+        Tipo de inventario
+    </label>
+
+    <select
+        name="tipo"
+        id="tipo"
+        class="form-select"
+        onchange="this.form.submit()">
+
+        <option
+            value="repuesto"
+            <?= ($tipo ?? 'repuesto') === 'repuesto' ? 'selected' : '' ?>>
+            🔧 Repuestos
+        </option>
+
+        <option
+            value="insumo"
+            <?= ($tipo ?? '') === 'insumo' ? 'selected' : '' ?>>
+            🧴 Insumos
+        </option>
+
+        <option
+            value="herramienta"
+            <?= ($tipo ?? '') === 'herramienta' ? 'selected' : '' ?>>
+            🛠️ Herramientas
+        </option>
+
+    </select>
+
+</div>
+
         <div class="inventory-search">
 
             <i class="bi bi-search"></i>
