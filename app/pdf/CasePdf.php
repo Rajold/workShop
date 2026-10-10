@@ -175,60 +175,134 @@ class CasePdf extends FPDF
 
         // $this->Ln(4);
 
-        $this->titulo("TRABAJOS REALIZADOS");
+      $this->titulo("TRABAJOS REALIZADOS");
 
-        $this->SetFont('Arial', '', 10);
+// Anchos de columnas: total 190 mm
+$anchoFecha = 25;
+$anchoTipo = 35;
+$anchoDescripcion = 100;
+$anchoValor = 30;
 
-        foreach ($avances as $avance) {
+// Encabezados
+$this->SetFont('Arial', 'B', 9);
 
-            $texto = sprintf(
-                "[%s] %s - %s",
-                date('d/m/Y', strtotime($avance['fecha'])),
-                $avance['tipo'],
-                $avance['descripcion']
-            );
+$this->Cell($anchoFecha, 8, $this->txt('Fecha'), 1, 0, 'C');
+$this->Cell($anchoTipo, 8, $this->txt('Tipo'), 1, 0, 'L');
+$this->Cell($anchoDescripcion, 8, $this->txt('Descripción'), 1, 0, 'L');
+$this->Cell($anchoValor, 8, $this->txt('Valor'), 1, 1, 'R');
 
-            $this->MultiCell(0, 6, $this->txt($texto));
+if (empty($avances)) {
+    $this->SetFont('Arial', 'I', 9);
+    $this->Cell(
+        190,
+        8,
+        $this->txt('No hay trabajos registrados.'),
+        1,
+        1,
+        'C'
+    );
+} else {
+    $this->SetFont('Arial', '', 9);
 
-            if ($avance['valor'] > 0) {
+    foreach ($avances as $avance) {
+        $fecha = !empty($avance['fecha'])
+            ? date('d/m/Y', strtotime($avance['fecha']))
+            : '-';
 
-                $this->SetFont('Arial', 'I', 9);
+        $tipo = (string)($avance['tipo'] ?? '-');
+        $descripcion = (string)($avance['descripcion'] ?? '');
+        $valor = (float)($avance['valor'] ?? 0);
 
-                $this->Cell(
-                    0,
-                    5,
-                    '$ ' . number_format($avance['valor'], 0, ',', '.'),
-                    0,
-                    1,
-                    'R'
-                );
+        // Altura necesaria para la descripción
+        $lineasDescripcion = max(
+            1,
+            (int)ceil(
+                $this->GetStringWidth($this->txt($descripcion))
+                / ($anchoDescripcion - 2)
+            )
+        );
 
-                $this->SetFont('Arial', '', 10);
-            }
+        $altura = max(8, $lineasDescripcion * 5);
 
-            $this->Ln(2);
+        // Evitar que la fila se salga de la página
+        if ($this->GetY() + $altura > $this->GetPageHeight() - 20) {
+            $this->AddPage();
+
+            $this->SetFont('Arial', 'B', 9);
+            $this->Cell($anchoFecha, 8, $this->txt('Fecha'), 1, 0, 'C');
+            $this->Cell($anchoTipo, 8, $this->txt('Tipo'), 1, 0, 'L');
+            $this->Cell($anchoDescripcion, 8, $this->txt('Descripción'), 1, 0, 'L');
+            $this->Cell($anchoValor, 8, $this->txt('Valor'), 1, 1, 'R');
+
+            $this->SetFont('Arial', '', 9);
         }
 
-        $this->titulo("REPUESTOS UTILIZADOS");
+        $x = $this->GetX();
+        $y = $this->GetY();
 
-        if (empty($caseParts)) {
+        // Fecha
+        $this->Cell($anchoFecha, $altura, $this->txt($fecha), 1, 0, 'C');
 
-            $this->SetFont('Arial', 'I', 10);
+        // Tipo
+        $this->Cell($anchoTipo, $altura, $this->txt($tipo), 1, 0, 'L');
 
-            $this->Cell(
-                0,
-                7,
-                $this->txt('No se utilizaron repuestos registrados.'),
-                0,
-                1
-            );
-        } else {
+        // Descripción con ajuste de línea
+        $xDescripcion = $this->GetX();
+        $this->Rect($xDescripcion, $y, $anchoDescripcion, $altura);
 
-            // Encabezados de la tabla
+        $this->SetXY($xDescripcion + 1, $y + 1);
+        $this->MultiCell(
+            $anchoDescripcion - 2,
+            5,
+            $this->txt($descripcion),
+            0,
+            'L'
+        );
+
+        // Valor
+        $this->SetXY($x + $anchoFecha + $anchoTipo + $anchoDescripcion, $y);
+        $this->Cell(
+            $anchoValor,
+            $altura,
+            $this->dinero($valor),
+            1,
+            1,
+            'R'
+        );
+    }
+}
+
+$this->Ln(3);
+
+
+       // REPUESTOS UTILIZADOS
+        // Mostrar la sección únicamente si existen repuestos
+
+        if (!empty($caseParts)) {
+
+            $this->titulo("REPUESTOS UTILIZADOS");
+
+            // Anchos de columnas: total 190 mm
+            $anchoFecha = 25;
+            $anchoRepuesto = 65;
+            $anchoCantidad = 20;
+            $anchoPrecio = 40;
+            $anchoSubtotal = 40;
+
+            // Encabezados
             $this->SetFont('Arial', 'B', 9);
 
             $this->Cell(
-                75,
+                $anchoFecha,
+                8,
+                $this->txt('Fecha'),
+                1,
+                0,
+                'C'
+            );
+
+            $this->Cell(
+                $anchoRepuesto,
                 8,
                 $this->txt('Repuesto'),
                 1,
@@ -237,7 +311,7 @@ class CasePdf extends FPDF
             );
 
             $this->Cell(
-                20,
+                $anchoCantidad,
                 8,
                 $this->txt('Cant.'),
                 1,
@@ -246,7 +320,7 @@ class CasePdf extends FPDF
             );
 
             $this->Cell(
-                40,
+                $anchoPrecio,
                 8,
                 $this->txt('Precio unit.'),
                 1,
@@ -255,7 +329,7 @@ class CasePdf extends FPDF
             );
 
             $this->Cell(
-                45,
+                $anchoSubtotal,
                 8,
                 $this->txt('Subtotal'),
                 1,
@@ -263,53 +337,175 @@ class CasePdf extends FPDF
                 'R'
             );
 
-            // Filas de repuestos
             $this->SetFont('Arial', '', 9);
 
             foreach ($caseParts as $repuesto) {
 
-                $nombre = $repuesto['nombre'];
+                // Fecha de registro del repuesto en el caso
+                $fecha = !empty($repuesto['created_at'])
+                    ? date('d/m/Y', strtotime($repuesto['created_at']))
+                    : '-';
+
+                // Nombre y marca
+                $nombre = (string)($repuesto['nombre'] ?? '');
 
                 if (!empty($repuesto['marca'])) {
                     $nombre .= ' - ' . $repuesto['marca'];
                 }
 
-                $this->Cell(
-                    75,
-                    8,
-                    $this->txt($nombre),
-                    1,
-                    0,
-                    'L'
+                // Cantidad
+                $cantidad = number_format(
+                    (float)$repuesto['cantidad'],
+                    2,
+                    ',',
+                    '.'
                 );
 
-                $this->Cell(
-                    20,
-                    8,
-                    number_format(
-                        (float)$repuesto['cantidad'],
+                // Precios
+                $precio = $this->dinero(
+                    $repuesto['precio_unitario'] ?? 0
+                );
+
+                $subtotal = $this->dinero(
+                    $repuesto['subtotal'] ?? 0
+                );
+
+                // Calcular altura aproximada según longitud del nombre
+                $lineasNombre = max(
+                    1,
+                    (int)ceil(
+                        $this->GetStringWidth($this->txt($nombre))
+                        / ($anchoRepuesto - 2)
+                    )
+                );
+
+                $altura = max(8, $lineasNombre * 5);
+
+                // Comprobar si la fila cabe en la página actual
+                if (
+                    $this->GetY() + $altura >
+                    $this->GetPageHeight() - 20
+                ) {
+
+                    $this->AddPage();
+
+                    // Repetir encabezados en la nueva página
+                    $this->SetFont('Arial', 'B', 9);
+
+                    $this->Cell(
+                        $anchoFecha,
+                        8,
+                        $this->txt('Fecha'),
+                        1,
                         0,
-                        ',',
-                        '.'
-                    ),
+                        'C'
+                    );
+
+                    $this->Cell(
+                        $anchoRepuesto,
+                        8,
+                        $this->txt('Repuesto'),
+                        1,
+                        0,
+                        'L'
+                    );
+
+                    $this->Cell(
+                        $anchoCantidad,
+                        8,
+                        $this->txt('Cant.'),
+                        1,
+                        0,
+                        'C'
+                    );
+
+                    $this->Cell(
+                        $anchoPrecio,
+                        8,
+                        $this->txt('Precio unit.'),
+                        1,
+                        0,
+                        'R'
+                    );
+
+                    $this->Cell(
+                        $anchoSubtotal,
+                        8,
+                        $this->txt('Subtotal'),
+                        1,
+                        1,
+                        'R'
+                    );
+
+                    $this->SetFont('Arial', '', 9);
+                }
+
+                $x = $this->GetX();
+                $y = $this->GetY();
+
+                // Fecha
+                $this->Cell(
+                    $anchoFecha,
+                    $altura,
+                    $this->txt($fecha),
                     1,
                     0,
                     'C'
                 );
 
+                // Nombre del repuesto con ajuste de línea
+                $xRepuesto = $this->GetX();
+
+                $this->Rect(
+                    $xRepuesto,
+                    $y,
+                    $anchoRepuesto,
+                    $altura
+                );
+
+                $this->SetXY(
+                    $xRepuesto + 1,
+                    $y + 1
+                );
+
+                $this->MultiCell(
+                    $anchoRepuesto - 2,
+                    5,
+                    $this->txt($nombre),
+                    0,
+                    'L'
+                );
+
+                // Cantidad
+                $this->SetXY(
+                    $x + $anchoFecha + $anchoRepuesto,
+                    $y
+                );
+
                 $this->Cell(
-                    40,
-                    8,
-                    $this->dinero($repuesto['precio_unitario']),
+                    $anchoCantidad,
+                    $altura,
+                    $cantidad,
+                    1,
+                    0,
+                    'C'
+                );
+
+                // Precio unitario
+                $this->Cell(
+                    $anchoPrecio,
+                    $altura,
+                    $precio,
                     1,
                     0,
                     'R'
                 );
 
+                // Subtotal
                 $this->Cell(
-                    45,
-                    8,
-                    $this->dinero($repuesto['subtotal']),
+                    $anchoSubtotal,
+                    $altura,
+                    $subtotal,
                     1,
                     1,
                     'R'

@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 10, 2026 at 01:37 AM
--- Server version: 10.4.32-MariaDB
--- PHP Version: 8.2.12
+-- Generation Time: Oct 10, 2026 at 08:36 PM
+-- Server version: 10.4.28-MariaDB
+-- PHP Version: 8.2.4
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -266,7 +266,13 @@ INSERT INTO `aplicacion_parte` (`id`, `parte_id`, `modelo_moto_id`, `created_at`
 (284, 43, 44, '2026-10-07 16:19:11', '2026-10-07 16:19:11'),
 (285, 43, 21, '2026-10-07 16:19:11', '2026-10-07 16:19:11'),
 (286, 89, 13, '2026-10-07 22:29:09', '2026-10-07 22:29:09'),
-(287, 89, 21, '2026-10-07 22:29:09', '2026-10-07 22:29:09');
+(287, 89, 21, '2026-10-07 22:29:09', '2026-10-07 22:29:09'),
+(292, 91, 53, '2026-10-10 01:09:05', '2026-10-10 01:09:05'),
+(293, 91, 54, '2026-10-10 01:09:05', '2026-10-10 01:09:05'),
+(294, 91, 52, '2026-10-10 01:09:05', '2026-10-10 01:09:05'),
+(295, 91, 94, '2026-10-10 01:09:05', '2026-10-10 01:09:05'),
+(296, 91, 93, '2026-10-10 01:09:05', '2026-10-10 01:09:05'),
+(297, 57, 12, '2026-10-10 06:23:07', '2026-10-10 06:23:07');
 
 -- --------------------------------------------------------
 
@@ -695,7 +701,11 @@ INSERT INTO `avances` (`id`, `caso_id`, `mecanico_id`, `descripcion`, `tipo`, `v
 (637, 188, 3, 'Cambio de prensa.', 'Mano de obra', 50000, '2026-10-09 00:40:58'),
 (638, 188, 3, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-09 00:50:56'),
 (639, 190, 6, 'Cambio de fusible.', 'Mano de obra', 10000, '2026-10-09 14:37:11'),
-(640, 190, 6, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-09 14:37:21');
+(640, 190, 6, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-09 14:37:21'),
+(641, 191, 3, 'Instalación bomba y pastillas.', 'Mano de obra', 20000, '2026-10-10 01:11:06'),
+(642, 191, 3, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-10 01:11:26'),
+(643, 192, 3, '🆕 Caso creado por falla o servicio diferente', 'Mano de obra', 0, '2026-10-10 06:24:37'),
+(644, 180, 3, 'Saldadura de escape', 'Mano de obra', 20000, '2026-10-10 07:38:42');
 
 -- --------------------------------------------------------
 
@@ -904,7 +914,8 @@ INSERT INTO `casos` (`id`, `vehiculo_id`, `mecanico_id`, `fecha_ingreso`, `hora_
 (188, 145, 3, '2026-10-08', '19:40:23', 'Patina la prensa', NULL, NULL, 'cerrado', '2026-10-08 19:50:56', 3, 85200, 0, 57800.00),
 (189, 146, 6, '2026-10-09', '08:55:17', 'ruido y juego en rueda trasera   \r\ndireccional rota\r\nacelerador se pega\r\nswich se pega\r\ncambio de bombillo', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
 (190, 147, 6, '2026-10-09', '09:36:05', 'Sistema eléctrico muerto. No enciende.', NULL, NULL, 'cerrado', '2026-10-09 09:37:21', 6, 10000, 0, 10000.00),
-(191, 148, 6, '2026-10-09', '11:09:37', 'Cambiar bomba freno', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00);
+(191, 148, 6, '2026-10-09', '11:09:37', 'Cambiar bomba freno', NULL, NULL, 'cerrado', '2026-10-09 20:11:26', 3, 62000, 2000, 40000.00),
+(192, 102, 3, '2026-10-10', '01:24:37', 'es solo otra prueba', 'No sientas miedo', '', 'abierto', NULL, NULL, NULL, 0, 0.00);
 
 -- --------------------------------------------------------
 
@@ -1011,7 +1022,10 @@ INSERT INTO `caso_repuestos` (`id`, `caso_id`, `parte_id`, `usuario_id`, `cantid
 (81, 177, 76, 3, 1.00, 24000.00, 30000.00, 30000.00, '2026-10-08 14:37:09'),
 (82, 188, 90, 3, 1.00, 3400.00, 5200.00, 5200.00, '2026-10-09 00:50:25'),
 (83, 188, 76, 3, 1.00, 24000.00, 30000.00, 30000.00, '2026-10-09 00:50:46'),
-(84, 191, 69, 6, 1.00, 15500.00, 30000.00, 30000.00, '2026-10-09 16:41:29');
+(84, 191, 69, 6, 1.00, 15500.00, 30000.00, 30000.00, '2026-10-09 16:41:29'),
+(85, 191, 91, 3, 1.00, 4500.00, 12000.00, 12000.00, '2026-10-10 01:10:26'),
+(86, 192, 61, 3, 4.00, 10000.00, 15000.00, 60000.00, '2026-10-10 06:25:00'),
+(87, 192, 61, 3, 1.00, 10000.00, 15000.00, 15000.00, '2026-10-10 18:07:43');
 
 -- --------------------------------------------------------
 
@@ -1183,6 +1197,29 @@ INSERT INTO `fabricante_repuesto` (`id`, `nombre`, `descripcion`, `activo`, `cre
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `gastos`
+--
+
+CREATE TABLE `gastos` (
+  `id` int(11) NOT NULL,
+  `descripcion` varchar(255) NOT NULL,
+  `categoria` enum('alimentacion','operativo','herramientas','transporte','imprevisto','otro') NOT NULL DEFAULT 'otro',
+  `valor` decimal(12,2) NOT NULL,
+  `fecha_gasto` datetime NOT NULL DEFAULT current_timestamp(),
+  `registrado_por` int(11) NOT NULL,
+  `autorizado_por` int(11) DEFAULT NULL,
+  `estado` enum('pendiente','aprobado','rechazado') NOT NULL DEFAULT 'pendiente',
+  `estado_pago` enum('pendiente','pagado','reembolsado') NOT NULL DEFAULT 'pendiente',
+  `forma_pago` enum('caja','transferencia','dinero_personal','otro') NOT NULL DEFAULT 'caja',
+  `proveedor` varchar(255) DEFAULT NULL,
+  `observacion` text DEFAULT NULL,
+  `fecha_creacion` datetime NOT NULL DEFAULT current_timestamp(),
+  `fecha_actualizacion` datetime NOT NULL DEFAULT current_timestamp() ON UPDATE current_timestamp()
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `marcas_moto`
 --
 
@@ -1324,7 +1361,8 @@ INSERT INTO `modelos_moto` (`id`, `marca_moto_id`, `tipo_moto_id`, `linea`, `cil
 (90, 14, 7, 'Hunk', 160, 1, '2026-10-05 20:00:46', '2026-10-05 20:00:46'),
 (91, 8, 6, 'Special R', 110, 1, '2026-10-05 23:22:14', '2026-10-05 23:22:14'),
 (92, 1, 7, 'Splendor Nxg', 110, 1, '2026-10-07 23:01:48', '2026-10-07 23:01:48'),
-(93, 16, 7, 'Rks', 125, 1, '2026-10-09 16:06:33', '2026-10-09 16:06:33');
+(93, 16, 7, 'Rks', 125, 1, '2026-10-09 16:06:33', '2026-10-09 16:06:33'),
+(94, 1, 7, 'Cbx', 250, 1, '2026-10-10 01:08:53', '2026-10-10 01:08:53');
 
 -- --------------------------------------------------------
 
@@ -1521,7 +1559,11 @@ INSERT INTO `movimientos_inventario` (`id`, `parte_id`, `usuario_id`, `caso_id`,
 (171, 90, 3, NULL, 'compra', 'Compra inicial', 3.00, 3.00, 3400.00, '', '2026-10-08 19:50:11'),
 (172, 90, 3, 188, 'consumo', 'Consumo durante reparación', 1.00, 2.00, 3400.00, 'Aplicado desde WorkShop', '2026-10-08 19:50:25'),
 (173, 76, 3, 188, 'consumo', 'Consumo durante reparación', 1.00, 10.00, 24000.00, 'Aplicado desde WorkShop', '2026-10-08 19:50:46'),
-(174, 69, 6, 191, 'consumo', 'Consumo durante reparación', 1.00, 1.00, 15500.00, 'Aplicado desde WorkShop', '2026-10-09 11:41:29');
+(174, 69, 6, 191, 'consumo', 'Consumo durante reparación', 1.00, 1.00, 15500.00, 'Aplicado desde WorkShop', '2026-10-09 11:41:29'),
+(175, 91, 3, NULL, 'compra', 'Compra inicial', 2.00, 2.00, 4500.00, '', '2026-10-09 20:10:08'),
+(176, 91, 3, 191, 'consumo', 'Consumo durante reparación', 1.00, 1.00, 4500.00, 'Agregado desde repuestos compatibles', '2026-10-09 20:10:26'),
+(177, 61, 3, 192, 'consumo', 'Consumo durante reparación', 4.00, 244.00, 10000.00, 'Agregado desde repuestos compatibles', '2026-10-10 01:25:00'),
+(178, 61, 3, 192, 'consumo', 'Consumo durante reparación', 1.00, 243.00, 10000.00, 'Agregado desde repuestos compatibles', '2026-10-10 13:07:43');
 
 -- --------------------------------------------------------
 
@@ -1614,7 +1656,7 @@ INSERT INTO `partes` (`id`, `codigo`, `categoria_id`, `tipo`, `nombre`, `marca`,
 (58, 'EmpCul002', 25, 'repuesto', 'Empaque Culata.', 'Bajaj', 14, 'DH101680', 6, 'Unidad', 0.00, 0.00, 1.00, 15000.00, 15300.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 11:16:13', '2026-09-10 11:17:23'),
 (59, 'GuiaValv002', 4, 'repuesto', 'Guías de válvulas.', 'Guivaim', 32, 'G-0301-SA1', 6, 'Unidad', 0.00, 0.00, 1.00, 21000.00, 45000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 11:21:48', '2026-09-10 11:25:15'),
 (60, 'PastFren001', 7, 'repuesto', 'Pastillas de freno BAN2553', 'Evol', 26, 'BAN2553', 7, 'Unidad', 0.00, 0.00, 1.00, 12000.00, 0.00, 'Vitrina', 'NA', NULL, 1, '2026-09-12 14:18:56', '2026-10-09 11:45:42'),
-(61, 'test001', 4, 'repuesto', 'Artículo de pruebas.', 'Honda', 8, '123probando', 3, 'Unidad', 248.00, 0.00, 1.00, 10000.00, 15000.00, 'No recuerdo', 'N/A', NULL, 1, '2026-09-15 21:07:26', '2026-09-30 19:13:02'),
+(61, 'test001', 4, 'repuesto', 'Artículo de pruebas.', 'Honda', 8, '123probando', 3, 'Unidad', 243.00, 0.00, 1.00, 10000.00, 15000.00, 'No recuerdo', 'N/A', NULL, 1, '2026-09-15 21:07:26', '2026-10-10 13:07:43'),
 (62, 'FoltTanq001', 14, 'repuesto', 'Flotador Tanque Gasolina', 'Yamaha', 9, '5D9-H5752-01', 3, 'Unidad', 0.00, 0.00, 1.00, 50000.00, 58200.00, 'Vitrina', '038447', NULL, 1, '2026-09-18 13:32:39', '2026-09-18 13:35:08'),
 (63, 'Oring002', 25, 'repuesto', 'O-Ring Tapa Válvulas Bws125', 'Sin marca', 3, 'NA', 6, 'Unidad', 2.00, 0.00, 1.00, 1000.00, 2000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-22 09:41:23', '2026-09-22 09:44:34'),
 (64, 'Oring003', 25, 'repuesto', 'O-Ring Tapa árbol levas Bws125', 'Sin marca', 3, 'NA', 6, 'Unidad', 0.00, 0.00, 1.00, 1000.00, 2000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-22 09:49:56', '2026-09-22 09:51:02'),
@@ -1641,7 +1683,8 @@ INSERT INTO `partes` (`id`, `codigo`, `categoria_id`, `tipo`, `nombre`, `marca`,
 (86, 'PeraFrenTras001', 24, 'repuesto', 'Pera Freno Trasero socket', 'Sin marca', 3, 'NA', 6, 'Unidad', 4.00, 0.00, 2.00, 1600.00, 8000.00, 'Vitrina', 'NA', NULL, 1, '2026-10-06 18:33:42', '2026-10-06 18:35:42'),
 (87, 'Pito001', 24, 'repuesto', 'Pito 12v PTR184', 'North Panthr', 36, 'PTR184', 6, 'Unidad', 0.00, 0.00, 1.00, 5000.00, 10000.00, 'Vitrina', 'NA', NULL, 1, '2026-10-07 09:27:18', '2026-10-07 09:28:52'),
 (89, 'EmpTapVol004', 25, 'repuesto', 'Empaque tapa volante 05X136 ', 'Darrow', 16, '05X136', 6, 'Unidad', 1.00, 0.00, 1.00, 2800.00, 4200.00, 'Vitrina', '7 707008 727962', NULL, 1, '2026-10-07 17:28:11', '2026-10-07 17:29:25'),
-(90, 'EmpTapCluth002', 25, 'repuesto', 'Empaque Tapa Cluth 01P145', 'Darrow', 16, '01P145', 3, 'Unidad', 2.00, 0.00, 1.00, 3400.00, 5200.00, 'Vitrina', '07', NULL, 1, '2026-10-08 19:48:50', '2026-10-08 19:50:25');
+(90, 'EmpTapCluth002', 25, 'repuesto', 'Empaque Tapa Cluth 01P145', 'Darrow', 16, '01P145', 3, 'Unidad', 2.00, 0.00, 1.00, 3400.00, 5200.00, 'Vitrina', '07', NULL, 1, '2026-10-08 19:48:50', '2026-10-08 19:50:25'),
+(91, 'PastFren002', 7, 'repuesto', 'Pastillas freno BAN 2562', 'Evol', 26, 'BAN 2562', 3, 'Unidad', 1.00, 0.00, 1.00, 4500.00, 12000.00, 'Vitrina', 'N/A', NULL, 1, '2026-10-09 20:06:36', '2026-10-09 20:10:26');
 
 -- --------------------------------------------------------
 
@@ -1883,7 +1926,8 @@ INSERT INTO `sesiones_trabajo` (`id`, `caso_id`, `mecanico_id`, `fecha_inicio`, 
 (260, 188, 3, '2026-10-08', '19:40:34', '2026-10-08', '19:50:56', 430),
 (261, 190, 6, '2026-10-09', '09:36:12', '2026-10-09', '09:37:21', 421),
 (262, 191, 6, '2026-10-09', '11:09:45', NULL, NULL, 0),
-(263, 187, 6, '2026-10-09', '12:48:21', NULL, NULL, 0);
+(263, 187, 6, '2026-10-09', '12:48:21', NULL, NULL, 0),
+(264, 191, 3, '2026-10-09', '20:03:26', '2026-10-09', '20:11:26', 428);
 
 -- --------------------------------------------------------
 
@@ -2156,6 +2200,18 @@ ALTER TABLE `fabricante_repuesto`
   ADD UNIQUE KEY `uk_fabricante_nombre` (`nombre`);
 
 --
+-- Indexes for table `gastos`
+--
+ALTER TABLE `gastos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `fk_gastos_registrado_por` (`registrado_por`),
+  ADD KEY `fk_gastos_autorizado_por` (`autorizado_por`),
+  ADD KEY `idx_gastos_fecha` (`fecha_gasto`),
+  ADD KEY `idx_gastos_estado` (`estado`),
+  ADD KEY `idx_gastos_categoria` (`categoria`),
+  ADD KEY `idx_gastos_pago` (`estado_pago`);
+
+--
 -- Indexes for table `marcas_moto`
 --
 ALTER TABLE `marcas_moto`
@@ -2254,25 +2310,25 @@ ALTER TABLE `vehiculos`
 -- AUTO_INCREMENT for table `aplicacion_parte`
 --
 ALTER TABLE `aplicacion_parte`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=288;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=298;
 
 --
 -- AUTO_INCREMENT for table `avances`
 --
 ALTER TABLE `avances`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=641;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=645;
 
 --
 -- AUTO_INCREMENT for table `casos`
 --
 ALTER TABLE `casos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=192;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=193;
 
 --
 -- AUTO_INCREMENT for table `caso_repuestos`
 --
 ALTER TABLE `caso_repuestos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=88;
 
 --
 -- AUTO_INCREMENT for table `categorias_partes`
@@ -2293,6 +2349,12 @@ ALTER TABLE `fabricante_repuesto`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
+-- AUTO_INCREMENT for table `gastos`
+--
+ALTER TABLE `gastos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT for table `marcas_moto`
 --
 ALTER TABLE `marcas_moto`
@@ -2302,19 +2364,19 @@ ALTER TABLE `marcas_moto`
 -- AUTO_INCREMENT for table `modelos_moto`
 --
 ALTER TABLE `modelos_moto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=95;
 
 --
 -- AUTO_INCREMENT for table `movimientos_inventario`
 --
 ALTER TABLE `movimientos_inventario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=175;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=179;
 
 --
 -- AUTO_INCREMENT for table `partes`
 --
 ALTER TABLE `partes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
 
 --
 -- AUTO_INCREMENT for table `pendientes`
@@ -2332,7 +2394,7 @@ ALTER TABLE `reaperturas_caso`
 -- AUTO_INCREMENT for table `sesiones_trabajo`
 --
 ALTER TABLE `sesiones_trabajo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=264;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=265;
 
 --
 -- AUTO_INCREMENT for table `tipos_moto`
@@ -2391,6 +2453,13 @@ ALTER TABLE `caso_repuestos`
 ALTER TABLE `compras_caso`
   ADD CONSTRAINT `fk_compras_caso` FOREIGN KEY (`caso_id`) REFERENCES `casos` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `fk_compras_usuario` FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`);
+
+--
+-- Constraints for table `gastos`
+--
+ALTER TABLE `gastos`
+  ADD CONSTRAINT `fk_gastos_autorizado_por` FOREIGN KEY (`autorizado_por`) REFERENCES `usuarios` (`id`),
+  ADD CONSTRAINT `fk_gastos_registrado_por` FOREIGN KEY (`registrado_por`) REFERENCES `usuarios` (`id`);
 
 --
 -- Constraints for table `modelos_moto`
