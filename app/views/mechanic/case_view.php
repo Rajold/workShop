@@ -534,6 +534,7 @@
 
         <?php endif; ?>
 
+        
         <?php if (!empty($compatibleParts)): ?>
 
             <details class="case-collapsible case-collapsible-compatible">
@@ -549,13 +550,16 @@
 
                 <div class="case-collapsible-body">
                     <div class="list-group list-group-flush">
+
                         <?php foreach ($compatibleParts as $part): ?>
                             <?php
                             $stock = (float)$part['stock_actual'];
+                            $precioVenta = (float)($part['precio_venta'] ?? 0);
+
                             if ($stock <= 0) {
                                 $badge = 'danger';
                                 $texto = 'Agotado';
-                            } elseif ($stock <= $part['stock_minimo']) {
+                            } elseif ($stock <= (float)$part['stock_minimo']) {
                                 $badge = 'warning';
                                 $texto = 'Stock bajo';
                             } else {
@@ -563,24 +567,119 @@
                                 $texto = 'Disponible';
                             }
                             ?>
+
                             <div class="list-group-item case-compatible-item">
+
                                 <div class="d-flex justify-content-between align-items-center gap-3">
                                     <div>
-                                        <strong><?= htmlspecialchars($part['nombre']) ?></strong><br>
-                                        <small class="text-muted"><?= htmlspecialchars($part['codigo']) ?></small>
+                                        <strong>
+                                            <?= htmlspecialchars($part['nombre']) ?>
+                                        </strong>
+                                        <br>
+                                        <small class="text-muted">
+                                            <?= htmlspecialchars($part['codigo']) ?>
+                                        </small>
                                     </div>
+
                                     <div class="text-end">
-                                        <span class="badge bg-<?= $badge ?>"><?= $texto ?></span><br>
-                                        <small>Stock: <?= $stock ?></small>
+                                        <span class="badge bg-<?= $badge ?>">
+                                            <?= $texto ?>
+                                        </span>
+                                        <br>
+                                        <small>
+                                            Stock: <?= $stock ?>
+                                        </small>
                                     </div>
                                 </div>
+
+                                <?php if (
+                                    !empty($caso) &&
+                                    $caso['estado'] === 'abierto' &&
+                                    $stock > 0
+                                ): ?>
+
+                                    <form
+                                        method="POST"
+                                        action="index.php?controller=inventory&action=addCompatiblePart"
+                                        class="mt-3"
+                                    >
+                                        <input
+                                            type="hidden"
+                                            name="case_id"
+                                            value="<?= (int)$caso['id'] ?>"
+                                        >
+
+                                        <input
+                                            type="hidden"
+                                            name="veh_id"
+                                            value="<?= (int)$veh_id ?>"
+                                        >
+
+                                        <input
+                                            type="hidden"
+                                            name="parte_id"
+                                            value="<?= (int)$part['id'] ?>"
+                                        >
+
+                                        <div class="row g-2 align-items-end">
+
+                                            <div class="col-6 col-md-3">
+                                                <label class="form-label small">
+                                                    Cantidad
+                                                </label>
+
+                                                <input
+                                                    type="number"
+                                                    name="cantidad"
+                                                    class="form-control form-control-sm"
+                                                    min="0.01"
+                                                    max="<?= htmlspecialchars((string)$stock) ?>"
+                                                    step="0.01"
+                                                    value="1"
+                                                    required
+                                                >
+                                            </div>
+
+                                            <div class="col-6 col-md-4">
+                                                <label class="form-label small">
+                                                    Precio de venta
+                                                </label>
+
+                                                <input
+                                                    type="number"
+                                                    name="precio_venta"
+                                                    class="form-control form-control-sm"
+                                                    min="0"
+                                                    step="0.01"
+                                                    value="<?= htmlspecialchars((string)$precioVenta) ?>"
+                                                    required
+                                                >
+                                            </div>
+
+                                            <div class="col-12 col-md-5">
+                                                <button
+                                                    type="submit"
+                                                    class="btn btn-sm btn-primary w-100"
+                                                >
+                                                    ➕ Agregar al caso
+                                                </button>
+                                            </div>
+
+                                        </div>
+                                    </form>
+
+                                <?php endif; ?>
+
                             </div>
+
                         <?php endforeach; ?>
+
                     </div>
                 </div>
             </details>
 
         <?php endif; ?>
+
 
         <?php if ($caso['estado'] === 'abierto'): ?>
             <div class="case-work-panel">

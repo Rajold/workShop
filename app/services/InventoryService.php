@@ -128,6 +128,107 @@ class InventoryService
         }
     }
 
+
+    
+public function addSinglePartToCase(
+    int $caseId,
+    int $partId,
+    float $quantity,
+    float $salePrice,
+    int $userId
+): void {
+    if ($caseId <= 0 || $partId <= 0 || $userId <= 0) {
+        throw new Exception('Datos inválidos para agregar el repuesto.');
+    }
+
+    if (!is_finite($quantity) || $quantity <= 0) {
+        throw new Exception('La cantidad debe ser mayor que cero.');
+    }
+
+    if (!is_finite($salePrice) || $salePrice < 0) {
+        throw new Exception('El precio de venta no puede ser negativo.');
+    }
+
+    $this->db->beginTransaction();
+
+    try {
+        $caseModel = new RepairCase($this->db);
+        $case = $caseModel->findById($caseId);
+
+        if (!$case) {
+            throw new Exception('El caso de reparación no existe.');
+        }
+
+        if (strtolower((string)$case['estado']) !== 'abierto') {
+            throw new Exception(
+                'No se pueden agregar repuestos a un caso cerrado.'
+            );
+        }
+
+        $part = $this->partModel->findById($partId);
+
+        $stmt = $this->db->prepare("
+    SELECT *
+    FROM partes
+    WHERE id = ?
+    FOR UPDATE
+");
+
+$stmt->execute([$partId]);
+$part = $stmt->fetch(PDO::FETCH_ASSOC);
+
+if (!$part) {
+    throw new Exception('El repuesto seleccionado no existe.');
+}
+
+        if ((float)$part['stock_actual'] < $quantity) {
+            throw new Exception(
+                'Stock insuficiente para ' . $part['nombre'] . '.'
+            );
+        }
+
+        $newStock = (float)$part['stock_actual'] - $quantity;
+
+        if (!$this->partModel->updateStock($partId, $newStock)) {
+            throw new Exception('No fue posible actualizar el inventario.');
+        }
+
+        if (!$this->partModel->registerMovement([
+            'parte_id'         => $partId,
+            'usuario_id'       => $userId,
+            'caso_id'          => $caseId,
+            'tipo'             => 'consumo',
+            'motivo'           => 'Consumo durante reparación',
+            'cantidad'         => $quantity,
+            'stock_resultante' => $newStock,
+            'costo_unitario'   => (float)$part['costo'],
+            'observacion'      => 'Agregado desde repuestos compatibles'
+        ])) {
+            throw new Exception('No fue posible registrar el movimiento.');
+        }
+
+        if (!$this->casePartModel->add([
+            'caso_id'         => $caseId,
+            'parte_id'        => $partId,
+            'usuario_id'      => $userId,
+            'cantidad'        => $quantity,
+            'costo_unitario'  => (float)$part['costo'],
+            'precio_unitario' => $salePrice,
+            'subtotal'        => $salePrice * $quantity
+        ])) {
+            throw new Exception('No fue posible asociar el repuesto al caso.');
+        }
+
+        $this->db->commit();
+    } catch (Throwable $e) {
+        if ($this->db->inTransaction()) {
+            $this->db->rollBack();
+        }
+
+        throw $e;
+    }
+}
+
     private function clearCart(int $caseId): void
     {
         unset($_SESSION['case_cart'][$caseId]);

@@ -430,6 +430,37 @@ $pendingId = (int)($_POST['pending_id'] ?? 0);
         );
     }
 
+
+    public function addCompatiblePart(): void
+    {
+        $this->ensureLogged();
+
+        $caseId = (int)($_POST['case_id'] ?? 0);
+        $vehId = (int)($_POST['veh_id'] ?? 0);
+        $partId = (int)($_POST['parte_id'] ?? 0);
+        $quantity = (float)($_POST['cantidad'] ?? 1);
+        $salePrice = (float)($_POST['precio_venta'] ?? -1);
+
+        try {
+            $this->inventoryService->addSinglePartToCase(
+                $caseId,
+                $partId,
+                $quantity,
+                $salePrice,
+                (int)$_SESSION['user_id']
+            );
+
+            $this->success('Repuesto agregado correctamente al caso.');
+        } catch (Throwable $e) {
+            $this->error($e->getMessage());
+        }
+
+        $this->redirect(
+            "index.php?controller=mechanic&action=viewCase"
+            . "&veh_id={$vehId}&case_id={$caseId}"
+        );
+    }
+
     private function clearCaseCart(int $caseId): void
     {
         unset($_SESSION['case_cart'][$caseId]);

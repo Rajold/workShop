@@ -3,9 +3,9 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: localhost
--- Generation Time: Oct 06, 2026 at 04:48 AM
--- Server version: 10.4.28-MariaDB
--- PHP Version: 8.2.4
+-- Generation Time: Oct 10, 2026 at 01:37 AM
+-- Server version: 10.4.32-MariaDB
+-- PHP Version: 8.2.12
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -123,8 +123,6 @@ INSERT INTO `aplicacion_parte` (`id`, `parte_id`, `modelo_moto_id`, `created_at`
 (130, 40, 22, '2026-08-29 23:53:44', '2026-08-29 23:53:44'),
 (131, 41, 44, '2026-08-31 22:40:36', '2026-08-31 22:40:36'),
 (132, 42, 45, '2026-08-31 22:49:51', '2026-08-31 22:49:51'),
-(133, 43, 38, '2026-08-31 22:54:29', '2026-08-31 22:54:29'),
-(134, 43, 44, '2026-08-31 22:54:29', '2026-08-31 22:54:29'),
 (135, 44, 48, '2026-09-04 19:02:04', '2026-09-04 19:02:04'),
 (136, 45, 48, '2026-09-04 19:08:30', '2026-09-04 19:08:30'),
 (137, 46, 47, '2026-09-04 20:52:11', '2026-09-04 20:52:11'),
@@ -263,7 +261,12 @@ INSERT INTO `aplicacion_parte` (`id`, `parte_id`, `modelo_moto_id`, `created_at`
 (279, 79, 60, '2026-09-29 22:43:25', '2026-09-29 22:43:25'),
 (280, 79, 28, '2026-09-29 22:43:25', '2026-09-29 22:43:25'),
 (281, 79, 40, '2026-09-29 22:43:25', '2026-09-29 22:43:25'),
-(282, 79, 83, '2026-09-29 22:43:25', '2026-09-29 22:43:25');
+(282, 79, 83, '2026-09-29 22:43:25', '2026-09-29 22:43:25'),
+(283, 43, 38, '2026-10-07 16:19:11', '2026-10-07 16:19:11'),
+(284, 43, 44, '2026-10-07 16:19:11', '2026-10-07 16:19:11'),
+(285, 43, 21, '2026-10-07 16:19:11', '2026-10-07 16:19:11'),
+(286, 89, 13, '2026-10-07 22:29:09', '2026-10-07 22:29:09'),
+(287, 89, 21, '2026-10-07 22:29:09', '2026-10-07 22:29:09');
 
 -- --------------------------------------------------------
 
@@ -670,7 +673,29 @@ INSERT INTO `avances` (`id`, `caso_id`, `mecanico_id`, `descripcion`, `tipo`, `v
 (615, 180, 3, '🆕 Caso creado por falla o servicio diferente', 'Mano de obra', 0, '2026-10-06 00:26:43'),
 (616, 179, 3, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-06 00:27:47'),
 (617, 169, 3, 'pasa en 8 días.', 'Mano de obra', 12750, '2026-10-06 02:40:06'),
-(618, 169, 3, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-06 02:40:20');
+(618, 169, 3, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-06 02:40:20'),
+(619, 181, 6, '🆕 Caso creado por falla o servicio diferente', 'Mano de obra', 0, '2026-10-06 14:19:52'),
+(620, 181, 6, 'Cambio tren arrastre.', 'Mano de obra', 20000, '2026-10-06 16:36:43'),
+(621, 181, 6, 'Cambio portaplato y tensores de cadena.', 'Mano de obra', 10000, '2026-10-06 16:37:27'),
+(622, 181, 6, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-06 16:49:53'),
+(623, 183, 6, '🆕 Caso creado por falla o servicio diferente', 'Mano de obra', 0, '2026-10-06 22:44:35'),
+(624, 183, 6, 'Ajustar freno,', 'Mano de obra', 10000, '2026-10-06 22:46:03'),
+(625, 183, 6, 'Cambio de pedal de cambios.', 'Mano de obra', 5000, '2026-10-06 22:46:26'),
+(626, 183, 6, 'Revisiòn freno delantero.', 'Mano de obra', 10000, '2026-10-06 22:46:49'),
+(627, 183, 6, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-06 22:47:19'),
+(628, 179, 6, 'Instalaciòn repuestos', 'Mano de obra', 10000, '2026-10-06 23:36:19'),
+(629, 179, 6, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-06 23:37:29'),
+(630, 184, 6, '🆕 Caso creado por falla o servicio diferente', 'Mano de obra', 0, '2026-10-07 13:53:25'),
+(631, 185, 6, '🆕 Caso creado por falla o servicio diferente', 'Mano de obra', 0, '2026-10-07 16:21:24'),
+(632, 186, 6, 'Instalación .', 'Mano de obra', 15000, '2026-10-07 17:23:35'),
+(633, 186, 6, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-07 22:33:04'),
+(634, 184, 6, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-07 22:41:00'),
+(635, 177, 3, 'Taller.', 'Mano de obra', 180000, '2026-10-08 20:16:14'),
+(636, 177, 3, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-08 21:34:07'),
+(637, 188, 3, 'Cambio de prensa.', 'Mano de obra', 50000, '2026-10-09 00:40:58'),
+(638, 188, 3, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-09 00:50:56'),
+(639, 190, 6, 'Cambio de fusible.', 'Mano de obra', 10000, '2026-10-09 14:37:11'),
+(640, 190, 6, 'Caso cerrado por el mecánico.', 'Mano de obra', 0, '2026-10-09 14:37:21');
 
 -- --------------------------------------------------------
 
@@ -865,10 +890,21 @@ INSERT INTO `casos` (`id`, `vehiculo_id`, `mecanico_id`, `fecha_ingreso`, `hora_
 (174, 126, 3, '2026-10-03', NULL, 'Cambio de rodamientos', '', '', 'cerrado', '2026-10-03 17:49:09', 3, 43000, 0, 29000.00),
 (175, 136, 6, '2026-10-05', '10:38:20', 'Cambio de cadena.', 'Tornillos faltantes y bombillo stop', '', 'cerrado', '2026-10-05 10:53:20', 6, 20000, 0, 20000.00),
 (176, 138, 6, '2026-10-05', '10:49:52', 'Cambiar base embrague, bomba de freno y direccionales.', NULL, NULL, 'cerrado', '2026-10-05 13:25:35', 6, 25000, 0, 25000.00),
-(177, 139, 6, '2026-10-05', '14:04:20', 'Consume el aceite y tira humo.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
+(177, 139, 6, '2026-10-05', '14:04:20', 'Consume el aceite y tira humo.', NULL, NULL, 'cerrado', '2026-10-08 16:34:07', 3, 360400, 0, 218228.00),
 (178, 140, 6, '2026-10-05', '15:01:44', 'Falla en el embrague, patina la prensa.', NULL, NULL, 'cerrado', '2026-10-05 19:18:19', 6, 124000, 0, 65000.00),
-(179, 141, 6, '2026-10-05', '18:22:48', 'No frena delantero.', NULL, NULL, 'cerrado', '2026-10-05 19:27:47', 3, 40000, 0, 40000.00),
-(180, 35, 3, '2026-10-05', '19:26:43', 'Escape flojo, suena mal.', 'Nivel de aceite bajo.', '', 'abierto', NULL, NULL, NULL, 0, 0.00);
+(179, 141, 6, '2026-10-05', '18:22:48', 'No frena delantero.', NULL, NULL, 'cerrado', '2026-10-06 18:37:29', 6, 63000, 0, 59700.00),
+(180, 35, 3, '2026-10-05', '19:26:43', 'Escape flojo, suena mal.', 'Nivel de aceite bajo.', '', 'abierto', NULL, NULL, NULL, 0, 0.00),
+(181, 16, 6, '2026-10-06', '09:19:51', 'Rueda trasera traquea.', '', '', 'cerrado', '2026-10-06 11:49:53', 6, 134200, 0, 47700.00),
+(182, 142, 6, '2026-10-06', '11:51:43', 'No Enciende, estuvo guardada, revisión general y reportar para autorizar servicio.', 'Carburador fue cambiado por otro que no corresponde.', NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
+(183, 88, 6, '2026-10-06', '17:44:35', 'Freno no funciona', 'Eje partido.', '', 'cerrado', '2026-10-06 17:47:19', 6, 25000, 0, 25000.00),
+(184, 141, 6, '2026-10-07', '08:53:25', 'No pita.', '', '', 'cerrado', '2026-10-07 17:41:00', 6, 10000, 0, 5000.00),
+(185, 16, 6, '2026-10-07', '11:21:24', 'Reparar posapiés traseros', '', '', 'abierto', NULL, NULL, NULL, 0, 0.00),
+(186, 143, 6, '2026-10-07', '12:15:46', 'Falta bobina de alta', NULL, NULL, 'cerrado', '2026-10-07 17:33:04', 6, 74000, 0, 53860.00),
+(187, 144, 6, '2026-10-07', '18:04:09', 'No enciende.', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
+(188, 145, 3, '2026-10-08', '19:40:23', 'Patina la prensa', NULL, NULL, 'cerrado', '2026-10-08 19:50:56', 3, 85200, 0, 57800.00),
+(189, 146, 6, '2026-10-09', '08:55:17', 'ruido y juego en rueda trasera   \r\ndireccional rota\r\nacelerador se pega\r\nswich se pega\r\ncambio de bombillo', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00),
+(190, 147, 6, '2026-10-09', '09:36:05', 'Sistema eléctrico muerto. No enciende.', NULL, NULL, 'cerrado', '2026-10-09 09:37:21', 6, 10000, 0, 10000.00),
+(191, 148, 6, '2026-10-09', '11:09:37', 'Cambiar bomba freno', NULL, NULL, 'abierto', NULL, NULL, NULL, 0, 0.00);
 
 -- --------------------------------------------------------
 
@@ -964,7 +1000,18 @@ INSERT INTO `caso_repuestos` (`id`, `caso_id`, `parte_id`, `usuario_id`, `cantid
 (70, 173, 57, 3, 20.00, 24.00, 200.00, 4000.00, '2026-10-01 23:46:57'),
 (71, 174, 83, 3, 1.00, 4000.00, 8000.00, 8000.00, '2026-10-03 19:46:44'),
 (72, 174, 84, 3, 1.00, 5000.00, 10000.00, 10000.00, '2026-10-03 19:46:44'),
-(73, 174, 85, 3, 1.00, 5000.00, 10000.00, 10000.00, '2026-10-03 19:46:44');
+(73, 174, 85, 3, 1.00, 5000.00, 10000.00, 10000.00, '2026-10-03 19:46:44'),
+(74, 179, 66, 6, 1.00, 1700.00, 5000.00, 5000.00, '2026-10-06 23:35:42'),
+(75, 179, 86, 6, 1.00, 1600.00, 8000.00, 8000.00, '2026-10-06 23:35:42'),
+(76, 184, 87, 6, 1.00, 5000.00, 10000.00, 10000.00, '2026-10-07 14:28:52'),
+(77, 177, 43, 6, 1.00, 7500.00, 12200.00, 12200.00, '2026-10-07 16:20:40'),
+(78, 186, 66, 6, 1.00, 1700.00, 5000.00, 5000.00, '2026-10-07 17:16:41'),
+(79, 186, 57, 6, 60.00, 24.00, 200.00, 12000.00, '2026-10-07 20:31:31'),
+(80, 177, 89, 6, 1.00, 2800.00, 4200.00, 4200.00, '2026-10-07 22:29:25'),
+(81, 177, 76, 3, 1.00, 24000.00, 30000.00, 30000.00, '2026-10-08 14:37:09'),
+(82, 188, 90, 3, 1.00, 3400.00, 5200.00, 5200.00, '2026-10-09 00:50:25'),
+(83, 188, 76, 3, 1.00, 24000.00, 30000.00, 30000.00, '2026-10-09 00:50:46'),
+(84, 191, 69, 6, 1.00, 15500.00, 30000.00, 30000.00, '2026-10-09 16:41:29');
 
 -- --------------------------------------------------------
 
@@ -1057,7 +1104,24 @@ INSERT INTO `compras_caso` (`id`, `caso_id`, `usuario_id`, `descripcion`, `prove
 (19, 172, 3, 'Carenado', 'Chiquimotos', 1.00, 34400.00, 42000.00, 42000.00, '2026-10-02 18:32:15', ''),
 (20, 172, 3, 'Acrílico visor Velocímetro', 'Chiquimotos', 1.00, 18000.00, 20000.00, 20000.00, '2026-10-02 18:35:16', ''),
 (21, 178, 6, 'Prensa', 'Chiquimotos', 1.00, 49000.00, 59000.00, 59000.00, '2026-10-05 18:00:48', ''),
-(22, 178, 6, 'Discos de embrague.', 'Chiquimotos', 1.00, 10000.00, 15000.00, 15000.00, '2026-10-05 18:03:20', '');
+(22, 178, 6, 'Discos de embrague.', 'Chiquimotos', 1.00, 10000.00, 15000.00, 15000.00, '2026-10-05 18:03:20', ''),
+(23, 181, 6, 'Portaplato Eco100 modelo Viejo', 'Chiquimotos', 1.00, 30700.00, 37000.00, 37000.00, '2026-10-06 11:45:59', ''),
+(24, 181, 6, 'Lainas evol', 'Chiquimotos', 1.00, 1500.00, 1800.00, 1800.00, '2026-10-06 11:46:52', ''),
+(25, 181, 6, 'Tren arrastre Choho.', 'Chiquimotos', 1.00, 54300.00, 65400.00, 65400.00, '2026-10-06 11:47:54', ''),
+(26, 182, 6, 'Guaya acelerador.', 'Chiquimotos', 1.00, 12700.00, 15400.00, 15400.00, '2026-10-06 11:52:48', ''),
+(27, 177, 6, 'Pistón Tkrj', 'Chiquimotos1', 1.00, 64240.00, 73000.00, 73000.00, '2026-10-06 16:36:36', ''),
+(28, 177, 6, 'Guías de cadenilla.', 'Chiquimotos1', 1.00, 11792.00, 15000.00, 15000.00, '2026-10-06 16:37:58', ''),
+(29, 177, 6, 'Sellos de válvula original', 'Chiquimotos1', 1.00, 8000.00, 13000.00, 13000.00, '2026-10-06 16:38:57', ''),
+(32, 185, 6, 'Posapiés Evol', 'Chiquimotos', 1.00, 11000.00, 13200.00, 13200.00, '2026-10-07 11:22:27', ''),
+(33, 186, 6, 'Bobina de alta', 'Chiquimotos', 1.00, 17000.00, 42000.00, 42000.00, '2026-10-07 12:16:21', 'Original'),
+(34, 180, 6, 'Kit empaquetadura', 'Chiquimotos', 1.00, 32600.00, 38000.00, 38000.00, '2026-10-07 17:37:24', ''),
+(35, 180, 6, 'Kit pistón mapache', 'Chiquimotos', 1.00, 30000.00, 48000.00, 48000.00, '2026-10-07 17:37:57', ''),
+(36, 177, 3, 'Filtro de aire vitrix', 'Chiquimotos', 1.00, 18040.00, 25000.00, 25000.00, '2026-10-08 10:52:23', ''),
+(37, 177, 3, 'Kit medio', 'Chiquimotos', 1.00, 5800.00, 8000.00, 8000.00, '2026-10-08 10:58:19', ''),
+(38, 180, 3, 'Piñón árbol de levas', 'Akt Amparo', 1.00, 6500.00, 12000.00, 12000.00, '2026-10-08 10:59:34', ''),
+(39, 180, 3, 'Kit distribución Original', 'Tito Motos', 1.00, 35000.00, 42000.00, 42000.00, '2026-10-08 11:22:14', ''),
+(40, 180, 6, 'Balancines', 'Mundimitos', 1.00, 18000.00, 24500.00, 24500.00, '2026-10-09 12:12:50', 'Vitrix'),
+(41, 187, 6, 'Gasolina', 'Sideral', 1.00, 10000.00, 10000.00, 10000.00, '2026-10-09 12:48:42', '');
 
 -- --------------------------------------------------------
 
@@ -1113,7 +1177,8 @@ INSERT INTO `fabricante_repuesto` (`id`, `nombre`, `descripcion`, `activo`, `cre
 (32, 'Guivaim', 'Gvi', 1, '2026-07-22 04:25:39', '2026-07-22 04:25:39'),
 (33, 'MX-Parts', '', 1, '2026-07-22 04:25:39', '2026-07-22 04:25:39'),
 (34, 'Yamatech', '', 1, '2026-07-22 04:25:39', '2026-07-22 04:25:39'),
-(35, 'Reencafé', '', 1, '2026-07-22 04:25:39', '2026-07-22 04:25:39');
+(35, 'Reencafé', '', 1, '2026-07-22 04:25:39', '2026-07-22 04:25:39'),
+(36, 'North Panthr', '', 1, '2026-07-22 04:25:39', '2026-07-22 04:25:39');
 
 -- --------------------------------------------------------
 
@@ -1148,7 +1213,8 @@ INSERT INTO `marcas_moto` (`id`, `nombre`, `activo`, `created_at`, `updated_at`)
 (12, 'Victory', 1, '2026-07-20 02:07:04', '2026-07-20 02:07:04'),
 (13, 'Ceronte', 1, '2026-07-20 02:07:04', '2026-07-20 02:07:04'),
 (14, 'Hero', 1, '2026-07-20 02:07:04', '2026-07-20 02:07:04'),
-(15, 'Um', 1, '2026-07-20 02:07:04', '2026-07-20 02:07:04');
+(15, 'Um', 1, '2026-07-20 02:07:04', '2026-07-20 02:07:04'),
+(16, 'Keeway', 1, '2026-07-20 02:07:04', '2026-07-20 02:07:04');
 
 -- --------------------------------------------------------
 
@@ -1256,7 +1322,9 @@ INSERT INTO `modelos_moto` (`id`, `marca_moto_id`, `tipo_moto_id`, `linea`, `cil
 (88, 11, 6, 'Jetyx', 125, 1, '2026-09-30 16:18:10', '2026-09-30 16:18:10'),
 (89, 7, 7, 'Discover Str', 125, 1, '2026-10-05 15:48:36', '2026-10-05 15:48:36'),
 (90, 14, 7, 'Hunk', 160, 1, '2026-10-05 20:00:46', '2026-10-05 20:00:46'),
-(91, 8, 6, 'Special R', 110, 1, '2026-10-05 23:22:14', '2026-10-05 23:22:14');
+(91, 8, 6, 'Special R', 110, 1, '2026-10-05 23:22:14', '2026-10-05 23:22:14'),
+(92, 1, 7, 'Splendor Nxg', 110, 1, '2026-10-07 23:01:48', '2026-10-07 23:01:48'),
+(93, 16, 7, 'Rks', 125, 1, '2026-10-09 16:06:33', '2026-10-09 16:06:33');
 
 -- --------------------------------------------------------
 
@@ -1437,7 +1505,23 @@ INSERT INTO `movimientos_inventario` (`id`, `parte_id`, `usuario_id`, `caso_id`,
 (155, 84, 3, NULL, 'compra', 'Compra inicial', 1.00, 1.00, 5000.00, '', '2026-10-03 14:45:39'),
 (156, 83, 3, 174, 'consumo', 'Consumo durante reparación', 1.00, 2.00, 4000.00, 'Aplicado desde WorkShop', '2026-10-03 14:46:44'),
 (157, 84, 3, 174, 'consumo', 'Consumo durante reparación', 1.00, 0.00, 5000.00, 'Aplicado desde WorkShop', '2026-10-03 14:46:44'),
-(158, 85, 3, 174, 'consumo', 'Consumo durante reparación', 1.00, 0.00, 5000.00, 'Aplicado desde WorkShop', '2026-10-03 14:46:44');
+(158, 85, 3, 174, 'consumo', 'Consumo durante reparación', 1.00, 0.00, 5000.00, 'Aplicado desde WorkShop', '2026-10-03 14:46:44'),
+(159, 86, 6, NULL, 'compra', 'Compra inicial', 5.00, 5.00, 1600.00, '', '2026-10-06 18:35:26'),
+(160, 66, 6, 179, 'consumo', 'Consumo durante reparación', 1.00, 3.00, 1700.00, 'Aplicado desde WorkShop', '2026-10-06 18:35:42'),
+(161, 86, 6, 179, 'consumo', 'Consumo durante reparación', 1.00, 4.00, 1600.00, 'Aplicado desde WorkShop', '2026-10-06 18:35:42'),
+(162, 87, 6, NULL, 'compra', 'Compra inicial', 1.00, 1.00, 5000.00, '', '2026-10-07 09:28:17'),
+(163, 87, 6, 184, 'consumo', 'Consumo durante reparación', 1.00, 0.00, 5000.00, 'Aplicado desde WorkShop', '2026-10-07 09:28:52'),
+(164, 43, 6, 177, 'consumo', 'Consumo durante reparación', 1.00, 0.00, 7500.00, 'Aplicado desde WorkShop', '2026-10-07 11:20:40'),
+(165, 66, 6, 186, 'consumo', 'Consumo durante reparación', 1.00, 2.00, 1700.00, 'Aplicado desde WorkShop', '2026-10-07 12:16:41'),
+(166, 57, 6, 186, 'consumo', 'Consumo durante reparación', 60.00, 440.00, 24.00, 'Aplicado desde WorkShop', '2026-10-07 15:31:31'),
+(167, 89, 6, NULL, 'compra', 'Compra inicial', 2.00, 2.00, 2800.00, '', '2026-10-07 17:28:44'),
+(168, 89, 6, 177, 'consumo', 'Consumo durante reparación', 1.00, 1.00, 2800.00, 'Aplicado desde WorkShop', '2026-10-07 17:29:25'),
+(169, 76, 3, NULL, 'compra', 'Compra inicial', 12.00, 12.00, 24000.00, '', '2026-10-08 09:34:16'),
+(170, 76, 3, 177, 'consumo', 'Consumo durante reparación', 1.00, 11.00, 24000.00, 'Aplicado desde WorkShop', '2026-10-08 09:37:09'),
+(171, 90, 3, NULL, 'compra', 'Compra inicial', 3.00, 3.00, 3400.00, '', '2026-10-08 19:50:11'),
+(172, 90, 3, 188, 'consumo', 'Consumo durante reparación', 1.00, 2.00, 3400.00, 'Aplicado desde WorkShop', '2026-10-08 19:50:25'),
+(173, 76, 3, 188, 'consumo', 'Consumo durante reparación', 1.00, 10.00, 24000.00, 'Aplicado desde WorkShop', '2026-10-08 19:50:46'),
+(174, 69, 6, 191, 'consumo', 'Consumo durante reparación', 1.00, 1.00, 15500.00, 'Aplicado desde WorkShop', '2026-10-09 11:41:29');
 
 -- --------------------------------------------------------
 
@@ -1512,7 +1596,7 @@ INSERT INTO `partes` (`id`, `codigo`, `categoria_id`, `tipo`, `nombre`, `marca`,
 (40, 'Reg001', 24, 'repuesto', 'Regulador de carga', 'Industrias Leo', 24, 'xxxxxxx', 6, 'Unidad', 0.00, 0.00, 1.00, 22000.00, 32000.00, 'Vitrina', 'NA', NULL, 1, '2026-08-29 18:53:22', '2026-08-29 18:55:11'),
 (41, 'Filt001', 3, 'repuesto', 'Filtro de Aire', 'Gaviria', 25, '563A', 6, 'Unidad', 0.00, 0.00, 1.00, 5000.00, 12000.00, 'Vitrina', '0052792', NULL, 1, '2026-08-31 17:39:49', '2026-08-31 17:51:27'),
 (42, 'Filt002', 3, 'repuesto', 'Filtro de Aire', 'Evol', 26, 'FIL2558', 6, 'Unidad', 1.00, 0.00, 1.00, 4100.00, 12000.00, 'Vitrina', '17211-KRE-900', NULL, 1, '2026-08-31 17:48:23', '2026-08-31 17:50:09'),
-(43, 'Buj002', 24, 'repuesto', 'Bujía', 'Bajaj', 14, 'DD111018', 6, 'Unidad', 1.00, 0.00, 1.00, 7500.00, 12000.00, 'Vitrina', 'NA', NULL, 1, '2026-08-31 17:53:40', '2026-08-31 17:56:24'),
+(43, 'Buj002', 24, 'repuesto', 'Bujía DD111018', 'Bajaj', 14, 'DD111018', 6, 'Unidad', 0.00, 0.00, 1.00, 7500.00, 12200.00, 'Vitrina', 'NA', NULL, 1, '2026-08-31 17:53:40', '2026-10-07 11:20:40'),
 (44, 'DafrCarb001', 4, 'repuesto', 'Diafragma carburado', 'SukiParts', 27, '13500H48F00H000', 6, 'Unidad', 0.00, 0.00, 1.00, 32000.00, 40000.00, 'Vitrina', 'TP0817', NULL, 1, '2026-09-04 14:01:42', '2026-09-04 14:03:32'),
 (45, 'Oring001', 17, 'repuesto', 'O-Ring', 'Sin marca', 3, '217', 6, 'Unidad', 2.00, 0.00, 2.00, 1000.00, 2000.00, 'Caja Azul', 'NA', NULL, 1, '2026-09-04 14:08:09', '2026-09-04 14:09:58'),
 (46, 'Piston002', 4, 'repuesto', 'Kit pistón.', 'Casarella', 2, '4VP-E1631-00 25', 6, 'Unidad', 0.00, 0.00, 1.00, 60000.00, 64000.00, 'Vitrina', '00002710', NULL, 1, '2026-09-04 15:51:03', '2026-09-04 15:54:55'),
@@ -1526,26 +1610,26 @@ INSERT INTO `partes` (`id`, `codigo`, `categoria_id`, `tipo`, `nombre`, `marca`,
 (54, 'CadRep002', 4, 'repuesto', 'Cadena de repartición', 'Bajaj', 14, 'JE511230', 6, 'Unidad', 0.00, 0.00, 0.00, 20000.00, 22500.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 10:21:02', '2026-09-10 10:41:27'),
 (55, 'SellValv002', 4, 'repuesto', 'Sellos de válvulas.', 'Bajaj', 14, '39201719', 6, 'Unidad', 0.00, 0.00, 1.00, 9000.00, 9100.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 10:31:50', '2026-09-10 10:31:50'),
 (56, 'GuiaCadRep002', 4, 'repuesto', 'GuíasCadena Repartición', 'Bajaj', 14, '36DS1004', 6, 'Unidad', 0.00, 0.00, 1.00, 15000.00, 15800.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 10:36:46', '2026-09-10 10:38:10'),
-(57, 'Manguera001', 20, 'repuesto', 'Manguera Gasolina', 'Sin marca', 3, 'NA', 6, 'Unidad', 500.00, 0.00, 10.00, 24.00, 200.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 10:48:03', '2026-10-01 18:46:57'),
+(57, 'Manguera001', 20, 'repuesto', 'Manguera Gasolina', 'Sin marca', 3, 'NA', 6, 'Unidad', 440.00, 0.00, 10.00, 24.00, 200.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 10:48:03', '2026-10-07 15:31:31'),
 (58, 'EmpCul002', 25, 'repuesto', 'Empaque Culata.', 'Bajaj', 14, 'DH101680', 6, 'Unidad', 0.00, 0.00, 1.00, 15000.00, 15300.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 11:16:13', '2026-09-10 11:17:23'),
 (59, 'GuiaValv002', 4, 'repuesto', 'Guías de válvulas.', 'Guivaim', 32, 'G-0301-SA1', 6, 'Unidad', 0.00, 0.00, 1.00, 21000.00, 45000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-10 11:21:48', '2026-09-10 11:25:15'),
-(60, 'PastFren001', 7, 'repuesto', 'Pastillas de freno.', 'Evol', 26, 'BAN2553', 7, 'Unidad', 0.00, 0.00, 1.00, 12000.00, 18000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-12 14:18:56', '2026-09-12 14:24:35'),
+(60, 'PastFren001', 7, 'repuesto', 'Pastillas de freno BAN2553', 'Evol', 26, 'BAN2553', 7, 'Unidad', 0.00, 0.00, 1.00, 12000.00, 0.00, 'Vitrina', 'NA', NULL, 1, '2026-09-12 14:18:56', '2026-10-09 11:45:42'),
 (61, 'test001', 4, 'repuesto', 'Artículo de pruebas.', 'Honda', 8, '123probando', 3, 'Unidad', 248.00, 0.00, 1.00, 10000.00, 15000.00, 'No recuerdo', 'N/A', NULL, 1, '2026-09-15 21:07:26', '2026-09-30 19:13:02'),
 (62, 'FoltTanq001', 14, 'repuesto', 'Flotador Tanque Gasolina', 'Yamaha', 9, '5D9-H5752-01', 3, 'Unidad', 0.00, 0.00, 1.00, 50000.00, 58200.00, 'Vitrina', '038447', NULL, 1, '2026-09-18 13:32:39', '2026-09-18 13:35:08'),
 (63, 'Oring002', 25, 'repuesto', 'O-Ring Tapa Válvulas Bws125', 'Sin marca', 3, 'NA', 6, 'Unidad', 2.00, 0.00, 1.00, 1000.00, 2000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-22 09:41:23', '2026-09-22 09:44:34'),
 (64, 'Oring003', 25, 'repuesto', 'O-Ring Tapa árbol levas Bws125', 'Sin marca', 3, 'NA', 6, 'Unidad', 0.00, 0.00, 1.00, 1000.00, 2000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-22 09:49:56', '2026-09-22 09:51:02'),
 (65, 'Filt003', 3, 'repuesto', 'Filtro para gasolina. Cobre.', 'Sin marca', 3, 'NA', 6, 'Unidad', 0.00, 0.00, 1.00, 4000.00, 6000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-24 10:31:22', '2026-10-01 18:46:29'),
-(66, 'cap001', 24, 'repuesto', 'Capuchón bujía.', 'Gx', 23, '822310', 3, 'Unidad', 4.00, 0.00, 2.00, 1700.00, 5000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-25 10:36:49', '2026-09-25 10:44:18'),
+(66, 'cap001', 24, 'repuesto', 'Capuchón bujía.', 'Gx', 23, '822310', 3, 'Unidad', 2.00, 0.00, 2.00, 1700.00, 5000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-25 10:36:49', '2026-10-07 12:16:41'),
 (67, 'BombStop001', 11, 'repuesto', 'Bombillo Stop', 'Evol', 26, 'BOM2579', 3, 'Unidad', 0.00, 0.00, 2.00, 550.00, 5000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-25 15:30:19', '2026-09-25 15:30:19'),
 (68, 'FiltAceit002', 3, 'repuesto', 'Filtro aceite 2510', 'Evol', 26, 'FIL2510', 3, 'Unidad', 5.00, 0.00, 2.00, 2000.00, 8000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-25 15:33:28', '2026-09-25 15:34:24'),
-(69, 'BombFren001', 7, 'repuesto', 'Bomba Freno MX-Parts', 'MX-Parts', 33, 'NA', 3, 'Unidad', 2.00, 0.00, 1.00, 15500.00, 30000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-25 15:43:04', '2026-09-25 15:45:15'),
+(69, 'BombFren001', 7, 'repuesto', 'Bomba Freno MX-Parts', 'MX-Parts', 33, 'NA', 3, 'Unidad', 1.00, 0.00, 1.00, 15500.00, 30000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-25 15:43:04', '2026-10-09 11:41:29'),
 (70, 'BombFren002', 7, 'repuesto', 'Bomba Freno Yamatech', 'Yamatech', 34, 'NA', 3, 'Unidad', 0.00, 0.00, 1.00, 15500.00, 30000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-25 15:47:33', '2026-09-25 15:47:33'),
 (71, 'Flash001', 24, 'repuesto', 'Flasher Direccional', 'Evol', 26, 'NA', 3, 'Unidad', 0.00, 0.00, 2.00, 2450.00, 5000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-25 15:51:54', '2026-09-25 15:51:54'),
 (72, 'EmpCluth002', 25, 'repuesto', 'Empaque tapa cluth Invicta', 'Darrow', 16, '01P151', 3, 'Unidad', 2.00, 0.00, 1.00, 4200.00, 5000.00, 'Vitrina', '7 707008 728754', NULL, 1, '2026-09-25 16:45:50', '2026-09-25 16:52:42'),
 (73, 'EmpKitMedio002', 25, 'repuesto', 'Kit medio 21L46SE', 'Darrow', 16, '21L46SE', 3, 'Unidad', 1.00, 0.00, 1.00, 10960.00, 12500.00, 'Vitrina', '7 707008 720246', NULL, 1, '2026-09-25 17:13:54', '2026-09-25 17:54:33'),
 (74, 'EmpKitMedio003', 25, 'repuesto', 'Kit medio 17L10SE', 'Darrow', 16, '17L10SE', 3, 'Unidad', 1.00, 0.00, 1.00, 12560.00, 10000.00, 'Vitrina', '7 707008 727665', NULL, 1, '2026-09-25 17:17:56', '2026-09-25 17:52:12'),
 (75, 'EmpKitMedio004', 25, 'repuesto', 'Kit medio 22L37SE', 'Darrow', 16, '22L37SE', 3, 'Unidad', 1.00, 0.00, 1.00, 9760.00, 12200.00, 'Vitrina', '7 707008 728525', NULL, 1, '2026-09-25 17:43:21', '2026-09-25 17:54:48'),
-(76, 'Aceite', 2, 'repuesto', 'Aceite Grizzly', 'Reencafé', 35, '4T20W50', 3, 'Unidad', 0.00, 0.00, 1.00, 24000.00, 30000.00, 'Vitrina', '', NULL, 1, '2026-09-25 18:47:39', '2026-09-29 17:45:15'),
+(76, 'Aceite', 2, 'repuesto', 'Aceite Grizzly', 'Reencafé', 35, '4T20W50', 3, 'Unidad', 10.00, 0.00, 1.00, 24000.00, 30000.00, 'Vitrina', '', NULL, 1, '2026-09-25 18:47:39', '2026-10-08 19:50:46'),
 (77, 'EmpTapVol003', 25, 'repuesto', 'Empaque Volante 05X060', 'Darrow', 16, '05X060', 3, 'Unidad', 2.00, 0.00, 1.00, 2500.00, 3300.00, 'Vitrina', '7 707008 706974', NULL, 1, '2026-09-29 10:56:10', '2026-09-29 10:59:25'),
 (78, 'Oring004', 25, 'repuesto', 'Oring 120', 'Sin marca', 3, 'NA', 3, 'Unidad', 3.00, 0.00, 1.00, 1000.00, 2000.00, 'Vitrina', 'NA', NULL, 1, '2026-09-29 11:11:06', '2026-09-29 11:12:08'),
 (79, 'AnilloEsc001', 25, 'repuesto', 'Anillo Escape 04Q154M', 'Darrow', 16, '04Q154M', 3, 'Unidad', 4.00, 0.00, 1.00, 1200.00, 5000.00, 'Vitrina', '7 707008 705656', NULL, 1, '2026-09-29 17:42:21', '2026-09-29 17:44:29'),
@@ -1553,7 +1637,11 @@ INSERT INTO `partes` (`id`, `codigo`, `categoria_id`, `tipo`, `nombre`, `marca`,
 (81, 'ChapGol#6', 19, 'repuesto', 'Chapeta Goloso #6', 'Sin marca', 3, 'NA', 3, 'Unidad', 12.00, 0.00, 10.00, 500.00, 800.00, 'Tornillera', 'NA', NULL, 1, '2026-10-02 18:55:45', '2026-10-02 18:56:24'),
 (83, 'RodBol6202', 16, 'repuesto', 'Rodamiento Bolas 6202-Rs', 'Evol', 26, '6202-Rs', 3, 'Unidad', 2.00, 0.00, 1.00, 4000.00, 8000.00, 'Vitrina', 'NA', NULL, 1, '2026-10-03 14:37:31', '2026-10-03 14:46:44'),
 (84, 'RodBol-6204-2Rs', 16, 'repuesto', '6204-2Rs', 'Koyo', 5, '6204-2Rs', 3, 'Unidad', 0.00, 0.00, 1.00, 5000.00, 10000.00, 'Vitrina', '4 549250 006203', NULL, 1, '2026-10-03 14:43:17', '2026-10-03 14:46:44'),
-(85, 'RodBol-6302-2Rs', 16, 'repuesto', '6302-2Rs', 'Koyo', 5, '6302-2Rs', 3, 'Unidad', 0.00, 0.00, 1.00, 5000.00, 10000.00, 'Vitrina', '4 549250 006203', NULL, 1, '2026-10-03 14:44:54', '2026-10-03 14:46:44');
+(85, 'RodBol-6302-2Rs', 16, 'repuesto', '6302-2Rs', 'Koyo', 5, '6302-2Rs', 3, 'Unidad', 0.00, 0.00, 1.00, 5000.00, 10000.00, 'Vitrina', '4 549250 006203', NULL, 1, '2026-10-03 14:44:54', '2026-10-03 14:46:44'),
+(86, 'PeraFrenTras001', 24, 'repuesto', 'Pera Freno Trasero socket', 'Sin marca', 3, 'NA', 6, 'Unidad', 4.00, 0.00, 2.00, 1600.00, 8000.00, 'Vitrina', 'NA', NULL, 1, '2026-10-06 18:33:42', '2026-10-06 18:35:42'),
+(87, 'Pito001', 24, 'repuesto', 'Pito 12v PTR184', 'North Panthr', 36, 'PTR184', 6, 'Unidad', 0.00, 0.00, 1.00, 5000.00, 10000.00, 'Vitrina', 'NA', NULL, 1, '2026-10-07 09:27:18', '2026-10-07 09:28:52'),
+(89, 'EmpTapVol004', 25, 'repuesto', 'Empaque tapa volante 05X136 ', 'Darrow', 16, '05X136', 6, 'Unidad', 1.00, 0.00, 1.00, 2800.00, 4200.00, 'Vitrina', '7 707008 727962', NULL, 1, '2026-10-07 17:28:11', '2026-10-07 17:29:25'),
+(90, 'EmpTapCluth002', 25, 'repuesto', 'Empaque Tapa Cluth 01P145', 'Darrow', 16, '01P145', 3, 'Unidad', 2.00, 0.00, 1.00, 3400.00, 5200.00, 'Vitrina', '07', NULL, 1, '2026-10-08 19:48:50', '2026-10-08 19:50:25');
 
 -- --------------------------------------------------------
 
@@ -1599,7 +1687,9 @@ INSERT INTO `pendientes` (`id`, `vehiculo_id`, `caso_origen_id`, `caso_resuelto_
 (19, 128, 155, NULL, 6, 'no llegó pago.', 'pendiente', '2026-09-21 13:02:58', NULL),
 (20, 85, 90, NULL, 6, '90 abono', 'pendiente', '2026-09-28 22:25:12', NULL),
 (21, 102, 169, 169, 6, 'pasa en 8 días', 'resuelto', '2026-10-01 00:17:03', '2026-10-05 21:40:06'),
-(22, 136, 172, 172, 3, 'Cambiar cadena, bombillo stop.', 'resuelto', '2026-10-04 02:18:05', '2026-10-05 10:47:03');
+(22, 136, 172, 172, 3, 'Cambiar cadena, bombillo stop.', 'resuelto', '2026-10-04 02:18:05', '2026-10-05 10:47:03'),
+(23, 16, 181, NULL, 6, 'Cobrar rodBol pfi 6301-2rs c3*2, \r\nDeja posapiés traseros para reconstrucción.', 'pendiente', '2026-10-06 16:49:38', NULL),
+(24, 88, 183, NULL, 6, 'Cambiar eje soporte gato central.', 'pendiente', '2026-10-06 22:47:07', NULL);
 
 -- --------------------------------------------------------
 
@@ -1619,6 +1709,13 @@ CREATE TABLE `reaperturas_caso` (
   `utilidad_anterior` int(11) DEFAULT NULL,
   `fecha_cierre_anterior` datetime DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Dumping data for table `reaperturas_caso`
+--
+
+INSERT INTO `reaperturas_caso` (`id`, `caso_id`, `mecanico_id`, `motivo`, `comentario`, `fecha_reapertura`, `precio_cobrado_anterior`, `descuento_anterior`, `utilidad_anterior`, `fecha_cierre_anterior`) VALUES
+(1, 179, 6, 'Cerrado antes de tiempo.', NULL, '2026-10-06 18:31:00', 40000, 0, 40000, '2026-10-05 19:27:47');
 
 -- --------------------------------------------------------
 
@@ -1771,9 +1868,22 @@ INSERT INTO `sesiones_trabajo` (`id`, `caso_id`, `mecanico_id`, `fecha_inicio`, 
 (245, 175, 6, '2026-10-05', '10:52:49', '2026-10-05', '10:53:20', 421),
 (246, 177, 6, '2026-10-05', '14:04:25', NULL, NULL, 0),
 (247, 178, 6, '2026-10-05', '15:02:36', '2026-10-05', '19:18:18', 676),
-(248, 179, 6, '2026-10-05', '18:22:54', NULL, NULL, 0),
+(248, 179, 6, '2026-10-05', '18:22:54', '2026-10-06', '18:37:29', 1875),
 (249, 179, 3, '2026-10-05', '19:21:41', '2026-10-05', '19:27:47', 426),
-(250, 169, 3, '2026-10-05', '21:39:30', '2026-10-05', '21:40:20', 421);
+(250, 169, 3, '2026-10-05', '21:39:30', '2026-10-05', '21:40:20', 421),
+(251, 181, 6, '2026-10-06', '11:34:29', '2026-10-06', '11:49:53', 435),
+(252, 182, 6, '2026-10-06', '11:52:14', NULL, NULL, 0),
+(253, 183, 6, '2026-10-06', '17:44:41', '2026-10-06', '17:47:19', 423),
+(254, 184, 6, '2026-10-07', '09:22:25', '2026-10-07', '17:41:00', 919),
+(255, 185, 6, '2026-10-07', '11:21:43', NULL, NULL, 0),
+(256, 186, 6, '2026-10-07', '12:15:50', '2026-10-07', '17:33:03', 737),
+(257, 180, 6, '2026-10-07', '17:35:10', NULL, NULL, 0),
+(258, 177, 3, '2026-10-08', '09:36:22', '2026-10-08', '16:34:07', 838),
+(259, 180, 3, '2026-10-08', '10:58:50', NULL, NULL, 0),
+(260, 188, 3, '2026-10-08', '19:40:34', '2026-10-08', '19:50:56', 430),
+(261, 190, 6, '2026-10-09', '09:36:12', '2026-10-09', '09:37:21', 421),
+(262, 191, 6, '2026-10-09', '11:09:45', NULL, NULL, 0),
+(263, 187, 6, '2026-10-09', '12:48:21', NULL, NULL, 0);
 
 -- --------------------------------------------------------
 
@@ -1973,9 +2083,16 @@ INSERT INTO `vehiculos` (`id`, `placa`, `marca`, `modelo`, `modelo_moto_id`, `co
 (136, 'GJM09D', 'Yamaha', 'Crypton 115', 13, 'Negro', 'Harold Parra Gil', ''),
 (137, 'DLE50C', 'Bajaj', 'Pulsar 180', 55, 'Verde', 'Wilson Cuellar', ''),
 (138, 'FDV87F', 'Bajaj', 'Discover Str 125', 89, 'Rojo', 'Daniel Cruz', ''),
-(139, 'RVO15F', 'Yamaha', 'Crypton Fi 115', 21, 'Negro', 'Angie xm', '3218560634'),
+(139, 'RVO15F', 'Yamaha', 'Crypton Fi 115', 21, 'Negro', 'Jason xm', '3218560634'),
 (140, 'FIL94H', 'Hero', 'Hunk 160', 90, 'Blanco', 'Refrigeradores', ''),
-(141, 'KFT51G', 'Akt', 'Special R 110', 91, 'Negro', 'V', '4');
+(141, 'FKT51G', 'Akt', 'Special R 110', 91, 'Negro', 'Jason Vecino', '3138075756'),
+(142, 'JNE50B', 'Yamaha', 'Bws 100', 47, 'Negro', 'Fernando Motos', ''),
+(143, 'PWW76E', 'Akt', 'Nkd 125', 9, 'Negro', 'Gustavo Hijo', ''),
+(144, 'ZWW54C', 'Honda', 'Splendor Nxg 110', 92, 'Negro', 'David', '3124834753'),
+(145, 'YKQ37G', 'Akt', 'Nkd 125', 9, 'Gris', 'Hijo Julian', ''),
+(146, 'DQF57E', 'Yamaha', 'Bws 125', 51, 'Rojo', 'Helen', '3157973526'),
+(147, 'JYU58E', 'Akt', 'Nkd 125', 9, 'Negro', 'Blanco motos', ''),
+(148, 'OCJ06F', 'Keeway', 'Rks 125', 93, 'Negro', 'Sebastián Hugo', '3248255625');
 
 --
 -- Indexes for dumped tables
@@ -2137,25 +2254,25 @@ ALTER TABLE `vehiculos`
 -- AUTO_INCREMENT for table `aplicacion_parte`
 --
 ALTER TABLE `aplicacion_parte`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=283;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=288;
 
 --
 -- AUTO_INCREMENT for table `avances`
 --
 ALTER TABLE `avances`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=619;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=641;
 
 --
 -- AUTO_INCREMENT for table `casos`
 --
 ALTER TABLE `casos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=181;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=192;
 
 --
 -- AUTO_INCREMENT for table `caso_repuestos`
 --
 ALTER TABLE `caso_repuestos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=74;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=85;
 
 --
 -- AUTO_INCREMENT for table `categorias_partes`
@@ -2167,55 +2284,55 @@ ALTER TABLE `categorias_partes`
 -- AUTO_INCREMENT for table `compras_caso`
 --
 ALTER TABLE `compras_caso`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=42;
 
 --
 -- AUTO_INCREMENT for table `fabricante_repuesto`
 --
 ALTER TABLE `fabricante_repuesto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 
 --
 -- AUTO_INCREMENT for table `marcas_moto`
 --
 ALTER TABLE `marcas_moto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT for table `modelos_moto`
 --
 ALTER TABLE `modelos_moto`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=92;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=94;
 
 --
 -- AUTO_INCREMENT for table `movimientos_inventario`
 --
 ALTER TABLE `movimientos_inventario`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=159;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=175;
 
 --
 -- AUTO_INCREMENT for table `partes`
 --
 ALTER TABLE `partes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=86;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=91;
 
 --
 -- AUTO_INCREMENT for table `pendientes`
 --
 ALTER TABLE `pendientes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT for table `reaperturas_caso`
 --
 ALTER TABLE `reaperturas_caso`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT for table `sesiones_trabajo`
 --
 ALTER TABLE `sesiones_trabajo`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=251;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=264;
 
 --
 -- AUTO_INCREMENT for table `tipos_moto`
@@ -2233,7 +2350,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT for table `vehiculos`
 --
 ALTER TABLE `vehiculos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=142;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=149;
 
 --
 -- Constraints for dumped tables

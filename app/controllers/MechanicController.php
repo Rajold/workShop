@@ -182,14 +182,30 @@ class MechanicController extends BaseController
                     (int)$vehicle['id']
                 );
             }
-            if (!empty($vehicle['modelo_moto_id'])) {
+            
+if (!empty($vehicle['modelo_moto_id'])) {
 
-                $partModel = new Part($this->pdo);
+    $partModel = new Part($this->pdo);
 
-                $compatibleParts = $partModel->findByMotorcycleModel(
-                    (int)$vehicle['modelo_moto_id']
-                );
-            }
+    $compatibleParts = $partModel->findByMotorcycleModel(
+        (int)$vehicle['modelo_moto_id']
+    );
+
+    foreach ($compatibleParts as &$compatiblePart) {
+        $fullPart = $partModel->findById(
+            (int)$compatiblePart['id']
+        );
+
+        if ($fullPart) {
+            $compatiblePart['precio_venta'] =
+                (float)$fullPart['precio_venta'];
+        } else {
+            $compatiblePart['precio_venta'] = 0;
+        }
+    }
+
+    unset($compatiblePart);
+}
             $cases = $this->caseModel->findByVehicle($veh_id);
 
             // 🔍 Verificar si hay un caso abierto
