@@ -8,7 +8,7 @@
 
             <div>
                 <h1>Inventario</h1>
-                <p>Gestiona tus repuestos, herramientas y existencias.</p>
+                <p>Gestiona los repuestos, herramientas y existencias.</p>
             </div>
         </div>
     </div>
@@ -32,6 +32,51 @@
     </div>
 </div>
 
+<!-- Estadísticas -->
+<div class="inventory-stats">
+
+    <div class="inventory-stat-card">
+
+        <div class="stat-icon stat-icon-blue">
+            <i class="bi bi-boxes"></i>
+        </div>
+
+        <div>
+            <span>Total artículos</span>
+            <strong><?= $stats['total'] ?></strong>
+        </div>
+
+    </div>
+
+
+    <div class="inventory-stat-card">
+
+        <div class="stat-icon stat-icon-yellow">
+            <i class="bi bi-exclamation-triangle"></i>
+        </div>
+
+        <div>
+            <span>Stock bajo</span>
+            <strong><?= $stats['stock_bajo'] ?></strong>
+        </div>
+
+    </div>
+
+
+    <div class="inventory-stat-card">
+
+        <div class="stat-icon stat-icon-red">
+            <i class="bi bi-x-circle"></i>
+        </div>
+
+        <div>
+            <span>Agotados</span>
+            <strong><?= $stats['agotados'] ?></strong>
+        </div>
+
+    </div>
+
+</div>
 
 <!-- Buscador -->
 <div class="inventory-search-card">
@@ -128,54 +173,6 @@
 
 </div>
 
-
-<!-- Estadísticas -->
-<div class="inventory-stats">
-
-    <div class="inventory-stat-card">
-
-        <div class="stat-icon stat-icon-blue">
-            <i class="bi bi-boxes"></i>
-        </div>
-
-        <div>
-            <span>Total artículos</span>
-            <strong><?= $stats['total'] ?></strong>
-        </div>
-
-    </div>
-
-
-    <div class="inventory-stat-card">
-
-        <div class="stat-icon stat-icon-yellow">
-            <i class="bi bi-exclamation-triangle"></i>
-        </div>
-
-        <div>
-            <span>Stock bajo</span>
-            <strong><?= $stats['stock_bajo'] ?></strong>
-        </div>
-
-    </div>
-
-
-    <div class="inventory-stat-card">
-
-        <div class="stat-icon stat-icon-red">
-            <i class="bi bi-x-circle"></i>
-        </div>
-
-        <div>
-            <span>Agotados</span>
-            <strong><?= $stats['agotados'] ?></strong>
-        </div>
-
-    </div>
-
-</div>
-
-
 <!-- Tabla -->
 <div class="inventory-table-card">
 
@@ -203,6 +200,7 @@
                     <th>Código</th>
                     <th>Artículo</th>
                     <th>Marca</th>
+                    <th>Número de Parte</th>
                     <th>Stock</th>
                     <th>Estado</th>
                     <th class="text-end">Acciones</th>
@@ -356,6 +354,24 @@
 
                         </td>
 
+                        <!-- Marca -->
+                        <td>
+
+                            <?php if (!empty($part['numero_parte'])): ?>
+
+                                <span class="inventory-brand">
+                                    <?= htmlspecialchars($part['numero_parte']) ?>
+                                </span>
+
+                            <?php else: ?>
+
+                                <span class="text-muted">
+                                    —
+                                </span>
+
+                            <?php endif; ?>
+
+                        </td>
 
                         <!-- Stock -->
                         <td>

@@ -56,6 +56,7 @@
 
                 <th>Código</th>
                 <th>Nombre</th>
+                <th>Nümero de parte</th>
                 <th>Stock</th>
                 <th></th>
 
@@ -72,6 +73,7 @@
                     <td><?= htmlspecialchars($part['codigo']) ?></td>
 
                     <td><?= htmlspecialchars($part['nombre']) ?></td>
+                    <td><?= htmlspecialchars($part['numero_parte']) ?></td>
 
                     <td>
 
