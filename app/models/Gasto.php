@@ -45,7 +45,7 @@ class Gasto extends BaseModel
             ':categoria'     => $data['categoria'],
             ':valor'         => $data['valor'],
             ':fecha_gasto'   => $data['fecha_gasto'],
-            ':registrado_por'=> $data['registrado_por'],
+            ':registrado_por' => $data['registrado_por'],
             ':forma_pago'    => $data['forma_pago'],
             ':proveedor'     => $data['proveedor'] ?: null,
             ':observacion'   => $data['observacion'] ?: null,
@@ -57,22 +57,28 @@ class Gasto extends BaseModel
     /**
      * Listar gastos con los nombres de sus responsables.
      */
+
     public function findAll(
         ?string $estado = null,
-        ?string $categoria = null
+        ?string $categoria = null,
+        ?int $registradoPor = null
     ): array {
+        if ($registradoPor !== null && $registradoPor <= 0) {
+            return [];
+        }
+
         $sql = "
-            SELECT
-                g.*,
-                u.nombre AS registrado_por_nombre,
-                a.nombre AS autorizado_por_nombre
-            FROM gastos g
-            INNER JOIN usuarios u
-                ON u.id = g.registrado_por
-            LEFT JOIN usuarios a
-                ON a.id = g.autorizado_por
-            WHERE 1 = 1
-        ";
+        SELECT
+            g.*,
+            u.nombre AS registrado_por_nombre,
+            a.nombre AS autorizado_por_nombre
+        FROM gastos g
+        INNER JOIN usuarios u
+            ON u.id = g.registrado_por
+        LEFT JOIN usuarios a
+            ON a.id = g.autorizado_por
+        WHERE 1 = 1
+    ";
 
         $params = [];
 
@@ -86,6 +92,11 @@ class Gasto extends BaseModel
             $params[':categoria'] = $categoria;
         }
 
+        if ($registradoPor !== null) {
+            $sql .= " AND g.registrado_por = :registrado_por";
+            $params[':registrado_por'] = $registradoPor;
+        }
+
         $sql .= " ORDER BY g.fecha_gasto DESC, g.id DESC";
 
         $stmt = $this->db->prepare($sql);
@@ -93,6 +104,7 @@ class Gasto extends BaseModel
 
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
+
 
     /**
      * Consultar un gasto por su identificador.

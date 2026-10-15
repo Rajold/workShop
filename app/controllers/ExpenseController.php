@@ -40,6 +40,7 @@ class ExpenseController extends BaseController
             'otro',
         ];
 
+        // Validar los filtros recibidos por GET.
         if (!in_array($estado, $estadosPermitidos, true)) {
             $estado = '';
         }
@@ -48,31 +49,35 @@ class ExpenseController extends BaseController
             $categoria = '';
         }
 
+        // Determinar el rol y el usuario actual.
+        $esAdmin = ($_SESSION['user_role'] ?? '') === 'admin';
+        $userId = (int) ($_SESSION['user_id'] ?? 0);
+
+        // Verificar que los usuarios no administradores tengan un ID válido.
+        if (!$esAdmin && $userId <= 0) {
+            $this->error('No se pudo identificar al usuario.');
+            $this->redirect('index.php');
+            return;
+        }
+
+        // Los administradores ven todos los gastos.
+        // Los demás usuarios solo ven los gastos que registraron.
+        $registradoPor = $esAdmin ? null : $userId;
+
         $gastos = $this->expenseService->all(
             $estado !== '' ? $estado : null,
-            $categoria !== '' ? $categoria : null
+            $categoria !== '' ? $categoria : null,
+            $registradoPor
         );
-
-        // Los usuarios que no son administradores solo ven sus gastos.
-        if (($_SESSION['user_role'] ?? '') !== 'admin') {
-            $userId = (int)($_SESSION['user_id'] ?? 0);
-
-            $gastos = array_values(array_filter(
-                $gastos,
-                static fn(array $gasto): bool =>
-                    (int)$gasto['registrado_por'] === $userId
-            ));
-        }
 
         $this->render('expense/index', [
             'title' => 'Gestión de gastos',
             'gastos' => $gastos,
             'estado' => $estado,
             'categoria' => $categoria,
-            'esAdmin' => ($_SESSION['user_role'] ?? '') === 'admin',
+            'esAdmin' => $esAdmin,
         ]);
     }
-
     /**
      * Mostrar formulario de registro.
      */
@@ -239,9 +244,10 @@ class ExpenseController extends BaseController
                 'No tienes permisos para realizar esta operación.'
             );
 
-            $th|is->redirect(
+            $this->redirect(
                 'index.php?controller=expense&action=index'
             );
+            return;
         }
     }
 }

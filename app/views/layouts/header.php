@@ -34,6 +34,10 @@
        href="index.php?controller=expense&action=index">
         Gastos
     </a>
+<a class="nav-link"
+       href="index.php?controller=finance&action=index">
+        Gastos
+    </a>
 </li>
           <?php endif; ?>
         </ul>

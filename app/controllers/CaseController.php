@@ -75,155 +75,130 @@ class CaseController
         echo "Error al procesar el avance";
     }
 
-    // ✅ Cerrar caso
-    // ✅ Cerrar caso
-    public function cerrar(): void
-    {
-        $this->ensureLogged();
+    //  Cerrar caso
+public function cerrar(): void
+{
+    $this->ensureLogged();
 
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST' || empty($_POST['caso_id'])) {
-            echo "<div class='alert alert-danger'>Solicitud inválida.</div>";
-            return;
-        }
+    if (
+        $_SERVER['REQUEST_METHOD'] !== 'POST' ||
+        empty($_POST['caso_id'])
+    ) {
+        echo "<div class='alert alert-danger'>Solicitud inválida.</div>";
+        return;
+    }
 
-        $caseId = (int)$_POST['caso_id'];
-        $mechanicId = (int)$_SESSION['user_id'];
+    $caseId = (int) $_POST['caso_id'];
+    $mechanicId = (int) ($_SESSION['user_id'] ?? 0);
 
-        $precioCobrado = (int)($_POST['precio_cobrado'] ?? 0);
-        $descuento = (int)($_POST['descuento'] ?? 0);
+    $precioCobrado = (int) ($_POST['precio_cobrado'] ?? 0);
+    $descuento = (int) ($_POST['descuento'] ?? 0);
 
-        // Validaciones económicas
-        if ($precioCobrado < 0) {
-            echo "<div class='alert alert-danger'>El precio cobrado no puede ser negativo.</div>";
-            return;
-        }
+    // 1. Validar datos económicos
+    if ($caseId <= 0 || $mechanicId <= 0) {
+        echo "<div class='alert alert-danger'>El caso o el usuario no son válidos.</div>";
+        return;
+    }
 
-        if ($descuento < 0) {
-            echo "<div class='alert alert-danger'>El descuento no puede ser negativo.</div>";
-            return;
-        }
+    if ($precioCobrado < 0) {
+        echo "<div class='alert alert-danger'>El precio cobrado no puede ser negativo.</div>";
+        return;
+    }
 
-        if ($descuento > $precioCobrado) {
-            echo "<div class='alert alert-danger'>El descuento no puede ser mayor que el precio cobrado.</div>";
-            return;
-        }
+    if ($descuento < 0 || $descuento > $precioCobrado) {
+        echo "<div class='alert alert-danger'>El descuento no es válido.</div>";
+        return;
+    }
 
-        // 🔍 Obtener el caso y el vehículo asociado
+    try {
+        $this->pdo->beginTransaction();
+
+        // 2. Obtener el vehículo y comprobar que el caso siga abierto
         $stmt = $this->pdo->prepare("
-        SELECT vehiculo_id
-        FROM casos
-        WHERE id = :id
-        LIMIT 1
-    ");
+            SELECT vehiculo_id
+            FROM casos
+            WHERE id = :id
+              AND estado = 'abierto'
+            LIMIT 1
+            FOR UPDATE
+        ");
 
         $stmt->execute([
             ':id' => $caseId
         ]);
 
-        $vehiculoId = $stmt->fetchColumn();
+        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (!$vehiculoId) {
-            echo "<div class='alert alert-danger'>No se encontró el vehículo asociado al caso.</div>";
+        if (
+            !$resultado ||
+            empty($resultado['vehiculo_id']) ||
+            (int) $resultado['vehiculo_id'] <= 0
+        ) {
+            $this->pdo->rollBack();
+
+            echo "<div class='alert alert-danger'>
+                El caso no existe, ya está cerrado o no tiene un vehículo válido asociado.
+            </div>";
             return;
         }
 
-        /*
-     * ==========================================================
-     * CÁLCULO ECONÓMICO DEL CASO
-     * ==========================================================
-     *
-     * La mano de obra es ingreso, no costo.
-     *
-     * El costo real del caso está compuesto por:
-     *
-     * 1. Costo de los repuestos provenientes del inventario.
-     * 2. Costo de las compras directas realizadas para el caso.
-     *
-     * La utilidad se calcula:
-     *
-     * ingreso real - costo de repuestos
-     */
+        $vehiculoId = (int) $resultado['vehiculo_id'];
 
-        // 🧾 Costo de repuestos provenientes del inventario
+        // 3. Calcular el costo de los repuestos del inventario
         $stmt = $this->pdo->prepare("
-        SELECT COALESCE(
-            SUM(cantidad * costo_unitario),
-            0
-        )
-        FROM caso_repuestos
-        WHERE caso_id = :caso_id
-    ");
+            SELECT COALESCE(
+                SUM(cantidad * costo_unitario),
+                0
+            )
+            FROM caso_repuestos
+            WHERE caso_id = :caso_id
+        ");
 
         $stmt->execute([
             ':caso_id' => $caseId
         ]);
 
-        $costoRepuestosInventario = (float)$stmt->fetchColumn();
+        $costoRepuestosInventario = (float) $stmt->fetchColumn();
 
-
-        // 🛒 Costo de compras directas realizadas para el caso
+        // 4. Calcular el costo de las compras directas del caso
         $stmt = $this->pdo->prepare("
-        SELECT COALESCE(
-            SUM(cantidad * costo_unitario),
-            0
-        )
-        FROM compras_caso
-        WHERE caso_id = :caso_id
-    ");
+            SELECT COALESCE(
+                SUM(cantidad * costo_unitario),
+                0
+            )
+            FROM compras_caso
+            WHERE caso_id = :caso_id
+        ");
 
         $stmt->execute([
             ':caso_id' => $caseId
         ]);
 
-        $costoComprasDirectas = (float)$stmt->fetchColumn();
+        $costoComprasDirectas = (float) $stmt->fetchColumn();
 
-
-        // 💰 Costo total real de repuestos
+        // 5. Calcular el costo total de los repuestos
         $costoTotalRepuestos =
             $costoRepuestosInventario +
             $costoComprasDirectas;
 
+        // 6. Calcular el ingreso neto y la utilidad bruta
+        $ingresoReal = $precioCobrado - $descuento;
 
-        // 💵 Ingreso realmente recibido
-        $ingresoReal =
-            $precioCobrado -
-            $descuento;
+        $utilidad = $ingresoReal - $costoTotalRepuestos;
 
-
-        // 📈 Utilidad bruta del caso
-        $utilidad =
-            $ingresoReal -
-            $costoTotalRepuestos;
-
-
-        // 🕓 Finalizar sesión activa si existe
-        $workSession = new WorkSession($this->pdo);
-
-        $active = $workSession->getActiveByCaseAndMechanic(
-            $caseId,
-            $mechanicId
-        );
-
-        if ($active) {
-            $workSession->end((int)$active['id']);
-        }
-
-
-        // ==========================================================
-        // Cerrar caso y guardar información económica
-        // ==========================================================
-
+        // 7. Cerrar el caso y guardar los valores económicos
         $stmt = $this->pdo->prepare("
-        UPDATE casos
-        SET
-            estado = 'cerrado',
-            precio_cobrado = :precio,
-            descuento = :descuento,
-            utilidad = :utilidad,
-            fecha_cierre = NOW(),
-            cerrado_por = :cerrado_por
-        WHERE id = :id
-    ");
+            UPDATE casos
+            SET
+                estado = 'cerrado',
+                precio_cobrado = :precio,
+                descuento = :descuento,
+                utilidad = :utilidad,
+                fecha_cierre = NOW(),
+                cerrado_por = :cerrado_por
+            WHERE id = :id
+              AND estado = 'abierto'
+        ");
 
         $stmt->execute([
             ':precio' => $precioCobrado,
@@ -233,8 +208,25 @@ class CaseController
             ':id' => $caseId
         ]);
 
+        if ($stmt->rowCount() !== 1) {
+            throw new RuntimeException(
+                'No se pudo cerrar el caso. Verifica si ya fue cerrado.'
+            );
+        }
 
-        // 📝 Registrar avance automático
+        // 8. Finalizar la sesión de trabajo activa, si existe
+        $workSession = new WorkSession($this->pdo);
+
+        $active = $workSession->getActiveByCaseAndMechanic(
+            $caseId,
+            $mechanicId
+        );
+
+        if ($active) {
+            $workSession->end((int) $active['id']);
+        }
+
+        // 9. Registrar el avance automático del cierre
         $this->avanceModel->add(
             $caseId,
             $mechanicId,
@@ -243,17 +235,33 @@ class CaseController
             0
         );
 
+        // 10. Confirmar todos los cambios
+        $this->pdo->commit();
 
-        // 🔁 Redirigir correctamente
+        // 11. Volver a la pantalla del caso
         header(
             'Location: index.php?controller=mechanic&action=viewCase&case_id='
-                . $caseId
-                . '&veh_id='
-                . $vehiculoId
+            . $caseId
+            . '&veh_id='
+            . $vehiculoId
         );
 
         exit;
+
+    } catch (Throwable $e) {
+        if ($this->pdo->inTransaction()) {
+            $this->pdo->rollBack();
+        }
+
+        error_log(
+            'Error al cerrar el caso #' . $caseId . ': ' . $e->getMessage()
+        );
+
+        echo "<div class='alert alert-danger'>
+            Ocurrió un error al cerrar el caso. Revisa el registro de errores del servidor.
+        </div>";
     }
+}
 
     // 🔓 Reabrir un caso cerrado
     public function reabrir(): void

@@ -113,12 +113,28 @@ class ExpenseService
         ]);
     }
 
-    public function all(
-        ?string $estado = null,
-        ?string $categoria = null
-    ): array {
-        return $this->gastoModel->findAll($estado, $categoria);
+  
+/**
+ * para lista gastos aplicando filtros opcionales.
+ *
+ * Si $registradoPor es null, consulta todos los gastos.
+ * Si contiene un ID, consulta únicamente los gastos de ese usuario.
+ */
+public function all(
+    ?string $estado = null,
+    ?string $categoria = null,
+    ?int $registradoPor = null
+): array {
+    if ($registradoPor !== null && $registradoPor <= 0) {
+        return [];
     }
+
+    return $this->gastoModel->findAll(
+        $estado,
+        $categoria,
+        $registradoPor
+    );
+}
 
     public function findById(int $id): ?array
     {
