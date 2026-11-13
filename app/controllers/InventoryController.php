@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 require_once __DIR__ . '/../services/InventoryService.php';
+require_once __DIR__ . '/../models/MovimientoFinanciero.php';
 
 class InventoryController extends BaseController
 {
@@ -917,4 +918,414 @@ public function saveApplications(): void
     );
 }
 
+/**
+ * Mostrar formulario para registrar una compra.
+ */
+public function registerPurchase(): void
+{
+    $this->ensureLogged();
+
+    $stmt = $this->pdo->query("
+        SELECT id, nombre
+        FROM proveedores
+        WHERE activo = 1
+        ORDER BY nombre ASC
+    ");
+    $suppliers = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $stmt = $this->pdo->query("
+        SELECT id, codigo, nombre, tipo, unidad, stock_actual, costo
+        FROM partes
+        WHERE activo = 1
+        ORDER BY nombre ASC
+    ");
+    $parts = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+    $financialModel = new MovimientoFinanciero($this->pdo);
+    $accounts = $financialModel->cuentas();
+
+    $this->render('inventory/register_purchase', [
+        'title' => 'Registrar compra',
+        'suppliers' => $suppliers,
+        'parts' => $parts,
+        'accounts' => $accounts
+    ]);
+}
+
+/**
+ * Guardar una compra y actualizar el inventario.
+ */
+public function savePurchase(): void
+{
+    $this->ensureLogged();
+
+    if (!$this->isPost()) {
+        $this->redirect('index.php?controller=inventory&action=registerPurchase');
+        return;
+    }
+
+    $supplierId = (int)($_POST['proveedor_id'] ?? 0);
+    $paymentType = $_POST['forma_pago'] ?? '';
+    $accountId = (int)($_POST['cuenta_id'] ?? 0);
+    $paidInput = (float)($_POST['valor_pagado'] ?? 0);
+    $observations = trim($_POST['observaciones'] ?? '');
+
+    $partIds = $_POST['parte_id'] ?? [];
+    $quantities = $_POST['cantidad'] ?? [];
+    $unitCosts = $_POST['costo_unitario'] ?? [];
+
+    $allowedPaymentTypes = ['contado', 'credito', 'parcial'];
+
+    if (
+        $supplierId <= 0 ||
+        !in_array($paymentType, $allowedPaymentTypes, true) ||
+        !is_array($partIds) ||
+        !is_array($quantities) ||
+        !is_array($unitCosts) ||
+        count($partIds) === 0 ||
+        count($partIds) !== count($quantities) ||
+        count($partIds) !== count($unitCosts)
+    ) {
+        $this->error('Verifica el proveedor, la forma de pago y los artículos.');
+        $this->redirect('index.php?controller=inventory&action=registerPurchase');
+        return;
+    }
+
+    /*
+     * Validar proveedor.
+     */
+    $stmt = $this->pdo->prepare("
+        SELECT id
+        FROM proveedores
+        WHERE id = :id AND activo = 1
+        LIMIT 1
+    ");
+    $stmt->execute([':id' => $supplierId]);
+
+    if (!$stmt->fetch(PDO::FETCH_ASSOC)) {
+        $this->error('El proveedor seleccionado no existe o está inactivo.');
+        $this->redirect('index.php?controller=inventory&action=registerPurchase');
+        return;
+    }
+
+    /*
+     * Preparar y validar los artículos.
+     */
+    $items = [];
+    $total = 0;
+
+    foreach ($partIds as $i => $partIdValue) {
+        $partId = (int)$partIdValue;
+        $quantity = (float)$quantities[$i];
+        $unitCost = (float)$unitCosts[$i];
+
+        if (
+            $partId <= 0 ||
+            !is_finite($quantity) ||
+            !is_finite($unitCost) ||
+            $quantity <= 0 ||
+            $unitCost < 0
+        ) {
+            $this->error('Hay artículos con cantidades o costos no válidos.');
+            $this->redirect('index.php?controller=inventory&action=registerPurchase');
+            return;
+        }
+
+        $subtotal = round($quantity * $unitCost, 2);
+
+        $items[] = [
+            'parte_id' => $partId,
+            'cantidad' => $quantity,
+            'costo_unitario' => $unitCost,
+            'subtotal' => $subtotal
+        ];
+
+        $total += $subtotal;
+    }
+
+    $total = round($total, 2);
+
+    if ($total <= 0) {
+        $this->error('El total de la compra debe ser mayor que cero.');
+        $this->redirect('index.php?controller=inventory&action=registerPurchase');
+        return;
+    }
+
+    /*
+     * Determinar el pago inicial.
+     */
+    if ($paymentType === 'contado') {
+        $paid = $total;
+    } elseif ($paymentType === 'credito') {
+        $paid = 0;
+    } else {
+        $paid = round($paidInput, 2);
+
+        if ($paid <= 0 || $paid >= $total) {
+            $this->error('En una compra parcial, el pago debe ser mayor que cero y menor que el total.');
+            $this->redirect('index.php?controller=inventory&action=registerPurchase');
+            return;
+        }
+    }
+
+    if ($paid > 0 && $accountId <= 0) {
+        $this->error('Selecciona la cuenta financiera desde la que se realizará el pago.');
+        $this->redirect('index.php?controller=inventory&action=registerPurchase');
+        return;
+    }
+
+    $balance = round($total - $paid, 2);
+
+    $status = $balance <= 0
+        ? 'pagada'
+        : ($paid > 0 ? 'parcial' : 'pendiente');
+
+    $userId = (int)$_SESSION['user_id'];
+
+    try {
+        $this->pdo->beginTransaction();
+
+        /*
+         * Crear encabezado de compra.
+         */
+        $stmt = $this->pdo->prepare("
+            INSERT INTO compras_inventario (
+                proveedor_id,
+                usuario_id,
+                forma_pago,
+                total,
+                valor_pagado,
+                saldo_pendiente,
+                estado,
+                observaciones
+            ) VALUES (
+                :proveedor_id,
+                :usuario_id,
+                :forma_pago,
+                :total,
+                :valor_pagado,
+                :saldo_pendiente,
+                :estado,
+                :observaciones
+            )
+        ");
+
+        $stmt->execute([
+            ':proveedor_id' => $supplierId,
+            ':usuario_id' => $userId,
+            ':forma_pago' => $paymentType,
+            ':total' => $total,
+            ':valor_pagado' => $paid,
+            ':saldo_pendiente' => $balance,
+            ':estado' => $status,
+            ':observaciones' => $observations !== '' ? $observations : null
+        ]);
+
+        $purchaseId = (int)$this->pdo->lastInsertId();
+
+        /*
+         * Preparar inserciones de detalle y movimiento.
+         */
+        $detailStmt = $this->pdo->prepare("
+            INSERT INTO detalle_compra_inventario (
+                compra_id,
+                parte_id,
+                cantidad,
+                costo_unitario,
+                subtotal
+            ) VALUES (
+                :compra_id,
+                :parte_id,
+                :cantidad,
+                :costo_unitario,
+                :subtotal
+            )
+        ");
+
+        $movementStmt = $this->pdo->prepare("
+            INSERT INTO movimientos_inventario (
+                parte_id,
+                detalle_compra_id,
+                usuario_id,
+                caso_id,
+                tipo,
+                motivo,
+                cantidad,
+                stock_resultante,
+                costo_unitario,
+                observacion
+            ) VALUES (
+                :parte_id,
+                :detalle_compra_id,
+                :usuario_id,
+                NULL,
+                'compra',
+                'Compra de inventario',
+                :cantidad,
+                :stock_resultante,
+                :costo_unitario,
+                :observacion
+            )
+        ");
+
+        foreach ($items as $item) {
+            /*
+             * Bloquear el artículo para evitar cálculos
+             * simultáneos sobre el mismo stock y costo.
+             */
+            $lockStmt = $this->pdo->prepare("
+                SELECT id, stock_actual, costo
+                FROM partes
+                WHERE id = :id AND activo = 1
+                FOR UPDATE
+            ");
+
+            $lockStmt->execute([
+                ':id' => $item['parte_id']
+            ]);
+
+            $part = $lockStmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$part) {
+                throw new Exception(
+                    'Uno de los artículos no existe o está inactivo.'
+                );
+            }
+
+            $oldStock = (float)$part['stock_actual'];
+            $oldCost = (float)$part['costo'];
+
+            $newStock = $oldStock + $item['cantidad'];
+
+            /*
+             * Costo promedio ponderado.
+             */
+            if ($newStock > 0) {
+                $newCost = (
+                    ($oldStock * $oldCost) +
+                    ($item['cantidad'] * $item['costo_unitario'])
+                ) / $newStock;
+            } else {
+                $newCost = $item['costo_unitario'];
+            }
+
+            $newCost = round($newCost, 2);
+
+            /*
+             * Insertar detalle de compra.
+             */
+            $detailStmt->execute([
+                ':compra_id' => $purchaseId,
+                ':parte_id' => $item['parte_id'],
+                ':cantidad' => $item['cantidad'],
+                ':costo_unitario' => $item['costo_unitario'],
+                ':subtotal' => $item['subtotal']
+            ]);
+
+            $detailId = (int)$this->pdo->lastInsertId();
+
+            /*
+             * Actualizar stock y costo promedio.
+             */
+            if (!$this->partModel->updateInventory(
+                $item['parte_id'],
+                $newStock,
+                $newCost
+            )) {
+                throw new Exception(
+                    'No fue posible actualizar el inventario de un artículo.'
+                );
+            }
+
+            /*
+             * Registrar movimiento vinculado al detalle.
+             */
+            $movementStmt->execute([
+                ':parte_id' => $item['parte_id'],
+                ':detalle_compra_id' => $detailId,
+                ':usuario_id' => $userId,
+                ':cantidad' => $item['cantidad'],
+                ':stock_resultante' => $newStock,
+                ':costo_unitario' => $item['costo_unitario'],
+                ':observacion' => 'Compra #' . $purchaseId
+            ]);
+        }
+
+        /*
+         * Registrar el pago inicial, si existe.
+         */
+        if ($paid > 0) {
+            $financialModel = new MovimientoFinanciero($this->pdo);
+
+            $financialMovementId = $financialModel->registrar(
+                $accountId,
+                'egreso',
+                'salida',
+                $paid,
+                'Pago de compra de inventario #' . $purchaseId,
+                $userId,
+                null,
+                null,
+                null,
+                'COMPRA-' . $purchaseId
+            );
+
+            if (!$financialMovementId) {
+                throw new Exception(
+                    'No fue posible registrar el movimiento financiero.'
+                );
+            }
+
+            $paymentStmt = $this->pdo->prepare("
+                INSERT INTO pagos_compra_inventario (
+                    compra_id,
+                    cuenta_id,
+                    usuario_id,
+                    movimiento_financiero_id,
+                    monto,
+                    observacion
+                ) VALUES (
+                    :compra_id,
+                    :cuenta_id,
+                    :usuario_id,
+                    :movimiento_id,
+                    :monto,
+                    :observacion
+                )
+            ");
+
+            $paymentStmt->execute([
+                ':compra_id' => $purchaseId,
+                ':cuenta_id' => $accountId,
+                ':usuario_id' => $userId,
+                ':movimiento_id' => $financialMovementId,
+                ':monto' => $paid,
+                ':observacion' => 'Pago inicial de compra'
+            ]);
+        }
+
+        $this->pdo->commit();
+
+        $this->success(
+            'Compra #' . $purchaseId . ' registrada correctamente.'
+        );
+
+        $this->redirect('index.php?controller=inventory&action=index');
+        return;
+
+    } catch (Throwable $e) {
+        if ($this->pdo->inTransaction()) {
+            $this->pdo->rollBack();
+        }
+
+        error_log('Error al registrar compra: ' . $e->getMessage());
+
+        $this->error(
+            'No fue posible registrar la compra. Revisa los datos e inténtalo nuevamente.'
+        );
+
+        $this->redirect('index.php?controller=inventory&action=registerPurchase');
+        return;
+    }
+}
 }

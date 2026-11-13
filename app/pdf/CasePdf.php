@@ -276,168 +276,113 @@ $this->Ln(3);
 
 
        // REPUESTOS UTILIZADOS
-        // Mostrar la sección únicamente si existen repuestos
+        
+        // REPUESTOS UTILIZADOS Y COMPRAS DIRECTAS
+        // Ambas fuentes se presentan en una sola tabla.
 
-        if (!empty($caseParts)) {
+        if (!empty($caseParts) || !empty($casePurchases)) {
 
             $this->titulo("REPUESTOS UTILIZADOS");
 
             // Anchos de columnas: total 190 mm
             $anchoFecha = 25;
-            $anchoRepuesto = 65;
+            $anchoDescripcion = 65;
             $anchoCantidad = 20;
             $anchoPrecio = 40;
             $anchoSubtotal = 40;
 
-            // Encabezados
-            $this->SetFont('Arial', 'B', 9);
-
-            $this->Cell(
+            // Encabezados de la tabla
+            $dibujarEncabezado = function () use (
                 $anchoFecha,
-                8,
-                $this->txt('Fecha'),
-                1,
-                0,
-                'C'
-            );
-
-            $this->Cell(
-                $anchoRepuesto,
-                8,
-                $this->txt('Repuesto'),
-                1,
-                0,
-                'L'
-            );
-
-            $this->Cell(
+                $anchoDescripcion,
                 $anchoCantidad,
-                8,
-                $this->txt('Cant.'),
-                1,
-                0,
-                'C'
-            );
-
-            $this->Cell(
                 $anchoPrecio,
-                8,
-                $this->txt('Precio unit.'),
-                1,
-                0,
-                'R'
-            );
+                $anchoSubtotal
+            ) {
+                $this->SetFont('Arial', 'B', 9);
 
-            $this->Cell(
-                $anchoSubtotal,
-                8,
-                $this->txt('Subtotal'),
-                1,
-                1,
-                'R'
-            );
+                $this->Cell($anchoFecha, 8, $this->txt('Fecha'), 1, 0, 'C');
+                $this->Cell($anchoDescripcion, 8, $this->txt('Descripción'), 1, 0, 'L');
+                $this->Cell($anchoCantidad, 8, $this->txt('Cant.'), 1, 0, 'C');
+                $this->Cell($anchoPrecio, 8, $this->txt('Precio unit.'), 1, 0, 'R');
+                $this->Cell($anchoSubtotal, 8, $this->txt('Subtotal'), 1, 1, 'R');
 
-            $this->SetFont('Arial', '', 9);
+                $this->SetFont('Arial', '', 9);
+            };
+
+            $dibujarEncabezado();
+
+            // Unificar los registros de ambos módulos
+            $articulos = [];
 
             foreach ($caseParts as $repuesto) {
-
-                // Fecha de registro del repuesto en el caso
-                $fecha = !empty($repuesto['created_at'])
-                    ? date('d/m/Y', strtotime($repuesto['created_at']))
-                    : '-';
-
-                // Nombre y marca
                 $nombre = (string)($repuesto['nombre'] ?? '');
 
                 if (!empty($repuesto['marca'])) {
                     $nombre .= ' - ' . $repuesto['marca'];
                 }
 
-                // Cantidad
+                $articulos[] = [
+                    'fecha' => $repuesto['created_at'] ?? null,
+                    'descripcion' => $nombre,
+                    'cantidad' => (float)($repuesto['cantidad'] ?? 0),
+                    'precio' => (float)($repuesto['precio_unitario'] ?? 0),
+                    'subtotal' => (float)($repuesto['subtotal'] ?? 0)
+                ];
+            }
+
+            foreach ($casePurchases as $purchase) {
+                $articulos[] = [
+                    'fecha' => $purchase['fecha'] ?? null,
+                    'descripcion' => (string)($purchase['descripcion'] ?? ''),
+                    'cantidad' => (float)($purchase['cantidad'] ?? 0),
+                    'precio' => (float)($purchase['precio_unitario'] ?? 0),
+                    'subtotal' => (float)($purchase['subtotal'] ?? 0)
+                ];
+            }
+
+            // Ordenar todos los registros por fecha
+            usort($articulos, function ($a, $b) {
+                return strtotime($a['fecha'] ?? '') <=> strtotime($b['fecha'] ?? '');
+            });
+
+            // Dibujar todas las filas
+            foreach ($articulos as $articulo) {
+
+                $fecha = !empty($articulo['fecha'])
+                    ? date('d/m/Y', strtotime($articulo['fecha']))
+                    : '-';
+
+                $descripcion = $articulo['descripcion'];
+
                 $cantidad = number_format(
-                    (float)$repuesto['cantidad'],
+                    $articulo['cantidad'],
                     2,
                     ',',
                     '.'
                 );
 
-                // Precios
-                $precio = $this->dinero(
-                    $repuesto['precio_unitario'] ?? 0
-                );
+                $precio = $this->dinero($articulo['precio']);
+                $subtotal = $this->dinero($articulo['subtotal']);
 
-                $subtotal = $this->dinero(
-                    $repuesto['subtotal'] ?? 0
-                );
-
-                // Calcular altura aproximada según longitud del nombre
-                $lineasNombre = max(
+                // Calcular altura según longitud de descripción
+                $lineas = max(
                     1,
                     (int)ceil(
-                        $this->GetStringWidth($this->txt($nombre))
-                        / ($anchoRepuesto - 2)
+                        $this->GetStringWidth($this->txt($descripcion))
+                        / ($anchoDescripcion - 2)
                     )
                 );
 
-                $altura = max(8, $lineasNombre * 5);
+                $altura = max(8, $lineas * 5);
 
-                // Comprobar si la fila cabe en la página actual
+                // Comprobar espacio disponible
                 if (
                     $this->GetY() + $altura >
                     $this->GetPageHeight() - 20
                 ) {
-
                     $this->AddPage();
-
-                    // Repetir encabezados en la nueva página
-                    $this->SetFont('Arial', 'B', 9);
-
-                    $this->Cell(
-                        $anchoFecha,
-                        8,
-                        $this->txt('Fecha'),
-                        1,
-                        0,
-                        'C'
-                    );
-
-                    $this->Cell(
-                        $anchoRepuesto,
-                        8,
-                        $this->txt('Repuesto'),
-                        1,
-                        0,
-                        'L'
-                    );
-
-                    $this->Cell(
-                        $anchoCantidad,
-                        8,
-                        $this->txt('Cant.'),
-                        1,
-                        0,
-                        'C'
-                    );
-
-                    $this->Cell(
-                        $anchoPrecio,
-                        8,
-                        $this->txt('Precio unit.'),
-                        1,
-                        0,
-                        'R'
-                    );
-
-                    $this->Cell(
-                        $anchoSubtotal,
-                        8,
-                        $this->txt('Subtotal'),
-                        1,
-                        1,
-                        'R'
-                    );
-
-                    $this->SetFont('Arial', '', 9);
+                    $dibujarEncabezado();
                 }
 
                 $x = $this->GetX();
@@ -453,32 +398,29 @@ $this->Ln(3);
                     'C'
                 );
 
-                // Nombre del repuesto con ajuste de línea
-                $xRepuesto = $this->GetX();
+                // Descripción
+                $xDescripcion = $this->GetX();
 
                 $this->Rect(
-                    $xRepuesto,
+                    $xDescripcion,
                     $y,
-                    $anchoRepuesto,
+                    $anchoDescripcion,
                     $altura
                 );
 
-                $this->SetXY(
-                    $xRepuesto + 1,
-                    $y + 1
-                );
+                $this->SetXY($xDescripcion + 1, $y + 1);
 
                 $this->MultiCell(
-                    $anchoRepuesto - 2,
+                    $anchoDescripcion - 2,
                     5,
-                    $this->txt($nombre),
+                    $this->txt($descripcion),
                     0,
                     'L'
                 );
 
                 // Cantidad
                 $this->SetXY(
-                    $x + $anchoFecha + $anchoRepuesto,
+                    $x + $anchoFecha + $anchoDescripcion,
                     $y
                 );
 
@@ -515,100 +457,9 @@ $this->Ln(3);
             $this->Ln(3);
         }
 
-        // COMPRAS DIRECTAS
 
-        if (!empty($casePurchases)) {
 
-            $this->titulo("COMPRAS DIRECTAS");
-
-            $this->SetFont('Arial', 'B', 9);
-
-            $this->Cell(
-                75,
-                8,
-                $this->txt('Descripción'),
-                1,
-                0,
-                'L'
-            );
-
-            $this->Cell(
-                20,
-                8,
-                $this->txt('Cant.'),
-                1,
-                0,
-                'C'
-            );
-
-            $this->Cell(
-                40,
-                8,
-                $this->txt('Precio unit.'),
-                1,
-                0,
-                'R'
-            );
-
-            $this->Cell(
-                45,
-                8,
-                $this->txt('Subtotal'),
-                1,
-                1,
-                'R'
-            );
-
-            $this->SetFont('Arial', '', 9);
-
-            foreach ($casePurchases as $purchase) {
-
-                $this->Cell(
-                    75,
-                    8,
-                    $this->txt($purchase['descripcion']),
-                    1,
-                    0,
-                    'L'
-                );
-
-                $this->Cell(
-                    20,
-                    8,
-                    number_format(
-                        (float)$purchase['cantidad'],
-                        0,
-                        ',',
-                        '.'
-                    ),
-                    1,
-                    0,
-                    'C'
-                );
-
-                $this->Cell(
-                    40,
-                    8,
-                    $this->dinero($purchase['precio_unitario']),
-                    1,
-                    0,
-                    'R'
-                );
-
-                $this->Cell(
-                    45,
-                    8,
-                    $this->dinero($purchase['subtotal']),
-                    1,
-                    1,
-                    'R'
-                );
-            }
-
-            $this->Ln(3);
-        }
-
-        // RESUMEN DEL SERVICIO
+        // $this->AddPage();
 
         $this->titulo("RESUMEN DEL SERVICIO");
 
