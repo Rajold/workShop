@@ -22,6 +22,7 @@ class MechanicController extends BaseController
         require_once __DIR__ . '/../models/Avance.php';
         require_once __DIR__ . '/../models/CasePart.php';
         require_once __DIR__ . '/../models/CasePurchase.php';
+        require_once __DIR__ . '/../models/MovimientoFinanciero.php';
 
         $this->vehicleModel = new Vehicle($pdo);
         $this->caseModel = new RepairCase($pdo);
@@ -160,17 +161,16 @@ class MechanicController extends BaseController
             'total_venta_teorica' => 0,
             'utilidad_repuestos' => 0
         ];
-        $financial = [
-            'mano_obra' => 0,
-            'repuestos_venta' => 0,
-            'repuestos_costo' => 0,
-            'compras_directas_venta' => 0,
-            'compras_directas_costo' => 0,
-            'total_repuestos_venta' => 0,
-            'total_repuestos_costo' => 0,
-            'total_venta_teorica' => 0,
-            'utilidad_repuestos' => 0
-        ];
+
+        // Datos financieros de pagos del cliente
+        $movimientoModel = new MovimientoFinanciero($this->pdo);
+
+        $cuentasPago = [];
+        $pagos = [];
+        $totalPagado = 0.0;
+        $valorNeto = null;
+        $saldoPendiente = null;
+        $tokenPago = null;
 
         if ($veh_id) {
             // 🚗 Obtener datos del vehículo y sus casos
@@ -182,30 +182,30 @@ class MechanicController extends BaseController
                     (int)$vehicle['id']
                 );
             }
-            
-if (!empty($vehicle['modelo_moto_id'])) {
 
-    $partModel = new Part($this->pdo);
+            if (!empty($vehicle['modelo_moto_id'])) {
 
-    $compatibleParts = $partModel->findByMotorcycleModel(
-        (int)$vehicle['modelo_moto_id']
-    );
+                $partModel = new Part($this->pdo);
 
-    foreach ($compatibleParts as &$compatiblePart) {
-        $fullPart = $partModel->findById(
-            (int)$compatiblePart['id']
-        );
+                $compatibleParts = $partModel->findByMotorcycleModel(
+                    (int)$vehicle['modelo_moto_id']
+                );
 
-        if ($fullPart) {
-            $compatiblePart['precio_venta'] =
-                (float)$fullPart['precio_venta'];
-        } else {
-            $compatiblePart['precio_venta'] = 0;
-        }
-    }
+                foreach ($compatibleParts as &$compatiblePart) {
+                    $fullPart = $partModel->findById(
+                        (int)$compatiblePart['id']
+                    );
 
-    unset($compatiblePart);
-}
+                    if ($fullPart) {
+                        $compatiblePart['precio_venta'] =
+                            (float)$fullPart['precio_venta'];
+                    } else {
+                        $compatiblePart['precio_venta'] = 0;
+                    }
+                }
+
+                unset($compatiblePart);
+            }
             $cases = $this->caseModel->findByVehicle($veh_id);
 
             // 🔍 Verificar si hay un caso abierto
@@ -224,16 +224,16 @@ if (!empty($vehicle['modelo_moto_id'])) {
             }
 
             // ⏱ Calcular tiempo del caso directamente desde MySQL
-$tiempoCaso = null;
+            $tiempoCaso = null;
 
-if ($caso && !empty($caso['fecha_ingreso'])) {
+            if ($caso && !empty($caso['fecha_ingreso'])) {
 
-    if (
-        $caso['estado'] === 'cerrado' &&
-        !empty($caso['fecha_cierre'])
-    ) {
+                if (
+                    $caso['estado'] === 'cerrado' &&
+                    !empty($caso['fecha_cierre'])
+                ) {
 
-        $stmtTiempo = $this->pdo->prepare("
+                    $stmtTiempo = $this->pdo->prepare("
             SELECT GREATEST(
                 0,
                 TIMESTAMPDIFF(
@@ -246,15 +246,14 @@ if ($caso && !empty($caso['fecha_ingreso'])) {
             WHERE id = ?
         ");
 
-        $stmtTiempo->execute([(int)$caso['id']]);
+                    $stmtTiempo->execute([(int)$caso['id']]);
 
-        $segundos = (int)$stmtTiempo->fetchColumn();
+                    $segundos = (int)$stmtTiempo->fetchColumn();
 
-        $contadorActivo = false;
+                    $contadorActivo = false;
+                } else {
 
-    } else {
-
-        $stmtTiempo = $this->pdo->prepare("
+                    $stmtTiempo = $this->pdo->prepare("
             SELECT GREATEST(
                 0,
                 TIMESTAMPDIFF(
@@ -267,18 +266,18 @@ if ($caso && !empty($caso['fecha_ingreso'])) {
             WHERE id = ?
         ");
 
-        $stmtTiempo->execute([(int)$caso['id']]);
+                    $stmtTiempo->execute([(int)$caso['id']]);
 
-        $segundos = (int)$stmtTiempo->fetchColumn();
+                    $segundos = (int)$stmtTiempo->fetchColumn();
 
-        $contadorActivo = true;
-    }
+                    $contadorActivo = true;
+                }
 
-    $tiempoCaso = [
-        'segundos' => $segundos,
-        'activo' => $contadorActivo
-    ];
-}
+                $tiempoCaso = [
+                    'segundos' => $segundos,
+                    'activo' => $contadorActivo
+                ];
+            }
 
 
 
@@ -333,6 +332,52 @@ if ($caso && !empty($caso['fecha_ingreso'])) {
                 $financial['utilidad_repuestos'] =
                     $financial['total_repuestos_venta'] -
                     $financial['total_repuestos_costo'];
+
+
+                // PAGOS Y ABONOS DEL CLIENTE
+                $cuentasPago = $movimientoModel->cuentas();
+
+                $stmtPagos = $this->pdo->prepare("
+    SELECT
+        p.id,
+        p.monto,
+        p.fecha_pago,
+        p.observacion,
+        c.nombre AS cuenta_nombre,
+        u.nombre AS usuario_nombre
+    FROM pagos_casos p
+    INNER JOIN cuentas_financieras c
+        ON c.id = p.cuenta_id
+    INNER JOIN usuarios u
+        ON u.id = p.registrado_por
+    WHERE p.caso_id = :caso_id
+    ORDER BY p.fecha_pago DESC, p.id DESC
+");
+
+                $stmtPagos->execute([
+                    ':caso_id' => $caseId
+                ]);
+
+                $pagos = $stmtPagos->fetchAll(PDO::FETCH_ASSOC);
+
+                $totalPagado = 0.0;
+
+                foreach ($pagos as $pago) {
+                    $totalPagado += (float)$pago['monto'];
+                }
+
+                $valorNeto = null;
+                $saldoPendiente = null;
+
+                if ($caso['estado'] === 'cerrado') {
+                    $valorNeto =
+                        (float)$caso['precio_cobrado'] -
+                        (float)$caso['descuento'];
+
+                    $saldoPendiente = $valorNeto - $totalPagado;
+                }
+
+                $tokenPago = bin2hex(random_bytes(16));
             }
         }
 
@@ -396,6 +441,14 @@ if ($caso && !empty($caso['fecha_ingreso'])) {
             'financial' => $financial,
             'pendingItems' => $pendingItems,
             'tiempoCaso' => $tiempoCaso,
+
+            // Datos de pagos y abonos
+            'cuentasPago' => $cuentasPago,
+            'pagos' => $pagos,
+            'totalPagado' => $totalPagado,
+            'valorNeto' => $valorNeto,
+            'saldoPendiente' => $saldoPendiente,
+            'tokenPago' => $tokenPago,
 
         ]);
     }

@@ -3,6 +3,7 @@ require_once __DIR__ . '/../models/RepairCase.php';
 require_once __DIR__ . '/../models/Avance.php';
 require_once __DIR__ . '/../models/WorkSession.php';
 require_once __DIR__ . '/../models/CasePurchase.php';
+require_once __DIR__ . '/../models/MovimientoFinanciero.php';
 
 class CaseController
 {
@@ -10,6 +11,7 @@ class CaseController
     private RepairCase $caseModel;
     private Avance $avanceModel;
     private CasePurchase $casePurchaseModel;
+    private MovimientoFinanciero $movimientoModel;
 
     public function __construct(PDO $pdo)
     {
@@ -21,6 +23,7 @@ class CaseController
         $this->caseModel = new RepairCase($pdo);
         $this->avanceModel = new Avance($pdo);
         $this->casePurchaseModel = new CasePurchase($pdo);
+        $this->movimientoModel = new MovimientoFinanciero($pdo);
     }
 
     private function ensureLogged(): void
@@ -32,6 +35,7 @@ class CaseController
     }
 
     // Mostrar detalles del caso y formulario de avances
+    // Mostrar detalles del caso, avances, pagos e historial
     public function ver(): void
     {
         $this->ensureLogged();
@@ -41,17 +45,67 @@ class CaseController
             return;
         }
 
-        $id = (int)$_GET['id'];
+        $id = (int) $_GET['id'];
+
         $caso = $this->caseModel->findById($id);
-        $avances = $this->avanceModel->getByCase($id);
 
         if (!$caso) {
             echo "Caso no encontrado";
             return;
         }
 
-        // ✅ Obtener el historial de casos del mismo vehículo
-        $historial = $this->caseModel->getHistoryByVehicleId((int)$caso['vehiculo_id']);
+        $avances = $this->avanceModel->getByCase($id);
+
+        $historial = $this->caseModel->getHistoryByVehicleId(
+            (int) $caso['vehiculo_id']
+        );
+
+        // Cuentas activas para recibir abonos
+        $cuentasPago = $this->movimientoModel->cuentas();
+
+        // Historial de pagos de esta reparación
+        $stmt = $this->pdo->prepare("
+        SELECT
+            p.id,
+            p.monto,
+            p.fecha_pago,
+            p.observacion,
+            c.nombre AS cuenta_nombre,
+            u.nombre AS usuario_nombre
+        FROM pagos_casos p
+        INNER JOIN cuentas_financieras c
+            ON c.id = p.cuenta_id
+        INNER JOIN usuarios u
+            ON u.id = p.registrado_por
+        WHERE p.caso_id = :caso_id
+        ORDER BY p.fecha_pago DESC, p.id DESC
+    ");
+
+        $stmt->execute([':caso_id' => $id]);
+
+        $pagos = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        // Total abonado
+        $totalPagado = 0.0;
+
+        foreach ($pagos as $pago) {
+            $totalPagado += (float) $pago['monto'];
+        }
+
+        // Valor neto y saldo pendiente
+        $valorNeto = null;
+        $saldoPendiente = null;
+
+        if ($caso['estado'] === 'cerrado') {
+            $valorNeto =
+                (float) $caso['precio_cobrado']
+                - (float) $caso['descuento'];
+
+            $saldoPendiente = $valorNeto - $totalPagado;
+        }
+
+        // Token para evitar que un mismo envío se procese dos veces
+        $tokenPago = bin2hex(random_bytes(16));
 
         require __DIR__ . '/../views/casos/ver.php';
     }
@@ -76,45 +130,45 @@ class CaseController
     }
 
     //  Cerrar caso
-public function cerrar(): void
-{
-    $this->ensureLogged();
+    public function cerrar(): void
+    {
+        $this->ensureLogged();
 
-    if (
-        $_SERVER['REQUEST_METHOD'] !== 'POST' ||
-        empty($_POST['caso_id'])
-    ) {
-        echo "<div class='alert alert-danger'>Solicitud inválida.</div>";
-        return;
-    }
+        if (
+            $_SERVER['REQUEST_METHOD'] !== 'POST' ||
+            empty($_POST['caso_id'])
+        ) {
+            echo "<div class='alert alert-danger'>Solicitud inválida.</div>";
+            return;
+        }
 
-    $caseId = (int) $_POST['caso_id'];
-    $mechanicId = (int) ($_SESSION['user_id'] ?? 0);
+        $caseId = (int) $_POST['caso_id'];
+        $mechanicId = (int) ($_SESSION['user_id'] ?? 0);
 
-    $precioCobrado = (int) ($_POST['precio_cobrado'] ?? 0);
-    $descuento = (int) ($_POST['descuento'] ?? 0);
+        $precioCobrado = (int) ($_POST['precio_cobrado'] ?? 0);
+        $descuento = (int) ($_POST['descuento'] ?? 0);
 
-    // 1. Validar datos económicos
-    if ($caseId <= 0 || $mechanicId <= 0) {
-        echo "<div class='alert alert-danger'>El caso o el usuario no son válidos.</div>";
-        return;
-    }
+        // 1. Validar datos económicos
+        if ($caseId <= 0 || $mechanicId <= 0) {
+            echo "<div class='alert alert-danger'>El caso o el usuario no son válidos.</div>";
+            return;
+        }
 
-    if ($precioCobrado < 0) {
-        echo "<div class='alert alert-danger'>El precio cobrado no puede ser negativo.</div>";
-        return;
-    }
+        if ($precioCobrado < 0) {
+            echo "<div class='alert alert-danger'>El precio cobrado no puede ser negativo.</div>";
+            return;
+        }
 
-    if ($descuento < 0 || $descuento > $precioCobrado) {
-        echo "<div class='alert alert-danger'>El descuento no es válido.</div>";
-        return;
-    }
+        if ($descuento < 0 || $descuento > $precioCobrado) {
+            echo "<div class='alert alert-danger'>El descuento no es válido.</div>";
+            return;
+        }
 
-    try {
-        $this->pdo->beginTransaction();
+        try {
+            $this->pdo->beginTransaction();
 
-        // 2. Obtener el vehículo y comprobar que el caso siga abierto
-        $stmt = $this->pdo->prepare("
+            // 2. Obtener el vehículo y comprobar que el caso siga abierto
+            $stmt = $this->pdo->prepare("
             SELECT vehiculo_id
             FROM casos
             WHERE id = :id
@@ -123,29 +177,29 @@ public function cerrar(): void
             FOR UPDATE
         ");
 
-        $stmt->execute([
-            ':id' => $caseId
-        ]);
+            $stmt->execute([
+                ':id' => $caseId
+            ]);
 
-        $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
+            $resultado = $stmt->fetch(PDO::FETCH_ASSOC);
 
-        if (
-            !$resultado ||
-            empty($resultado['vehiculo_id']) ||
-            (int) $resultado['vehiculo_id'] <= 0
-        ) {
-            $this->pdo->rollBack();
+            if (
+                !$resultado ||
+                empty($resultado['vehiculo_id']) ||
+                (int) $resultado['vehiculo_id'] <= 0
+            ) {
+                $this->pdo->rollBack();
 
-            echo "<div class='alert alert-danger'>
+                echo "<div class='alert alert-danger'>
                 El caso no existe, ya está cerrado o no tiene un vehículo válido asociado.
             </div>";
-            return;
-        }
+                return;
+            }
 
-        $vehiculoId = (int) $resultado['vehiculo_id'];
+            $vehiculoId = (int) $resultado['vehiculo_id'];
 
-        // 3. Calcular el costo de los repuestos del inventario
-        $stmt = $this->pdo->prepare("
+            // 3. Calcular el costo de los repuestos del inventario
+            $stmt = $this->pdo->prepare("
             SELECT COALESCE(
                 SUM(cantidad * costo_unitario),
                 0
@@ -154,14 +208,14 @@ public function cerrar(): void
             WHERE caso_id = :caso_id
         ");
 
-        $stmt->execute([
-            ':caso_id' => $caseId
-        ]);
+            $stmt->execute([
+                ':caso_id' => $caseId
+            ]);
 
-        $costoRepuestosInventario = (float) $stmt->fetchColumn();
+            $costoRepuestosInventario = (float) $stmt->fetchColumn();
 
-        // 4. Calcular el costo de las compras directas del caso
-        $stmt = $this->pdo->prepare("
+            // 4. Calcular el costo de las compras directas del caso
+            $stmt = $this->pdo->prepare("
             SELECT COALESCE(
                 SUM(cantidad * costo_unitario),
                 0
@@ -170,24 +224,42 @@ public function cerrar(): void
             WHERE caso_id = :caso_id
         ");
 
-        $stmt->execute([
-            ':caso_id' => $caseId
-        ]);
+            $stmt->execute([
+                ':caso_id' => $caseId
+            ]);
 
-        $costoComprasDirectas = (float) $stmt->fetchColumn();
+            $costoComprasDirectas = (float) $stmt->fetchColumn();
 
-        // 5. Calcular el costo total de los repuestos
-        $costoTotalRepuestos =
-            $costoRepuestosInventario +
-            $costoComprasDirectas;
+            // 5. Calcular el costo total de los repuestos
+            $costoTotalRepuestos =
+                $costoRepuestosInventario +
+                $costoComprasDirectas;
 
-        // 6. Calcular el ingreso neto y la utilidad bruta
-        $ingresoReal = $precioCobrado - $descuento;
+            // 6. Calcular el ingreso neto y la utilidad bruta
+            $ingresoReal = $precioCobrado - $descuento;
 
-        $utilidad = $ingresoReal - $costoTotalRepuestos;
+            // Comprobar que los anticipos no superen el valor neto
+            $stmt = $this->pdo->prepare("
+    SELECT COALESCE(SUM(monto), 0)
+    FROM pagos_casos
+    WHERE caso_id = :caso_id
+");
 
-        // 7. Cerrar el caso y guardar los valores económicos
-        $stmt = $this->pdo->prepare("
+            $stmt->execute([':caso_id' => $caseId]);
+
+            $totalAbonado = (float) $stmt->fetchColumn();
+
+            if ($totalAbonado > $ingresoReal) {
+                throw new RuntimeException(
+                    'No se puede cerrar la reparación: los anticipos recibidos '
+                        . 'superan el valor neto que se va a cobrar.'
+                );
+            }
+
+            $utilidad = $ingresoReal - $costoTotalRepuestos;
+
+            // 7. Cerrar el caso y guardar los valores económicos
+            $stmt = $this->pdo->prepare("
             UPDATE casos
             SET
                 estado = 'cerrado',
@@ -200,68 +272,67 @@ public function cerrar(): void
               AND estado = 'abierto'
         ");
 
-        $stmt->execute([
-            ':precio' => $precioCobrado,
-            ':descuento' => $descuento,
-            ':utilidad' => $utilidad,
-            ':cerrado_por' => $mechanicId,
-            ':id' => $caseId
-        ]);
+            $stmt->execute([
+                ':precio' => $precioCobrado,
+                ':descuento' => $descuento,
+                ':utilidad' => $utilidad,
+                ':cerrado_por' => $mechanicId,
+                ':id' => $caseId
+            ]);
 
-        if ($stmt->rowCount() !== 1) {
-            throw new RuntimeException(
-                'No se pudo cerrar el caso. Verifica si ya fue cerrado.'
+            if ($stmt->rowCount() !== 1) {
+                throw new RuntimeException(
+                    'No se pudo cerrar el caso. Verifica si ya fue cerrado.'
+                );
+            }
+
+            // 8. Finalizar la sesión de trabajo activa, si existe
+            $workSession = new WorkSession($this->pdo);
+
+            $active = $workSession->getActiveByCaseAndMechanic(
+                $caseId,
+                $mechanicId
             );
-        }
 
-        // 8. Finalizar la sesión de trabajo activa, si existe
-        $workSession = new WorkSession($this->pdo);
+            if ($active) {
+                $workSession->end((int) $active['id']);
+            }
 
-        $active = $workSession->getActiveByCaseAndMechanic(
-            $caseId,
-            $mechanicId
-        );
+            // 9. Registrar el avance automático del cierre
+            $this->avanceModel->add(
+                $caseId,
+                $mechanicId,
+                'Caso cerrado por el mecánico.',
+                'Mano de obra',
+                0
+            );
 
-        if ($active) {
-            $workSession->end((int) $active['id']);
-        }
+            // 10. Confirmar todos los cambios
+            $this->pdo->commit();
 
-        // 9. Registrar el avance automático del cierre
-        $this->avanceModel->add(
-            $caseId,
-            $mechanicId,
-            'Caso cerrado por el mecánico.',
-            'Mano de obra',
-            0
-        );
+            // 11. Volver a la pantalla del caso
+            header(
+                'Location: index.php?controller=mechanic&action=viewCase&case_id='
+                    . $caseId
+                    . '&veh_id='
+                    . $vehiculoId
+            );
 
-        // 10. Confirmar todos los cambios
-        $this->pdo->commit();
+            exit;
+        } catch (Throwable $e) {
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
 
-        // 11. Volver a la pantalla del caso
-        header(
-            'Location: index.php?controller=mechanic&action=viewCase&case_id='
-            . $caseId
-            . '&veh_id='
-            . $vehiculoId
-        );
+            error_log(
+                'Error al cerrar el caso #' . $caseId . ': ' . $e->getMessage()
+            );
 
-        exit;
-
-    } catch (Throwable $e) {
-        if ($this->pdo->inTransaction()) {
-            $this->pdo->rollBack();
-        }
-
-        error_log(
-            'Error al cerrar el caso #' . $caseId . ': ' . $e->getMessage()
-        );
-
-        echo "<div class='alert alert-danger'>
+            echo "<div class='alert alert-danger'>
             Ocurrió un error al cerrar el caso. Revisa el registro de errores del servidor.
         </div>";
+        }
     }
-}
 
     // 🔓 Reabrir un caso cerrado
     public function reabrir(): void
@@ -641,5 +712,222 @@ public function cerrar(): void
             $caseParts,
             $casePurchases
         );
+    }
+
+    // Registrar un abono del cliente
+    public function pagar(): void
+    {
+        $this->ensureLogged();
+
+        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+            echo "Solicitud inválida.";
+            return;
+        }
+
+        $caseId = (int) ($_POST['caso_id'] ?? 0);
+        $cuentaId = (int) ($_POST['cuenta_id'] ?? 0);
+        $usuarioId = (int) ($_SESSION['user_id'] ?? 0);
+
+        $montoTexto = trim($_POST['monto'] ?? '');
+        $montoTexto = str_replace(',', '.', $montoTexto);
+
+        $observacion = trim($_POST['observacion'] ?? '');
+        $token = trim($_POST['token_pago'] ?? '');
+
+        // Validaciones iniciales
+        if (
+            $caseId <= 0 ||
+            $cuentaId <= 0 ||
+            $usuarioId <= 0
+        ) {
+            echo "Los datos del pago no son válidos.";
+            return;
+        }
+
+        if (!preg_match('/^\d+(?:\.\d{1,2})?$/', $montoTexto)) {
+            echo "El monto del abono no es válido.";
+            return;
+        }
+
+        $monto = (float) $montoTexto;
+        $montoCentavos = (int) round($monto * 100);
+
+        if ($montoCentavos <= 0) {
+            echo "El abono debe ser mayor que cero.";
+            return;
+        }
+
+        if (strlen($observacion) > 255) {
+            echo "La observación no puede superar 255 caracteres.";
+            return;
+        }
+
+        if (!preg_match('/^[a-f0-9]{32}$/', $token)) {
+            echo "El identificador de la operación no es válido.";
+            return;
+        }
+
+        $vehiculoId = (int) ($_POST['veh_id'] ?? 0);
+
+        try {
+            $this->pdo->beginTransaction();
+
+            // Bloquear el caso mientras se procesa el abono
+            $stmt = $this->pdo->prepare("
+            SELECT
+                id,
+                vehiculo_id,
+                estado,
+                precio_cobrado,
+                descuento
+            FROM casos
+            WHERE id = :id
+            FOR UPDATE
+        ");
+
+            $stmt->execute([':id' => $caseId]);
+
+            $caso = $stmt->fetch(PDO::FETCH_ASSOC);
+
+            if (!$caso) {
+                throw new RuntimeException(
+                    'La reparación no existe.'
+                );
+            }
+
+            $vehiculoId = (int) $caso['vehiculo_id'];
+
+            // Comprobar si este mismo envío ya fue procesado
+            $referencia = 'PAGO-' . $token;
+
+            $stmt = $this->pdo->prepare("
+            SELECT id
+            FROM movimientos_financieros
+            WHERE referencia = :referencia
+            LIMIT 1
+        ");
+
+            $stmt->execute([':referencia' => $referencia]);
+
+            if ($stmt->fetchColumn()) {
+                $this->pdo->commit();
+
+                header(
+                    'Location: index.php?controller=mechanic&action=viewCase&case_id='
+                        . $caseId . '&veh_id=' . $vehiculoId
+                );
+                exit;
+            }
+
+            // Calcular los abonos anteriores
+            $stmt = $this->pdo->prepare("
+            SELECT COALESCE(SUM(monto), 0)
+            FROM pagos_casos
+            WHERE caso_id = :caso_id
+        ");
+
+            $stmt->execute([':caso_id' => $caseId]);
+
+            $totalPagadoCentavos = (int) round(
+                (float) $stmt->fetchColumn() * 100
+            );
+
+            // Si está cerrado, comprobar el saldo pendiente
+            if ($caso['estado'] === 'cerrado') {
+                $valorNetoCentavos = (
+                    (int) $caso['precio_cobrado']
+                    - (int) $caso['descuento']
+                ) * 100;
+
+                $saldoCentavos =
+                    $valorNetoCentavos - $totalPagadoCentavos;
+
+                if ($saldoCentavos <= 0) {
+                    throw new RuntimeException(
+                        'Esta reparación ya está completamente pagada.'
+                    );
+                }
+
+                if ($montoCentavos > $saldoCentavos) {
+                    throw new RuntimeException(
+                        'El abono supera el saldo pendiente de la reparación.'
+                    );
+                }
+            }
+
+            // Registrar el ingreso en Caja o Banco
+            $movimientoId = $this->movimientoModel->registrar(
+                $cuentaId,
+                'ingreso',
+                'entrada',
+                $montoCentavos / 100,
+                'Abono de reparación #' . $caseId,
+                $usuarioId,
+                $caseId,
+                'Caso #' . $caseId,
+                null,
+                $referencia
+            );
+
+            // Registrar el pago asociado al movimiento financiero
+            $stmt = $this->pdo->prepare("
+            INSERT INTO pagos_casos (
+                caso_id,
+                caso_referencia,
+                monto,
+                cuenta_id,
+                registrado_por,
+                movimiento_id,
+                observacion
+            ) VALUES (
+                :caso_id,
+                :caso_referencia,
+                :monto,
+                :cuenta_id,
+                :registrado_por,
+                :movimiento_id,
+                :observacion
+            )
+        ");
+
+            $stmt->execute([
+                ':caso_id' => $caseId,
+                ':caso_referencia' => 'Caso #' . $caseId,
+                ':monto' => number_format($montoCentavos / 100, 2, '.', ''),
+                ':cuenta_id' => $cuentaId,
+                ':registrado_por' => $usuarioId,
+                ':movimiento_id' => $movimientoId,
+                ':observacion' => $observacion !== ''
+                    ? $observacion
+                    : null,
+            ]);
+
+            // Confirmar ambas operaciones
+            $this->pdo->commit();
+
+            header(
+                'Location: index.php?controller=mechanic&action=viewCase&case_id='
+                    . $caseId . '&veh_id=' . $vehiculoId
+            );
+            exit;
+        } catch (Throwable $e) {
+
+            if ($this->pdo->inTransaction()) {
+                $this->pdo->rollBack();
+            }
+
+            error_log(
+                'Error al registrar pago del caso #'
+                    . $caseId . ': ' . $e->getMessage()
+            );
+
+            $_SESSION['error_message'] = $e->getMessage();
+
+            header(
+                'Location: index.php?controller=mechanic&action=viewCase&case_id='
+                    . $caseId . '&veh_id=' . $vehiculoId
+            );
+            exit;
+        }
     }
 }

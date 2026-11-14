@@ -534,7 +534,7 @@
 
         <?php endif; ?>
 
-        
+
         <?php if (!empty($compatibleParts)): ?>
 
             <details class="case-collapsible case-collapsible-compatible">
@@ -601,25 +601,21 @@
                                     <form
                                         method="POST"
                                         action="index.php?controller=inventory&action=addCompatiblePart"
-                                        class="mt-3"
-                                    >
+                                        class="mt-3">
                                         <input
                                             type="hidden"
                                             name="case_id"
-                                            value="<?= (int)$caso['id'] ?>"
-                                        >
+                                            value="<?= (int)$caso['id'] ?>">
 
                                         <input
                                             type="hidden"
                                             name="veh_id"
-                                            value="<?= (int)$veh_id ?>"
-                                        >
+                                            value="<?= (int)$veh_id ?>">
 
                                         <input
                                             type="hidden"
                                             name="parte_id"
-                                            value="<?= (int)$part['id'] ?>"
-                                        >
+                                            value="<?= (int)$part['id'] ?>">
 
                                         <div class="row g-2 align-items-end">
 
@@ -636,8 +632,7 @@
                                                     max="<?= htmlspecialchars((string)$stock) ?>"
                                                     step="0.01"
                                                     value="1"
-                                                    required
-                                                >
+                                                    required>
                                             </div>
 
                                             <div class="col-6 col-md-4">
@@ -652,15 +647,13 @@
                                                     min="0"
                                                     step="0.01"
                                                     value="<?= htmlspecialchars((string)$precioVenta) ?>"
-                                                    required
-                                                >
+                                                    required>
                                             </div>
 
                                             <div class="col-12 col-md-5">
                                                 <button
                                                     type="submit"
-                                                    class="btn btn-sm btn-primary w-100"
-                                                >
+                                                    class="btn btn-sm btn-primary w-100">
                                                     ➕ Agregar al caso
                                                 </button>
                                             </div>
@@ -963,6 +956,199 @@
 
 
         <?php endif; ?>
+
+
+        <?php if (!empty($caso['id'])): ?>
+
+            <?php
+            $casoCerrado = ($caso['estado'] === 'cerrado');
+            $puedePagar = !$casoCerrado ||
+                ($saldoPendiente !== null && $saldoPendiente > 0);
+            ?>
+
+            <div class="card mt-4 border-primary">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Cuenta del cliente</h5>
+                </div>
+
+                <div class="card-body">
+
+                    <div class="row mb-3">
+                        <div class="col-md-4">
+                            <strong>Total abonado:</strong>
+                            <div class="fs-5 text-success">
+                                $<?= number_format((float)$totalPagado, 0, ',', '.') ?>
+                            </div>
+                        </div>
+
+                        <?php if ($casoCerrado): ?>
+                            <div class="col-md-4">
+                                <strong>Valor neto:</strong>
+                                <div class="fs-5">
+                                    $<?= number_format((float)$valorNeto, 0, ',', '.') ?>
+                                </div>
+                            </div>
+
+                            <div class="col-md-4">
+                                <strong>Saldo pendiente:</strong>
+                                <div class="fs-5 <?= $saldoPendiente > 0 ? 'text-danger' : 'text-success' ?>">
+                                    $<?= number_format(max(0, (float)$saldoPendiente), 0, ',', '.') ?>
+                                </div>
+                            </div>
+                        <?php else: ?>
+                            <div class="col-md-8">
+                                <strong>Estado de la cuenta:</strong>
+                                <div class="text-muted">
+                                    Reparación abierta. El valor definitivo se establecerá al cerrar el caso.
+                                </div>
+                            </div>
+                        <?php endif; ?>
+                    </div>
+
+                    <hr>
+
+                    <?php if ($puedePagar): ?>
+                        <h6>Registrar abono</h6>
+
+                        <?php if (!empty($cuentasPago)): ?>
+
+                            <form method="POST"
+                                action="index.php?controller=case&action=pagar">
+
+                                <input type="hidden"
+                                    name="caso_id"
+                                    value="<?= (int)$caso['id'] ?>">
+
+                                <input type="hidden"
+                                    name="veh_id"
+                                    value="<?= (int)$veh_id ?>">
+
+                                <input type="hidden"
+                                    name="token_pago"
+                                    value="<?= htmlspecialchars($tokenPago ?? '', ENT_QUOTES, 'UTF-8') ?>">
+
+                                <div class="row g-3">
+
+                                    <div class="col-md-4">
+                                        <label class="form-label">Cuenta de ingreso</label>
+
+                                        <select name="cuenta_id" class="form-select" required>
+                                            <option value="">Seleccionar cuenta</option>
+
+                                            <?php foreach ($cuentasPago as $cuenta): ?>
+                                                <option value="<?= (int)$cuenta['id'] ?>">
+                                                    <?= htmlspecialchars($cuenta['nombre'], ENT_QUOTES, 'UTF-8') ?>
+                                                </option>
+                                            <?php endforeach; ?>
+
+                                        </select>
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        <label class="form-label">Monto del abono</label>
+
+                                        <input type="number"
+                                            name="monto"
+                                            class="form-control"
+                                            min="0.01"
+                                            step="0.01"
+                                            required>
+                                    </div>
+
+                                    <div class="col-md-5">
+                                        <label class="form-label">Observación</label>
+
+                                        <input type="text"
+                                            name="observacion"
+                                            class="form-control"
+                                            maxlength="255"
+                                            placeholder="Opcional">
+                                    </div>
+
+                                    <div class="col-12">
+                                        <button type="submit" class="btn btn-success">
+                                            Registrar abono
+                                        </button>
+                                    </div>
+
+                                </div>
+                            </form>
+
+                        <?php else: ?>
+
+                            <div class="alert alert-warning mb-0">
+                                No hay cuentas financieras activas para recibir pagos.
+                            </div>
+
+                        <?php endif; ?>
+
+                    <?php else: ?>
+
+                        <div class="alert alert-success">
+                            La cuenta está completamente pagada.
+                        </div>
+
+                    <?php endif; ?>
+
+                    <hr>
+
+                    <h6>Historial de abonos</h6>
+
+                    <?php if (!empty($pagos)): ?>
+
+                        <div class="table-responsive">
+                            <table class="table table-sm table-striped align-middle">
+                                <thead>
+                                    <tr>
+                                        <th>Fecha</th>
+                                        <th>Cuenta</th>
+                                        <th>Registrado por</th>
+                                        <th>Observación</th>
+                                        <th class="text-end">Monto</th>
+                                    </tr>
+                                </thead>
+
+                                <tbody>
+                                    <?php foreach ($pagos as $pago): ?>
+                                        <tr>
+                                            <td>
+                                                <?= htmlspecialchars($pago['fecha_pago'], ENT_QUOTES, 'UTF-8') ?>
+                                            </td>
+
+                                            <td>
+                                                <?= htmlspecialchars($pago['cuenta_nombre'], ENT_QUOTES, 'UTF-8') ?>
+                                            </td>
+
+                                            <td>
+                                                <?= htmlspecialchars($pago['usuario_nombre'], ENT_QUOTES, 'UTF-8') ?>
+                                            </td>
+
+                                            <td>
+                                                <?= htmlspecialchars($pago['observacion'] ?? '', ENT_QUOTES, 'UTF-8') ?>
+                                            </td>
+
+                                            <td class="text-end">
+                                                $<?= number_format((float)$pago['monto'], 0, ',', '.') ?>
+                                            </td>
+                                        </tr>
+                                    <?php endforeach; ?>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    <?php else: ?>
+
+                        <p class="text-muted mb-0">
+                            Todavía no se han registrado abonos para esta reparación.
+                        </p>
+
+                    <?php endif; ?>
+
+                </div>
+            </div>
+
+        <?php endif; ?>
+
 
         <div class="row mt-4">
 
