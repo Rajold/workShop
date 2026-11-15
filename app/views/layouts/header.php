@@ -23,22 +23,14 @@
         <ul class="navbar-nav me-auto">
           <?php if (!empty($_SESSION['user_id'])): ?>
             <?php if (isset($_SESSION['user_role']) && $_SESSION['user_role'] === 'admin'): ?>
-              <li class="nav-item"><a class="nav-link" href="index.php?controller=admin&action=dashboard">Admin</a></li>
+              <li class="nav-item"><a class="nav-link" href="index.php?controller=admin&action=dashboard"><i class="bi bi-emoji-sunglasses"></i>Admin</a></li>
             <?php endif; ?>
-            <li class="nav-item"><a class="nav-link" href="index.php?controller=mechanic&action=dashboard">Panel</a></li>
-            <li class="nav-item"><a class="nav-link" href="index.php?controller=report&action=form">Reportes</a></li>
+            <li class="nav-item"><a class="nav-link" href="index.php?controller=mechanic&action=dashboard"><i class="bi bi-tools"></i>Taller</a></li>
+            <li class="nav-item"><a class="nav-link" href="index.php?controller=report&action=form"><i class="bi bi-file-earmark-text"></i>Reportes</a></li>
             <li class="nav-item"><a class="nav-link" href="index.php?controller=inventory&action=index"><i class="bi bi-box-seam"></i> Inventario</a></li>
-            <li class="nav-item"><a class="nav-link" href="index.php?controller=modelo_moto&action=index"><i class="bi bi-box-seam"></i> Motocicletas</a></li>
-            <li class="nav-item">
-    <a class="nav-link"
-       href="index.php?controller=expense&action=index">
-        Gastos
-    </a>
-<a class="nav-link"
-       href="index.php?controller=finance&action=index">
-        Gastos
-    </a>
-</li>
+            <li class="nav-item"><a class="nav-link" href="index.php?controller=modelo_moto&action=index"><i class="bi bi-scooter"></i> Motocicletas</a></li>
+            <li class="nav-item"><a class="nav-link" href="index.php?controller=expense&action=index"> <i class="bi bi-cash-coin"></i><i class="bi bi-hand-thumbs-down"></i> Gastos</a></li>
+            <li class="nav-item"><a class="nav-link" href="index.php?controller=finance&action=index"> <i class="bi bi-cash-coin"></i><i class="bi bi-hand-thumbs-up"></i>Caja</a></li>
           <?php endif; ?>
         </ul>
         <ul class="navbar-nav">
