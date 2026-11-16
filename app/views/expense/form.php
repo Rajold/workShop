@@ -89,7 +89,6 @@ $form = [
                             <option value="caja">Caja del taller</option>
                             <option value="transferencia">Transferencia</option>
                             <option value="dinero_personal">Dinero personal</option>
-                            <option value="otro">Otro</option>
                         </select>
                     </div>
                 </div>

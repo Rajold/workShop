@@ -321,18 +321,43 @@ $formatCOP = static function ($valor): string {
                                                 ): ?>
 
                                                     <form method="POST"
-                                                          action="index.php?controller=expense&action=markReimbursed"
-                                                          onsubmit="return confirm('Confirma que el reembolso ya se realizó.')">
+      action="index.php?controller=expense&action=markReimbursed"
+      onsubmit="return confirm('Confirma que el reembolso ya se realizó.')">
 
-                                                        <input type="hidden"
-                                                               name="id"
-                                                               value="<?= (int)$gasto['id'] ?>">
+    <input type="hidden"
+           name="id"
+           value="<?= (int)$gasto['id'] ?>">
 
-                                                        <button type="submit"
-                                                                class="btn btn-sm btn-primary">
-                                                            Registrar reembolso
-                                                        </button>
-                                                    </form>
+    <div class="mb-2">
+        <select name="cuenta_id"
+                class="form-select form-select-sm"
+                required
+                <?= empty($cuentas) ? 'disabled' : '' ?>>
+
+            <option value="">Cuenta de reembolso</option>
+
+            <?php foreach ($cuentas as $cuenta): ?>
+                <option value="<?= (int)$cuenta['id'] ?>">
+                    <?= htmlspecialchars($cuenta['nombre']) ?>
+                    (<?= htmlspecialchars(ucfirst($cuenta['tipo'])) ?>)
+                </option>
+            <?php endforeach; ?>
+
+        </select>
+    </div>
+
+    <button type="submit"
+            class="btn btn-sm btn-primary"
+            <?= empty($cuentas) ? 'disabled' : '' ?>>
+        Registrar reembolso
+    </button>
+
+    <?php if (empty($cuentas)): ?>
+        <div class="small text-danger mt-1">
+            No hay cuentas financieras activas.
+        </div>
+    <?php endif; ?>
+</form>
 
                                                 <?php elseif (
                                                     $estadoActual === 'aprobado'

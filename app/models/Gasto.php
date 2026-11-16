@@ -134,6 +134,27 @@ class Gasto extends BaseModel
     }
 
     /**
+ * Consultar y bloquear un gasto durante una transacción.
+ */
+public function findByIdForUpdate(int $id): ?array
+{
+    $sql = "
+        SELECT *
+        FROM gastos
+        WHERE id = ?
+        LIMIT 1
+        FOR UPDATE
+    ";
+
+    $stmt = $this->db->prepare($sql);
+    $stmt->execute([$id]);
+
+    $gasto = $stmt->fetch(PDO::FETCH_ASSOC);
+
+    return $gasto ?: null;
+}
+
+    /**
      * Aprobar o rechazar un gasto pendiente.
      */
     public function decide(

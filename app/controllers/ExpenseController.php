@@ -70,12 +70,17 @@ class ExpenseController extends BaseController
             $registradoPor
         );
 
+        $cuentas = $esAdmin
+            ? $this->expenseService->cuentas()
+            : [];
+
         $this->render('expense/index', [
             'title' => 'Gestión de gastos',
             'gastos' => $gastos,
             'estado' => $estado,
             'categoria' => $categoria,
             'esAdmin' => $esAdmin,
+            'cuentas' => $cuentas,
         ]);
     }
     /**
@@ -184,7 +189,10 @@ class ExpenseController extends BaseController
         $id = (int)($_POST['id'] ?? 0);
 
         try {
-            if ($this->expenseService->markPaid($id)) {
+            if ($this->expenseService->markPaid(
+                $id,
+                (int)$_SESSION['user_id']
+            )) {
                 $this->success('Pago registrado correctamente.');
             } else {
                 $this->warning(
@@ -214,9 +222,14 @@ class ExpenseController extends BaseController
         }
 
         $id = (int)($_POST['id'] ?? 0);
+        $cuentaId = (int)($_POST['cuenta_id'] ?? 0);
 
         try {
-            if ($this->expenseService->markReimbursed($id)) {
+            if ($this->expenseService->markReimbursed(
+                $id,
+                $cuentaId,
+                (int)$_SESSION['user_id']
+            )) {
                 $this->success('Reembolso registrado correctamente.');
             } else {
                 $this->warning(
