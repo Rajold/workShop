@@ -42,6 +42,7 @@ function field($name, $part, $old)
 
             <form
                 method="post"
+                enctype="multipart/form-data"
                 action="index.php?controller=inventory&action=<?= $isEdit ? 'update' : 'store' ?>">
 
                 <?php if ($isEdit): ?>
@@ -324,6 +325,36 @@ function field($name, $part, $old)
 
                 </div>
 
+                <div class="mb-4">
+
+                    <label class="form-label">
+                        Fotografía del artículo
+                    </label>
+
+                    <?php if (!empty($part['imagen'])): ?>
+                        <div class="mb-3">
+                            <img
+                                src="/projects/workShop/public/<?= htmlspecialchars($part['imagen']) ?>"
+                                alt="Fotografía del artículo"
+                                style="width: 150px; height: 120px; object-fit: contain; border: 1px solid #ddd; border-radius: 8px; padding: 5px;">
+
+                            <div class="form-text">
+                                Fotografía actual. Selecciona otra para reemplazarla.
+                            </div>
+                        </div>
+                    <?php endif; ?>
+
+                    <input
+                        type="file"
+                        name="imagen"
+                        class="form-control"
+                        accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp">
+
+                    <div class="form-text">
+                        Formatos permitidos: JPG, PNG y WEBP. Tamaño máximo: 5 MB.
+                    </div>
+
+                </div>
 
                 <div class="form-check mb-4">
 

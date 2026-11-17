@@ -14,11 +14,13 @@ class Part extends BaseModel
      * Obtiene todas las partes activas.
      */
     /**
- * Obtiene todas las partes activas de un tipo determinado.
- */
-public function all(string $tipo = 'repuesto'): array
-{
-    $sql = "
+     * Obtiene todas las partes activas de un tipo determinado.
+     */
+    public function all(
+        string $tipo = 'repuesto',
+        int $categoriaId = 0
+    ): array {
+        $sql = "
         SELECT
             p.*,
             c.nombre AS categoria
@@ -27,17 +29,24 @@ public function all(string $tipo = 'repuesto'): array
             ON c.id = p.categoria_id
         WHERE p.activo = 1
           AND p.tipo = :tipo
-        ORDER BY p.nombre ASC
     ";
 
-    $stmt = $this->db->prepare($sql);
+        $params = [
+            ':tipo' => $tipo
+        ];
 
-    $stmt->execute([
-        ':tipo' => $tipo
-    ]);
+        if ($categoriaId > 0) {
+            $sql .= " AND p.categoria_id = :categoria_id";
+            $params[':categoria_id'] = $categoriaId;
+        }
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+        $sql .= " ORDER BY p.nombre ASC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     /**
      * Busca una parte por ID.
@@ -74,11 +83,14 @@ public function all(string $tipo = 'repuesto'): array
     }
 
     /**
- * Búsqueda por nombre, código o marca dentro de un tipo.
- */
-public function search(string $texto, string $tipo = 'repuesto'): array
-{
-    $stmt = $this->db->prepare("
+     * Búsqueda por nombre, código o marca dentro de un tipo.
+     */
+    public function search(
+        string $texto,
+        string $tipo = 'repuesto',
+        int $categoriaId = 0
+    ): array {
+        $sql = "
         SELECT
             p.*,
             c.nombre AS categoria
@@ -92,20 +104,29 @@ public function search(string $texto, string $tipo = 'repuesto'): array
               OR p.nombre LIKE :buscar_nombre
               OR p.marca LIKE :buscar_marca
           )
-        ORDER BY p.nombre ASC
-    ");
+    ";
 
-    $like = "%{$texto}%";
+        $like = "%{$texto}%";
 
-    $stmt->execute([
-        ':tipo'          => $tipo,
-        ':buscar_codigo' => $like,
-        ':buscar_nombre' => $like,
-        ':buscar_marca'  => $like
-    ]);
+        $params = [
+            ':tipo'          => $tipo,
+            ':buscar_codigo' => $like,
+            ':buscar_nombre' => $like,
+            ':buscar_marca'  => $like
+        ];
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+        if ($categoriaId > 0) {
+            $sql .= " AND p.categoria_id = :categoria_id";
+            $params[':categoria_id'] = $categoriaId;
+        }
+
+        $sql .= " ORDER BY p.nombre ASC";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute($params);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 
     /**
      * Crear parte.
@@ -129,6 +150,7 @@ costo,
 precio_venta,
 ubicacion,
 codigo_barras,
+imagen,
 activo
         )
         VALUES (
@@ -147,6 +169,7 @@ activo
     :precio_venta,
     :ubicacion,
     :codigo_barras,
+    :imagen,
     :activo
 )
     ";
@@ -168,6 +191,7 @@ activo
             ':precio_venta'   => $data['precio_venta'] ?: 0,
             ':ubicacion'      => $data['ubicacion'] ?? null,
             ':codigo_barras'  => $data['codigo_barras'] ?? null,
+            ':imagen' => $data['imagen'] ?? null,
             ':activo'         => isset($data['activo']) ? 1 : 0,
         ]);
     }
@@ -195,6 +219,7 @@ unidad = :unidad,
             precio_venta = :precio_venta,
             ubicacion = :ubicacion,
             codigo_barras = :codigo_barras,
+            imagen = :imagen,
             activo = :activo
         WHERE id = :id
     ";
@@ -209,13 +234,14 @@ unidad = :unidad,
             ':nombre'         => $data['nombre'],
             ':marca'          => $data['marca'] ?? null,
             ':fabricante_repuesto_id' => $data['fabricante_repuesto_id'] ?? null,
-':numero_parte'           => $data['numero_parte'] ?? null,
+            ':numero_parte'           => $data['numero_parte'] ?? null,
             ':unidad'         => $data['unidad'],
             ':stock_minimo'   => $data['stock_minimo'] ?: 0,
             ':costo'          => $data['costo'] ?: 0,
             ':precio_venta'   => $data['precio_venta'] ?: 0,
             ':ubicacion'      => $data['ubicacion'] ?? null,
             ':codigo_barras'  => $data['codigo_barras'] ?? null,
+            ':imagen' => $data['imagen'] ?? null,
             ':activo'         => isset($data['activo']) ? 1 : 0,
         ]);
     }
@@ -243,6 +269,29 @@ unidad = :unidad,
                 ORDER BY nombre
             ")
             ->fetchAll(PDO::FETCH_ASSOC);
+    }
+
+    public function categoriesByType(string $tipo): array
+    {
+        $sql = "
+        SELECT DISTINCT
+            c.id,
+            c.nombre
+        FROM categorias_partes c
+        INNER JOIN partes p
+            ON p.categoria_id = c.id
+        WHERE c.activo = 1
+          AND p.activo = 1
+          AND p.tipo = :tipo
+        ORDER BY c.nombre ASC
+    ";
+
+        $stmt = $this->db->prepare($sql);
+        $stmt->execute([
+            ':tipo' => $tipo
+        ]);
+
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -356,10 +405,10 @@ unidad = :unidad,
         return $stmt->fetchAll(PDO::FETCH_ASSOC);
     }
 
-/**  estadísticas del inventario para un tipo determinado. */
-public function getStatistics(string $tipo = 'repuesto'): array
-{
-    $stmt = $this->db->prepare("
+    /**  estadísticas del inventario para un tipo determinado. */
+    public function getStatistics(string $tipo = 'repuesto'): array
+    {
+        $stmt = $this->db->prepare("
         SELECT
 
             COUNT(*) AS total,
@@ -393,12 +442,12 @@ public function getStatistics(string $tipo = 'repuesto'): array
           AND tipo = :tipo
     ");
 
-    $stmt->execute([
-        ':tipo' => $tipo
-    ]);
+        $stmt->execute([
+            ':tipo' => $tipo
+        ]);
 
-    return $stmt->fetch(PDO::FETCH_ASSOC);
-}
+        return $stmt->fetch(PDO::FETCH_ASSOC);
+    }
 
     /**
      * Actualiza el costo de un artículo.
@@ -512,8 +561,8 @@ public function getStatistics(string $tipo = 'repuesto'): array
     }
 
     public function findByMotorcycleModel(int $modeloMotoId): array
-{
-    $stmt = $this->db->prepare("
+    {
+        $stmt = $this->db->prepare("
         SELECT
 
             p.id,
@@ -537,10 +586,10 @@ public function getStatistics(string $tipo = 'repuesto'): array
             p.nombre
     ");
 
-    $stmt->execute([
-        ':modelo' => $modeloMotoId
-    ]);
+        $stmt->execute([
+            ':modelo' => $modeloMotoId
+        ]);
 
-    return $stmt->fetchAll(PDO::FETCH_ASSOC);
-}
+        return $stmt->fetchAll(PDO::FETCH_ASSOC);
+    }
 }
