@@ -296,12 +296,12 @@ function field($name, $part, $old)
                         </label>
 
                         <input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            class="form-control"
-                            name="precio_venta"
-                            value="<?= field('precio', $part, $old) ?>">
+    type="number"
+    step="0.01"
+    min="0"
+    class="form-control"
+    name="precio_venta"
+    value="<?= field('precio_venta', $part, $old) ?>">
 
                     </div>
 
