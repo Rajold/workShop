@@ -48,6 +48,159 @@
 
     </form>
 
+    <h4>
+
+        <i class="bi bi-cart"></i>
+
+        Repuestos seleccionados
+
+    </h4>
+
+    <?php
+
+    $cart = $_SESSION['case_cart'][$caseId] ?? [];
+
+    if (empty($cart)):
+
+    ?>
+
+        <p class="text-muted">
+
+            Aún no hay artículos seleccionados.
+
+        </p>
+
+    <?php else: ?>
+
+        <table class="table table-striped">
+
+            <thead>
+
+                <tr>
+
+                    <th>Artículo</th>
+
+                    <th>Cantidad</th>
+
+                    <th>Precio</th>
+
+                    <th>Subtotal</th>
+
+                    <th width="80">Acción</th>
+
+                </tr>
+
+            </thead>
+
+            <tbody>
+
+                <?php
+
+                $total = 0;
+
+                foreach ($cart as $item):
+
+                    $subtotal = $item['precio_venta'] * $item['cantidad'];
+
+                    $total += $subtotal;
+
+                ?>
+
+                    <tr>
+                        <td><?= htmlspecialchars($item['nombre']) ?></td>
+                        <td><?= $item['cantidad'] ?></td>
+                        <td><?= number_format($item['precio_venta'], 0, ',', '.') ?></td>
+                        <td><strong>$<?= number_format($subtotal, 0, ',', '.') ?></strong></td>
+                        <td>
+
+                            <form
+                                method="POST"
+                                action="index.php?controller=inventory&action=removeFromCart">
+
+                                <input
+                                    type="hidden" name="case_id" value="<?= $caseId ?>">
+
+                                <input
+                                    type="hidden" name="veh_id" value="<?= $vehId ?>">
+
+                                <input
+                                    type="hidden" name="pending_id" value="<?= $pendingId ?>">
+
+                                <input
+                                    type="hidden" name="part_id" value="<?= $item['part_id'] ?>">
+
+                                <button
+                                    type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
+
+                                    <i class="bi bi-trash"></i>
+                                    Eliminar
+                                </button>
+
+
+                            </form>
+
+                        </td>
+
+                    </tr>
+
+                <?php endforeach; ?>
+
+            </tbody>
+
+            <tfoot>
+
+                <tr>
+
+                    <th colspan="3">
+
+                        Total
+
+                    </th>
+
+                    <th>
+
+                        $<?= number_format($total, 0, ',', '.') ?>
+
+                    </th>
+
+                </tr>
+
+            </tfoot>
+
+        </table>
+
+        <div class="text-end mt-3">
+
+            <form
+                method="POST"
+                action="index.php?controller=inventory&action=confirmCart">
+
+                <input
+                    type="hidden" name="case_id" value="<?= $caseId ?>">
+
+                <input
+                    type="hidden" name="veh_id" value="<?= $vehId ?>">
+
+                <input
+                    type="hidden" name="pending_id" value="<?= $pendingId ?>">
+
+                <button
+                    type="submit" class="btn btn-success btn-lg">
+
+                    <i class="bi bi-check-circle"></i>
+
+                    Añadir repuestos al caso
+
+                </button>
+
+            </form>
+
+        </div>
+
+    <?php endif; ?>
+
+    <hr>
+
     <table class="table table-hover">
 
         <thead>
@@ -138,167 +291,5 @@
         </tbody>
 
     </table>
-
-    <hr>
-
-    <h4>
-
-        <i class="bi bi-cart"></i>
-
-        Repuestos seleccionados
-
-    </h4>
-
-    <?php
-
-    $cart = $_SESSION['case_cart'][$caseId] ?? [];
-
-    if (empty($cart)):
-
-    ?>
-
-        <p class="text-muted">
-
-            Aún no hay artículos seleccionados.
-
-        </p>
-
-    <?php else: ?>
-
-        <table class="table table-striped">
-
-            <thead>
-
-                <tr>
-
-                    <th>Artículo</th>
-
-                    <th>Cantidad</th>
-
-                    <th>Precio</th>
-
-                    <th>Subtotal</th>
-
-                    <th width="80">Acción</th>
-
-                </tr>
-
-            </thead>
-
-            <tbody>
-
-                <?php
-
-                $total = 0;
-
-                foreach ($cart as $item):
-
-                    $subtotal = $item['precio_venta'] * $item['cantidad'];
-
-                    $total += $subtotal;
-
-                ?>
-
-                    <tr>
-                        <td><?= htmlspecialchars($item['nombre']) ?></td>
-                        <td><?= $item['cantidad'] ?>
-                            <?= number_format($item['precio_venta'], 0, ',', '.') ?>
-                        </td>
-
-
-                        <td>
-                            <strong>
-
-                                $<?= number_format($subtotal, 0, ',', '.') ?>
-
-                            </strong>
-                        </td>
-                        <td>
-
-                            <form
-                                method="POST"
-                                action="index.php?controller=inventory&action=removeFromCart">
-
-                                <input
-                                    type="hidden" name="case_id" value="<?= $caseId ?>">
-
-                                <input
-                                    type="hidden" name="veh_id" value="<?= $vehId ?>">
-
-                                <input
-                                    type="hidden" name="pending_id" value="<?= $pendingId ?>">
-
-                                <input
-                                    type="hidden" name="part_id" value="<?= $item['part_id'] ?>">
-
-                                <button
-                                    type="submit" class="btn btn-sm btn-outline-danger" title="Eliminar">
-
-                                    <i class="bi bi-trash"></i>
-                                    Eliminar
-                                </button>
-
-
-                            </form>
-
-                        </td>
-
-                    </tr>
-
-                <?php endforeach; ?>
-
-            </tbody>
-
-            <tfoot>
-
-                <tr>
-
-                    <th colspan="3">
-
-                        Total
-
-                    </th>
-
-                    <th>
-
-                        $<?= number_format($total, 0, ',', '.') ?>
-
-                    </th>
-
-                </tr>
-
-            </tfoot>
-
-        </table>
-
-        <div class="text-end mt-3">
-
-            <form
-                method="POST"
-                action="index.php?controller=inventory&action=confirmCart">
-
-                <input
-                    type="hidden" name="case_id" value="<?= $caseId ?>">
-
-                <input
-                    type="hidden" name="veh_id" value="<?= $vehId ?>">
-
-                <input
-                    type="hidden" name="pending_id" value="<?= $pendingId ?>">
-
-                <button
-                    type="submit" class="btn btn-success btn-lg">
-
-                    <i class="bi bi-check-circle"></i>
-
-                    Añadir repuestos al caso
-
-                </button>
-
-            </form>
-
-        </div>
-
-    <?php endif; ?>
 
 </div>
