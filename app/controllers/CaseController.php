@@ -568,109 +568,344 @@ class CaseController
         echo "Solicitud inválida.";
     }
 
-    public function registrarCompraDirecta(): void
-    {
-        $this->ensureLogged();
 
-        if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
-            $_SESSION['error_message'] = 'Solicitud inválida.';
-            header('Location: index.php');
-            exit;
-        }
+public function registrarCompraDirecta(): void
+{
+    $this->ensureLogged();
 
-        $caseId = (int)($_POST['caso_id'] ?? 0);
+    if ($_SERVER['REQUEST_METHOD'] !== 'POST') {
+        $_SESSION['error_message'] = 'Solicitud inválida.';
+        header('Location: index.php');
+        exit;
+    }
 
-        $descripcion = trim($_POST['descripcion'] ?? '');
-        $proveedor = trim($_POST['proveedor'] ?? '');
-        $observacion = trim($_POST['observacion'] ?? '');
+    $caseId = (int)($_POST['caso_id'] ?? 0);
 
-        $cantidad = (float)($_POST['cantidad'] ?? 0);
-        $costoUnitario = (float)($_POST['costo_unitario'] ?? 0);
-        $precioUnitario = (float)($_POST['precio_unitario'] ?? 0);
+    $descripcion = trim($_POST['descripcion'] ?? '');
+    $proveedor = trim($_POST['proveedor'] ?? '');
+    $observacion = trim($_POST['observacion'] ?? '');
+
+    $cantidad = (float)($_POST['cantidad'] ?? 0);
+    $costoUnitario = (float)($_POST['costo_unitario'] ?? 0);
+    $precioUnitario = (float)($_POST['precio_unitario'] ?? 0);
+
+    $usuarioId = (int)$_SESSION['user_id'];
+
+    if (
+        $caseId <= 0 ||
+        $descripcion === '' ||
+        !is_finite($cantidad) ||
+        !is_finite($costoUnitario) ||
+        !is_finite($precioUnitario) ||
+        $cantidad <= 0 ||
+        $costoUnitario < 0 ||
+        $precioUnitario < 0
+    ) {
+        $_SESSION['error_message'] =
+            'Debe completar correctamente los datos de la compra.';
+
+        header('Location: index.php');
+        exit;
+    }
+
+    $vehiculoId = 0;
+
+    try {
 
         /*
-     * Primero verificamos que el caso exista.
-     * De esta forma obtenemos también el vehículo asociado
-     * y podemos conservar correctamente la ficha seleccionada
-     * al regresar a la vista.
-     */
-        $caso = $this->caseModel->findById($caseId);
+         * Las columnas cantidad y costo_unitario son DECIMAL(10,2).
+         * Calculamos el costo con la misma precisión que se almacenará.
+         */
+        $cantidad = round($cantidad, 2);
+        $costoUnitario = round($costoUnitario, 2);
+
+        $costoTotal = round($cantidad * $costoUnitario, 2);
+
+        /*
+         * Obtener las fuentes de financiación enviadas por el formulario.
+         */
+        $financiacion = $_POST['financiacion'] ?? null;
+
+        if (!is_array($financiacion) || empty($financiacion)) {
+            throw new RuntimeException(
+                'Debe indicar cómo se financiará la compra.'
+            );
+        }
+
+        /*
+         * Validar y normalizar cada fuente.
+         */
+        $fuentes = [];
+        $totalFinanciado = 0;
+
+        foreach ($financiacion as $fila) {
+
+            if (!is_array($fila)) {
+                throw new RuntimeException(
+                    'Los datos de financiación no son válidos.'
+                );
+            }
+
+            $origen = trim($fila['origen'] ?? '');
+
+            $montoTexto = trim((string)($fila['monto'] ?? ''));
+
+            if (!is_numeric($montoTexto)) {
+                throw new RuntimeException(
+                    'Debe indicar un monto válido para cada fuente.'
+                );
+            }
+
+            $monto = (float)$montoTexto;
+
+            if (!is_finite($monto) || $monto <= 0) {
+                throw new RuntimeException(
+                    'Todos los montos de financiación deben ser mayores que cero.'
+                );
+            }
+
+            $montoCentavos = (int)round($monto * 100);
+
+            if ($montoCentavos <= 0) {
+                throw new RuntimeException(
+                    'El monto de financiación es demasiado pequeño.'
+                );
+            }
+
+            if (!in_array(
+                $origen,
+                ['caja', 'banco', 'personal', 'credito'],
+                true
+            )) {
+                throw new RuntimeException(
+                    'La fuente de financiación seleccionada no es válida.'
+                );
+            }
+
+            $cuentaId = null;
+
+            if ($origen === 'caja' || $origen === 'banco') {
+
+                $cuentaId = (int)($fila['cuenta_id'] ?? 0);
+
+                if ($cuentaId <= 0) {
+                    throw new RuntimeException(
+                        'Debe seleccionar una cuenta para Caja o Banco.'
+                    );
+                }
+
+                /*
+                 * Verificar que la cuenta corresponda al origen elegido.
+                 */
+                $stmtCuenta = $this->pdo->prepare("
+                    SELECT id
+                    FROM cuentas_financieras
+                    WHERE id = :id
+                      AND tipo = :tipo
+                      AND activa = 1
+                ");
+
+                $stmtCuenta->execute([
+                    ':id' => $cuentaId,
+                    ':tipo' => $origen
+                ]);
+
+                if (!$stmtCuenta->fetchColumn()) {
+                    throw new RuntimeException(
+                        'La cuenta seleccionada no corresponde al medio de financiación.'
+                    );
+                }
+            }
+
+            $totalFinanciado += $montoCentavos;
+
+            $fuentes[] = [
+                'origen' => $origen,
+                'cuenta_id' => $cuentaId,
+                'monto_centavos' => $montoCentavos,
+                'observacion' => trim($fila['observacion'] ?? '')
+            ];
+        }
+
+        /*
+         * La suma de las fuentes debe coincidir exactamente
+         * con el costo real de adquisición.
+         */
+        $costoCentavos = (int)round($costoTotal * 100);
+
+        if ($totalFinanciado !== $costoCentavos) {
+            throw new RuntimeException(
+                'La financiación debe sumar exactamente el costo de adquisición: $' .
+                number_format($costoTotal, 2, ',', '.')
+            );
+        }
+
+        /*
+         * Iniciar transacción.
+         */
+        $this->pdo->beginTransaction();
+
+        /*
+         * Bloquear el caso para impedir registrar compras
+         * si fue cerrado mientras se procesaba la solicitud.
+         */
+        $stmtCaso = $this->pdo->prepare("
+            SELECT id, vehiculo_id, estado
+            FROM casos
+            WHERE id = :id
+            FOR UPDATE
+        ");
+
+        $stmtCaso->execute([
+            ':id' => $caseId
+        ]);
+
+        $caso = $stmtCaso->fetch(PDO::FETCH_ASSOC);
 
         if (!$caso) {
-            $_SESSION['error_message'] = 'El caso no existe.';
-            header('Location: index.php');
-            exit;
+            throw new RuntimeException('El caso no existe.');
         }
 
         $vehiculoId = (int)$caso['vehiculo_id'];
 
-        /*
-     * Validar datos recibidos
-     */
-        if (
-            $caseId <= 0 ||
-            $descripcion === '' ||
-            $cantidad <= 0 ||
-            $costoUnitario < 0 ||
-            $precioUnitario < 0
-        ) {
-            $_SESSION['error_message'] =
-                'Debe completar correctamente los datos de la compra directa.';
-
-            header(
-                'Location: index.php?controller=mechanic&action=viewCase' .
-                    '&veh_id=' . $vehiculoId .
-                    '&case_id=' . $caseId
-            );
-            exit;
-        }
-
-        /*
-     * El caso debe estar abierto para registrar una compra directa.
-     */
         if ($caso['estado'] !== 'abierto') {
-            $_SESSION['error_message'] =
-                'No se pueden registrar compras directas en un caso cerrado.';
-
-            header(
-                'Location: index.php?controller=mechanic&action=viewCase' .
-                    '&veh_id=' . $vehiculoId .
-                    '&case_id=' . $caseId
+            throw new RuntimeException(
+                'No se pueden registrar compras directas en un caso cerrado.'
             );
-            exit;
-        }
-
-        try {
-
-            $this->casePurchaseModel->add([
-                'caso_id' => $caseId,
-                'usuario_id' => (int)$_SESSION['user_id'],
-                'descripcion' => $descripcion,
-                'proveedor' => $proveedor,
-                'cantidad' => $cantidad,
-                'costo_unitario' => $costoUnitario,
-                'precio_unitario' => $precioUnitario,
-                'observacion' => $observacion
-            ]);
-
-            $_SESSION['success_message'] =
-                'Compra directa registrada correctamente.';
-        } catch (Throwable $e) {
-
-            $_SESSION['error_message'] =
-                'No fue posible registrar la compra directa.';
         }
 
         /*
-     * Regresar conservando tanto el vehículo como el caso.
+         * Registrar la compra directa.
+         */
+        $compraId = $this->casePurchaseModel->add([
+            'caso_id' => $caseId,
+            'usuario_id' => $usuarioId,
+            'descripcion' => $descripcion,
+            'proveedor' => $proveedor,
+            'cantidad' => $cantidad,
+            'costo_unitario' => $costoUnitario,
+            'precio_unitario' => $precioUnitario,
+            'observacion' => $observacion
+        ]);
+
+        /*
+         * Preparar inserción de fuentes de financiación.
+         */
+        $stmtFinanciacion = $this->pdo->prepare("
+            INSERT INTO financiacion_compras_caso
+            (
+                compra_id,
+                origen,
+                cuenta_id,
+                movimiento_id,
+                monto,
+                usuario_id,
+                fecha_registro,
+                observacion
+            )
+            VALUES
+            (
+                :compra_id,
+                :origen,
+                :cuenta_id,
+                :movimiento_id,
+                :monto,
+                :usuario_id,
+                NOW(),
+                :observacion
+            )
+        ");
+
+        /*
+         * Registrar cada fuente.
+         */
+        foreach ($fuentes as $fuente) {
+
+            $movimientoId = null;
+
+            /*
+             * Caja y Banco representan dinero que sale realmente
+             * de las cuentas del taller en el momento de la compra.
+             */
+            if (
+                $fuente['origen'] === 'caja' ||
+                $fuente['origen'] === 'banco'
+            ) {
+
+                $monto = $fuente['monto_centavos'] / 100;
+
+                $movimientoId = $this->movimientoModel->registrar(
+                    $fuente['cuenta_id'],
+                    'egreso',
+                    'salida',
+                    $monto,
+                    'Compra directa: ' . $descripcion,
+                    $usuarioId,
+                    $caseId,
+                    'Caso #' . $caseId,
+                    null,
+                    'compra_caso:' . $compraId
+                );
+            }
+
+            /*
+             * Personal y Crédito proveedor no generan egresos
+             * en este momento. Se registra la obligación pendiente.
+             */
+            $stmtFinanciacion->execute([
+                ':compra_id' => $compraId,
+                ':origen' => $fuente['origen'],
+                ':cuenta_id' => $fuente['cuenta_id'],
+                ':movimiento_id' => $movimientoId,
+                ':monto' => $fuente['monto_centavos'] / 100,
+                ':usuario_id' => $usuarioId,
+                ':observacion' => $fuente['observacion'] !== ''
+                    ? $fuente['observacion']
+                    : null
+            ]);
+        }
+
+        /*
+         * Confirmar compra, financiación y movimientos juntos.
+         */
+        $this->pdo->commit();
+
+        $_SESSION['success_message'] =
+            'Compra directa y financiación registradas correctamente.';
+
+    } catch (Throwable $e) {
+
+        if ($this->pdo->inTransaction()) {
+            $this->pdo->rollBack();
+        }
+
+        error_log(
+            'Error registrando compra directa: ' . $e->getMessage()
+        );
+
+        $_SESSION['error_message'] =
+            'No fue posible registrar la compra: ' . $e->getMessage();
+    }
+
+    /*
+     * Regresar a la vista del caso.
      */
+    if ($vehiculoId > 0) {
+
         header(
             'Location: index.php?controller=mechanic&action=viewCase' .
-                '&veh_id=' . $vehiculoId .
-                '&case_id=' . $caseId
+            '&veh_id=' . $vehiculoId .
+            '&case_id=' . $caseId
         );
-        exit;
+
+    } else {
+
+        header('Location: index.php');
     }
+
+    exit;
+}
+
 
     public function imprimir(): void
     {

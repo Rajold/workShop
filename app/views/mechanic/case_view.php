@@ -1812,6 +1812,7 @@
                             <input
                                 type="number"
                                 class="form-control"
+                                id="cantidadCompra"
                                 name="cantidad"
                                 min="0.01"
                                 step="0.01"
@@ -1829,6 +1830,7 @@
                             <input
                                 type="number"
                                 class="form-control"
+                                id="costoUnitarioCompra"
                                 name="costo_unitario"
                                 min="0"
                                 step="1"
@@ -1862,6 +1864,225 @@
                         </div>
 
                     </div>
+
+
+                    <!-- FINANCIACIÓN DE LA COMPRA -->
+
+                    <div class="card border-primary mb-3">
+
+                        <div class="card-header bg-light">
+                            <strong>💰 ¿Cómo se financiará esta compra?</strong>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="alert alert-info py-2">
+                                El costo de adquisición debe distribuirse entre las
+                                fuentes de financiación seleccionadas.
+                            </div>
+
+                            <div class="mb-3">
+                                <label class="form-label">
+                                    Costo total de adquisición
+                                </label>
+
+                                <div class="form-control bg-light fw-bold"
+                                    id="costoTotalFinanciacion">
+                                    $0
+                                </div>
+                            </div>
+
+                            <div id="listaFinanciacion">
+
+                                <div class="fila-financiacion border rounded p-3 mb-3"
+                                    data-index="0">
+
+                                    <div class="row align-items-end">
+
+                                        <div class="col-md-5 mb-2">
+
+                                            <label class="form-label">
+                                                Origen del dinero
+                                            </label>
+
+                                            <select
+                                                class="form-select origen-financiacion"
+                                                name="financiacion[0][origen]"
+                                                required>
+
+                                                <option value="caja">Caja del taller</option>
+                                                <option value="banco">Banco</option>
+                                                <option value="personal">Dinero personal</option>
+                                                <option value="credito">Crédito proveedor</option>
+
+                                            </select>
+
+                                        </div>
+
+                                        <input
+                                            type="hidden"
+                                            class="cuenta-financiacion"
+                                            name="financiacion[0][cuenta_id]"
+                                            value="">
+
+                                        <div class="col-md-9 mb-2">
+
+                                            <label class="form-label">
+                                                Monto financiado
+                                            </label>
+
+                                            <input
+                                                type="number"
+                                                class="form-control monto-financiacion"
+                                                name="financiacion[0][monto]"
+                                                min="0.01"
+                                                step="0.01"
+                                                placeholder="$"
+                                                required>
+
+                                        </div>
+
+                                        <div class="col-md-3 mb-2">
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-danger w-100 eliminar-financiacion"
+                                                disabled>
+
+                                                <i class="bi bi-trash"></i>
+
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="mb-1">
+
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            name="financiacion[0][observacion]"
+                                            placeholder="Observación (opcional)">
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                            <template id="plantillaFinanciacion">
+
+                                <div class="fila-financiacion border rounded p-3 mb-3"
+                                    data-index="__INDEX__">
+
+                                    <div class="row align-items-end">
+
+                                        <div class="col-md-5 mb-2">
+
+                                            <label class="form-label">
+                                                Origen del dinero
+                                            </label>
+
+                                            <select
+                                                class="form-select origen-financiacion"
+                                                name="financiacion[__INDEX__][origen]"
+                                                required>
+
+                                                <option value="caja">Caja del taller</option>
+                                                <option value="banco">Banco</option>
+                                                <option value="personal">Dinero personal</option>
+                                                <option value="credito">Crédito proveedor</option>
+
+                                            </select>
+
+                                        </div>
+
+                                        <input
+                                            type="hidden"
+                                            class="cuenta-financiacion"
+                                            name="financiacion[__INDEX__][cuenta_id]"
+                                            value="">
+
+                                        <div class="col-md-9 mb-2">
+
+                                            <label class="form-label">
+                                                Monto financiado
+                                            </label>
+
+                                            <input
+                                                type="number"
+                                                class="form-control monto-financiacion"
+                                                name="financiacion[__INDEX__][monto]"
+                                                min="0.01"
+                                                step="0.01"
+                                                placeholder="$"
+                                                required>
+
+                                        </div>
+
+                                        <div class="col-md-3 mb-2">
+
+                                            <button
+                                                type="button"
+                                                class="btn btn-outline-danger w-100 eliminar-financiacion">
+
+                                                <i class="bi bi-trash"></i>
+
+                                            </button>
+
+                                        </div>
+
+                                    </div>
+
+                                    <div class="mb-1">
+
+                                        <input
+                                            type="text"
+                                            class="form-control"
+                                            name="financiacion[__INDEX__][observacion]"
+                                            placeholder="Observación (opcional)">
+
+                                    </div>
+
+                                </div>
+
+                            </template>
+
+                            <button
+                                type="button"
+                                class="btn btn-outline-primary btn-sm"
+                                id="agregarFinanciacion">
+
+                                <i class="bi bi-plus-circle"></i>
+                                Agregar otro medio de financiación
+
+                            </button>
+
+                            <hr>
+
+                            <div class="d-flex justify-content-between">
+                                <strong>Total financiado:</strong>
+                                <strong id="totalFinanciado">$0</strong>
+                            </div>
+
+                            <div class="d-flex justify-content-between mt-2">
+                                <strong>Saldo por distribuir:</strong>
+                                <strong id="saldoFinanciacion">$0</strong>
+                            </div>
+
+                            <div id="estadoFinanciacion"
+                                class="alert alert-warning mt-3 mb-0 py-2">
+
+                                Pendiente de completar la financiación.
+
+                            </div>
+
+                        </div>
+
+                    </div>
+                    <!-- FIN DE FINANCIACIÓN -->
+
 
                     <div class="mb-3">
 
@@ -2415,3 +2636,353 @@
     </div>
 
 <?php endif; ?>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+
+        const form = document.querySelector('#modalCompraDirecta form');
+        const cantidad = document.getElementById('cantidadCompra');
+        const costoUnitario = document.getElementById('costoUnitarioCompra');
+
+        const lista = document.getElementById('listaFinanciacion');
+        const plantilla = document.getElementById('plantillaFinanciacion');
+        const botonAgregar = document.getElementById('agregarFinanciacion');
+
+        const lblCosto = document.getElementById('costoTotalFinanciacion');
+        const lblTotal = document.getElementById('totalFinanciado');
+        const lblSaldo = document.getElementById('saldoFinanciacion');
+        const estado = document.getElementById('estadoFinanciacion');
+
+        if (!form || !cantidad || !costoUnitario || !lista || !plantilla) {
+            console.error('No se encontró la estructura del formulario de financiación.');
+            return;
+        }
+
+        let indice = 1;
+        let costoAnterior = 0;
+
+        function aCentavos(valor) {
+            return Math.round((parseFloat(valor) || 0) * 100);
+        }
+
+        function formatoCOP(centavos) {
+            return '$' + (centavos / 100).toLocaleString('es-CO', {
+                minimumFractionDigits: 0,
+                maximumFractionDigits: 2
+            });
+        }
+
+        function obtenerCostoTotal() {
+            const unidades = parseFloat(cantidad.value) || 0;
+            const costo = parseFloat(costoUnitario.value) || 0;
+
+            return Math.round(unidades * costo * 100);
+        }
+
+        function obtenerFilas() {
+            return lista.querySelectorAll('.fila-financiacion');
+        }
+
+        function actualizarCuenta(fila) {
+
+            const origen = fila.querySelector('.origen-financiacion');
+            const cuenta = fila.querySelector('.cuenta-financiacion');
+
+            if (!origen || !cuenta) return;
+
+            cuenta.value = '';
+
+            if (origen.value !== 'caja' && origen.value !== 'banco') {
+                return;
+            }
+
+            const tipoBuscado = origen.value;
+
+            const cuentasDisponibles = Array.from(
+                document.querySelectorAll(
+                    '#modalCompraDirecta .cuenta-financiacion'
+                )
+            );
+
+            // Buscar las opciones disponibles en la información PHP
+            const opciones = <?= json_encode(
+                                    array_map(function ($cuenta) {
+                                        return [
+                                            'id' => (int)$cuenta['id'],
+                                            'tipo' => $cuenta['tipo']
+                                        ];
+                                    }, $cuentasPago),
+                                    JSON_UNESCAPED_UNICODE
+                                ) ?>;
+
+            const encontrada = opciones.find(function(item) {
+                return item.tipo === tipoBuscado;
+            });
+
+            if (encontrada) {
+                cuenta.value = encontrada.id;
+            }
+        }
+
+        function reindexarFilas() {
+
+            const filas = obtenerFilas();
+
+            filas.forEach(function(fila, index) {
+
+                fila.dataset.index = index;
+
+                fila.querySelectorAll('[name]').forEach(function(campo) {
+
+                    campo.name = campo.name.replace(
+                        /financiacion\[\d+\]/g,
+                        'financiacion[' + index + ']'
+                    );
+
+                });
+
+                const botonEliminar =
+                    fila.querySelector('.eliminar-financiacion');
+
+                if (botonEliminar) {
+                    botonEliminar.disabled = filas.length === 1;
+                }
+
+            });
+
+            indice = filas.length;
+        }
+
+        function actualizarEstado() {
+
+            const costoTotal = obtenerCostoTotal();
+
+            let totalFinanciado = 0;
+            let filasValidas = true;
+
+            const filas = obtenerFilas();
+
+            filas.forEach(function(fila) {
+
+                const origen =
+                    fila.querySelector('.origen-financiacion');
+
+                const monto =
+                    fila.querySelector('.monto-financiacion');
+
+                const cuenta =
+                    fila.querySelector('.cuenta-financiacion');
+
+                const valor = aCentavos(monto.value);
+
+                totalFinanciado += valor;
+
+                if (!origen.value || valor <= 0) {
+                    filasValidas = false;
+                }
+
+                if (
+                    (origen.value === 'caja' || origen.value === 'banco') &&
+                    (!cuenta || !cuenta.value)
+                ) {
+                    filasValidas = false;
+                }
+
+            });
+
+            const saldo = costoTotal - totalFinanciado;
+
+            lblCosto.textContent = formatoCOP(costoTotal);
+            lblTotal.textContent = formatoCOP(totalFinanciado);
+            lblSaldo.textContent = formatoCOP(saldo);
+
+            let correcto =
+                costoTotal > 0 &&
+                filasValidas &&
+                saldo === 0;
+
+            estado.className = 'alert mt-3 mb-0 py-2';
+
+            if (correcto) {
+
+                estado.classList.add('alert-success');
+                estado.textContent =
+                    'Financiación completa. La distribución coincide con el costo de adquisición.';
+
+            } else if (saldo > 0) {
+
+                estado.classList.add('alert-warning');
+                estado.textContent =
+                    'Faltan ' + formatoCOP(saldo) +
+                    ' por distribuir. Revisa los medios de financiación.';
+
+            } else if (saldo < 0) {
+
+                estado.classList.add('alert-danger');
+                estado.textContent =
+                    'La financiación supera el costo de adquisición por ' +
+                    formatoCOP(Math.abs(saldo)) + '.';
+
+            } else if (costoTotal <= 0) {
+
+                estado.classList.add('alert-warning');
+                estado.textContent =
+                    'Ingresa una cantidad y un costo unitario mayores que cero.';
+
+            } else {
+
+                estado.classList.add('alert-warning');
+                estado.textContent =
+                    'Completa los montos y selecciona las cuentas correspondientes.';
+
+            }
+
+            const botonGuardar = form.querySelector('button[type="submit"]');
+
+            if (botonGuardar) {
+                botonGuardar.disabled = !correcto;
+            }
+
+        }
+
+        function sincronizarFila(fila) {
+            actualizarCuenta(fila);
+            actualizarEstado();
+        }
+
+        function agregarFila() {
+
+            const contenido = plantilla.innerHTML.replace(
+                /__INDEX__/g,
+                indice
+            );
+
+            lista.insertAdjacentHTML('beforeend', contenido);
+
+            const filaNueva = obtenerFilas()[obtenerFilas().length - 1];
+
+            indice++;
+
+            reindexarFilas();
+            actualizarCuenta(filaNueva);
+            actualizarEstado();
+        }
+
+        // Cambios en los campos de la compra.
+        function actualizarCosto() {
+
+            const nuevoCosto = obtenerCostoTotal();
+
+            const filas = obtenerFilas();
+
+            // Si existe una sola fuente, actualizar su monto automáticamente
+            // cuando el usuario modifica el costo de adquisición.
+            if (filas.length === 1) {
+
+                const monto = filas[0].querySelector('.monto-financiacion');
+
+                const montoActual = aCentavos(monto.value);
+
+                if (
+                    monto.value.trim() === '' ||
+                    montoActual === costoAnterior
+                ) {
+                    monto.value = (nuevoCosto / 100).toFixed(2);
+                }
+
+            }
+
+            costoAnterior = nuevoCosto;
+
+            actualizarEstado();
+        }
+
+        cantidad.addEventListener('input', actualizarCosto);
+        costoUnitario.addEventListener('input', actualizarCosto);
+
+        // Agregar una fuente de financiación.
+        botonAgregar.addEventListener('click', agregarFila);
+
+        // Eventos de las filas actuales y futuras.
+        lista.addEventListener('change', function(evento) {
+
+            const fila = evento.target.closest('.fila-financiacion');
+
+            if (!fila) return;
+
+            if (evento.target.classList.contains('origen-financiacion')) {
+                actualizarCuenta(fila);
+            }
+
+            actualizarEstado();
+        });
+
+        lista.addEventListener('input', function(evento) {
+
+            if (
+                evento.target.classList.contains('monto-financiacion')
+            ) {
+                actualizarEstado();
+            }
+
+        });
+
+        // Eliminar una fuente de financiación.
+        lista.addEventListener('click', function(evento) {
+
+            const boton = evento.target.closest('.eliminar-financiacion');
+
+            if (!boton) return;
+
+            const fila = boton.closest('.fila-financiacion');
+
+            if (obtenerFilas().length <= 1) return;
+
+            fila.remove();
+
+            reindexarFilas();
+            actualizarEstado();
+
+        });
+
+        // Validación final antes de enviar al servidor.
+        form.addEventListener('submit', function(evento) {
+
+            actualizarEstado();
+
+            const costoTotal = obtenerCostoTotal();
+
+            let total = 0;
+
+            obtenerFilas().forEach(function(fila) {
+
+                const monto = fila.querySelector('.monto-financiacion');
+
+                total += aCentavos(monto.value);
+
+            });
+
+            if (costoTotal <= 0 || total !== costoTotal) {
+
+                evento.preventDefault();
+
+                alert(
+                    'No se puede registrar la compra. ' +
+                    'La suma de la financiación debe coincidir exactamente ' +
+                    'con el costo total de adquisición.'
+                );
+
+            }
+
+        });
+
+        // Preparar el formulario al cargar la página.
+        obtenerFilas().forEach(function(fila) {
+            actualizarCuenta(fila);
+        });
+
+        actualizarCosto();
+
+    });
+</script>
