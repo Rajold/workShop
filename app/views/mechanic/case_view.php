@@ -2,11 +2,6 @@
 // app/views/mechanic/case_view.php
 ?>
 
-<!-- Bootstrap -->
-<link
-    href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css"
-    rel="stylesheet">
-
 <!-- Estilos específicos de la ficha -->
 <link
     href="css/case_view.css"
@@ -1267,7 +1262,305 @@
 
         <?php endif; ?>
 
+
+
+
+        <?php if (!empty($caseObligations)): ?>
+
+            <?php
+            $totalObligaciones = 0;
+            $totalAbonadoObligaciones = 0;
+            $totalPendienteObligaciones = 0;
+
+            foreach ($caseObligations as $obligacion) {
+                $totalObligaciones += (float)$obligacion['monto'];
+                $totalAbonadoObligaciones += (float)$obligacion['abonado'];
+                $totalPendienteObligaciones += (float)$obligacion['pendiente'];
+            }
+            ?>
+
+            <details class="case-collapsible case-collapsible-obligations">
+                <summary>
+                    <span class="case-collapsible-title">
+                        <span class="case-collapsible-icon">💳</span>
+                        <span>Obligaciones de compras directas</span>
+                    </span>
+
+                    <span class="case-collapsible-meta">
+                        Pendiente:
+                        $<?= number_format($totalPendienteObligaciones, 0, ',', '.') ?>
+                    </span>
+                </summary>
+
+                <div class="case-collapsible-body p-0">
+
+                    <div class="card shadow-sm">
+
+                        <div class="card-header bg-warning text-dark">
+                            <strong>💳 Obligaciones pendientes</strong>
+                        </div>
+
+                        <div class="card-body">
+
+                            <div class="row g-3 mb-3">
+
+                                <div class="col-md-4">
+                                    <small class="text-muted">Valor financiado</small>
+                                    <div class="fw-bold">
+                                        $<?= number_format($totalObligaciones, 0, ',', '.') ?>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <small class="text-muted">Total abonado</small>
+                                    <div class="fw-bold text-success">
+                                        $<?= number_format($totalAbonadoObligaciones, 0, ',', '.') ?>
+                                    </div>
+                                </div>
+
+                                <div class="col-md-4">
+                                    <small class="text-muted">Saldo pendiente</small>
+                                    <div class="fw-bold text-danger">
+                                        $<?= number_format($totalPendienteObligaciones, 0, ',', '.') ?>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="table-responsive">
+
+                                <table class="table table-hover table-sm align-middle">
+
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Compra</th>
+                                            <th>Origen</th>
+                                            <th class="text-end">Valor</th>
+                                            <th class="text-end">Abonado</th>
+                                            <th class="text-end">Pendiente</th>
+                                            <th>Estado</th>
+                                            <th>Registrar pago</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <?php foreach ($caseObligations as $obligacion): ?>
+
+                                            <tr>
+                                                <td>
+                                                    <strong>
+                                                        <?= htmlspecialchars($obligacion['descripcion']) ?>
+                                                    </strong>
+
+                                                    <?php if (!empty($obligacion['proveedor'])): ?>
+                                                        <br>
+                                                        <small class="text-muted">
+                                                            <?= htmlspecialchars($obligacion['proveedor']) ?>
+                                                        </small>
+                                                    <?php endif; ?>
+                                                </td>
+
+                                                <td>
+                                                    <?php if ($obligacion['origen'] === 'personal'): ?>
+                                                        Dinero personal
+                                                    <?php else: ?>
+                                                        Crédito proveedor
+                                                    <?php endif; ?>
+                                                </td>
+
+                                                <td class="text-end">
+                                                    $<?= number_format((float)$obligacion['monto'], 0, ',', '.') ?>
+                                                </td>
+
+                                                <td class="text-end text-success">
+                                                    $<?= number_format((float)$obligacion['abonado'], 0, ',', '.') ?>
+                                                </td>
+
+                                                <td class="text-end fw-bold">
+                                                    $<?= number_format((float)$obligacion['pendiente'], 0, ',', '.') ?>
+                                                </td>
+
+                                                <td>
+                                                    <?php if ($obligacion['estado'] === 'pagada'): ?>
+                                                        <span class="badge bg-success">Pagada</span>
+                                                    <?php elseif ($obligacion['estado'] === 'abono parcial'): ?>
+                                                        <span class="badge bg-warning text-dark">Abono parcial</span>
+                                                    <?php else: ?>
+                                                        <span class="badge bg-danger">Pendiente</span>
+                                                    <?php endif; ?>
+
+                                                </td>
+
+                                                <td style="min-width: 260px;">
+
+                                                    <?php if ((float)$obligacion['pendiente'] > 0): ?>
+
+                                                        <form method="POST"
+                                                            action="index.php?controller=case&action=pagarObligacionCompra">
+
+                                                            <input type="hidden"
+                                                                name="caso_id"
+                                                                value="<?= (int)$caso['id'] ?>">
+
+                                                            <input type="hidden"
+                                                                name="veh_id"
+                                                                value="<?= (int)$veh_id ?>">
+
+                                                            <input type="hidden"
+                                                                name="financiacion_id"
+                                                                value="<?= (int)$obligacion['financiacion_id'] ?>">
+
+                                                            <input type="hidden"
+                                                                name="token_pago_obligacion"
+                                                                value="<?= bin2hex(random_bytes(16)) ?>">
+
+                                                            <div class="mb-2">
+                                                                <select
+                                                                    name="cuenta_id"
+                                                                    class="form-select form-select-sm"
+                                                                    required>
+
+                                                                    <option value="">
+                                                                        Cuenta de pago
+                                                                    </option>
+
+                                                                    <?php foreach ($cuentasPago as $cuenta): ?>
+
+                                                                        <?php if (in_array($cuenta['tipo'], ['caja', 'banco'], true)): ?>
+
+                                                                            <option value="<?= (int)$cuenta['id'] ?>">
+                                                                                <?= htmlspecialchars($cuenta['nombre'], ENT_QUOTES, 'UTF-8') ?>
+                                                                                (<?= ucfirst($cuenta['tipo']) ?>)
+                                                                            </option>
+
+                                                                        <?php endif; ?>
+
+                                                                    <?php endforeach; ?>
+
+                                                                </select>
+                                                            </div>
+
+                                                            <div class="mb-2">
+                                                                <input
+                                                                    type="number"
+                                                                    name="monto"
+                                                                    class="form-control form-control-sm"
+                                                                    min="0.01"
+                                                                    max="<?= number_format((float)$obligacion['pendiente'], 2, '.', '') ?>"
+                                                                    step="0.01"
+                                                                    placeholder="Valor a pagar"
+                                                                    required>
+                                                            </div>
+
+                                                            <div class="mb-2">
+                                                                <input
+                                                                    type="text"
+                                                                    name="observacion"
+                                                                    class="form-control form-control-sm"
+                                                                    maxlength="255"
+                                                                    placeholder="Observación (opcional)">
+                                                            </div>
+
+                                                            <button
+                                                                type="submit"
+                                                                class="btn btn-sm btn-outline-primary w-100">
+                                                                Registrar pago
+                                                            </button>
+
+                                                        </form>
+
+                                                    <?php else: ?>
+
+                                                        <span class="text-success">
+                                                            <i class="bi bi-check-circle"></i>
+                                                            Obligación saldada
+                                                        </span>
+
+                                                    <?php endif; ?>
+
+                                                </td>
+                                            </tr>
+
+                                        <?php endforeach; ?>
+
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <?php if (!empty($obligationPayments)): ?>
+
+                        <div class="card shadow-sm mt-3">
+
+                            <div class="card-header">
+                                <strong>📜 Historial de pagos de obligaciones</strong>
+                            </div>
+
+                            <div class="table-responsive">
+
+                                <table class="table table-sm table-hover mb-0">
+
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Fecha</th>
+                                            <th>Compra</th>
+                                            <th>Cuenta utilizada</th>
+                                            <th class="text-end">Monto</th>
+                                            <th>Registrado por</th>
+                                        </tr>
+                                    </thead>
+
+                                    <tbody>
+
+                                        <?php foreach ($obligationPayments as $pagoObligacion): ?>
+
+                                            <tr>
+                                                <td>
+                                                    <?= htmlspecialchars($pagoObligacion['fecha_pago']) ?>
+                                                </td>
+
+                                                <td>
+                                                    <?= htmlspecialchars($pagoObligacion['compra_descripcion']) ?>
+                                                </td>
+
+                                                <td>
+                                                    <?= htmlspecialchars($pagoObligacion['cuenta_nombre']) ?>
+                                                </td>
+
+                                                <td class="text-end fw-bold">
+                                                    $<?= number_format((float)$pagoObligacion['monto'], 0, ',', '.') ?>
+                                                </td>
+
+                                                <td>
+                                                    <?= htmlspecialchars($pagoObligacion['usuario_nombre']) ?>
+                                                </td>
+                                            </tr>
+
+                                        <?php endforeach; ?>
+
+                                    </tbody>
+
+                                </table>
+
+                            </div>
+                        </div>
+
+                    <?php endif; ?>
+
+                </div>
+            </details>
+
+        <?php endif; ?>
+
+
         <details class="case-collapsible case-collapsible-advances">
+
             <summary>
                 <span class="case-collapsible-title">
                     <span class="case-collapsible-icon">📋</span>

@@ -23,6 +23,7 @@ class MechanicController extends BaseController
         require_once __DIR__ . '/../models/CasePart.php';
         require_once __DIR__ . '/../models/CasePurchase.php';
         require_once __DIR__ . '/../models/MovimientoFinanciero.php';
+        require_once __DIR__ . '/../models/CasePurchaseObligation.php';
 
         $this->vehicleModel = new Vehicle($pdo);
         $this->caseModel = new RepairCase($pdo);
@@ -143,7 +144,10 @@ class MechanicController extends BaseController
         ];
 
         $casePurchases = [];
+        $caseObligations = [];
+        $obligationPayments = [];
         $casePurchaseModel = new CasePurchase($this->pdo);
+        $obligationModel = new CasePurchaseObligation($this->pdo);
         $compatibleParts = [];
         $caseParts = [];
         $advanceModel = new Avance($this->pdo);
@@ -300,6 +304,13 @@ class MechanicController extends BaseController
                 $casePurchases = $casePurchaseModel->findByCase(
                     (int)$caso['id']
                 );
+                $caseObligations = $obligationModel->findByCase(
+                    (int)$caso['id']
+                );
+
+                $obligationPayments = $obligationModel->findPaymentsByCase(
+                    (int)$caso['id']
+                );
                 $caseId = (int)$caso['id'];
 
                 $financial['mano_obra'] =
@@ -438,11 +449,11 @@ class MechanicController extends BaseController
             'compatibleParts' => $compatibleParts,
             'caseParts' => $caseParts,
             'casePurchases' => $casePurchases,
+            'caseObligations' => $caseObligations,
+            'obligationPayments' => $obligationPayments,
             'financial' => $financial,
             'pendingItems' => $pendingItems,
             'tiempoCaso' => $tiempoCaso,
-
-            // Datos de pagos y abonos
             'cuentasPago' => $cuentasPago,
             'pagos' => $pagos,
             'totalPagado' => $totalPagado,

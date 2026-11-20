@@ -1,4 +1,7 @@
-body { padding-bottom: 40px; }
+body {
+    padding-top: 56px;
+    padding-bottom: 40px;
+}
 @media (max-width:600px){ .container{padding:8px;} }
 
 /* ==========================================
@@ -847,3 +850,15 @@ RESPONSIVE
     padding: 5px;
     border-radius: 8px;
 }
+
+/* Barra de navegación fija */
+.navbar-sticky {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 100%;
+    z-index: 1030;
+    background-color: #f8f9fa;
+}
+
